@@ -1,0 +1,2603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web Foundations</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7/babel.min.js" crossorigin></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html, body, #root { background: #020617; min-height: 100%; }
+  body { margin: 0; }
+  #boot { color:#94a3b8; font-family: system-ui, sans-serif; padding: 40px; text-align:center; }
+</style>
+</head>
+<body>
+<div id="root"><div id="boot">Loading…</div></div>
+
+<script type="text/babel" data-type="module">
+const { useState, useEffect, useRef } = React;
+
+// Icons come from the lucide UMD build. If it fails to load for any
+// reason, every icon becomes an empty box instead of crashing the app —
+// the lesson content still works without them.
+const L = window.LucideReact || {};
+const blank = () => null;
+const {
+  Check = blank, Lock = blank, Play = blank, Trophy = blank, Flame = blank,
+  Zap = blank, Code2 = blank, Braces = blank, Boxes = blank, Sparkles = blank,
+  Circle = blank, CheckCircle2 = blank, BookOpen = blank, Rocket = blank,
+  ArrowRight = blank, PartyPopper = blank, Star = blank, ChevronLeft = blank,
+  RotateCcw = blank, Eye = blank, Globe = blank, Lightbulb = blank,
+  ListChecks = blank, Dumbbell = blank, Square = blank, CheckSquare = blank,
+  AlertTriangle = blank, BookMarked = blank, HelpCircle = blank, ChevronDown = blank,
+} = L;
+
+
+const UNIT_1 = {
+  title: "Web foundations",
+  sub: "HTML & CSS",
+  badge: "Page builder",
+  totalXp: 580,
+  lessons: [
+    // ─────────────────────────────── 1
+    {
+      title: "Welcome to the web",
+      blurb: "What a browser actually does, and the tags every page is built from.",
+      xp: 60,
+      learn: {
+        subtitle: "How a page is built",
+        check: {
+          q: "In <h1>Hello</h1>, which part is the closing tag?",
+          a: "</h1> is the closing tag. It has a slash. <h1> is the opening tag, and Hello is the content.",
+        },
+        ref: [
+          { label: "Page skeleton", body: "Every page needs <!DOCTYPE html>, then <html>, then <head> and <body> inside it." },
+          { label: "Tags", body: "Most tags come in pairs. <p> opens it. </p> closes it. The slash means close." },
+          { label: "Common tags", body: "h1 is the main heading. p is a paragraph. ul is a list. li is one list item. a is a link. img is a picture." },
+          { label: "Attributes", body: "Extra info goes in the opening tag. href says where a link goes. src says which picture. alt describes it." },
+          { label: "Good habit", body: "Write one tag. Run the code. Look at the result. Then write the next tag." },
+        ],
+        blocks: [
+          { type: "text", body: "When you open a web page, your browser downloads a text file and reads it top to bottom. That's it. There's no magic — an HTML file is a plain text document with labels around the content, and the browser's job is to turn those labels into something you can see." },
+          { type: "text", body: "Those labels are called tags. A tag wraps content and tells the browser what that content IS. An <h1> means \"this is the most important heading on the page.\" A <p> means \"this is a paragraph.\" The browser then applies default styling — headings get big and bold, paragraphs get normal-sized — but the styling is a consequence of the meaning, not the point of it." },
+          { type: "heading", body: "Anatomy of a tag" },
+          { type: "text", body: "Most tags come in pairs: an opening tag and a closing tag, with content in between. The closing tag has a forward slash." },
+          { type: "code", body: "<h1>Hello, world!</h1>\n ↑        ↑        ↑\nopening  content  closing" },
+          { type: "text", body: "A few tags are self-closing, because they have no content to wrap — an image isn't wrapped around anything, it just IS. Those are written as a single tag: <img src=\"cat.jpg\">." },
+          { type: "heading", body: "The skeleton every page needs" },
+          { type: "reference", items: [
+            { code: "<!DOCTYPE html>", what: "Tells the browser \"this is modern HTML.\" Not really a tag — it's an instruction, and it must be the very first line." },
+            { code: "<html>", what: "Wraps the entire document. Everything else lives inside it." },
+            { code: "<head>", what: "Information ABOUT the page that visitors don't see directly: the title, links to stylesheets, character encoding." },
+            { code: "<title>", what: "The text in the browser tab. Also what shows up in search results and bookmarks, so it matters more than it looks." },
+            { code: "<body>", what: "Everything a visitor actually sees. All your visible content goes here." },
+          ]},
+          { type: "tip", body: "If you write content outside <body>, browsers will usually fix it for you silently. That sounds helpful, but it means your mistakes don't announce themselves — which is exactly why HTML bugs can be sneaky." },
+          { type: "heading", body: "Text tags you'll use constantly" },
+          { type: "reference", items: [
+            { code: "<h1> … <h6>", what: "Headings, in order of importance. <h1> is the page's main title, <h2> is a section, <h3> a subsection.", note: "Use one <h1> per page, and never skip levels just to get a smaller size — that's CSS's job." },
+            { code: "<p>", what: "A paragraph of text. The browser adds space above and below automatically." },
+            { code: "<ul> / <ol>", what: "An unordered (bulleted) or ordered (numbered) list. The list itself is just a container." },
+            { code: "<li>", what: "A single list item. These go inside a <ul> or <ol> — never on their own." },
+            { code: "<a href=\"...\">", what: "A link. The href attribute says where it goes.", note: "Links navigate somewhere. If clicking should DO something instead, you want a <button>." },
+            { code: "<img src=\"...\" alt=\"...\">", what: "An image. src is the file path; alt describes it for screen readers and shows if the image fails to load.", note: "alt is not optional. An image without it is invisible to anyone using a screen reader." },
+          ]},
+          { type: "heading", body: "Attributes" },
+          { type: "text", body: "Some tags need extra information to do their job. A link needs to know where to go; an image needs to know which file to show. That extra information goes in the opening tag as an attribute — a name, an equals sign, and a value in quotes." },
+          { type: "code", body: "<a href=\"https://example.com\">Visit example</a>\n    └─ attribute name\n         └─ value, always in quotes" },
+          { type: "mistake", body: "Forgetting the slash in a closing tag. <p> opens. </p> closes. Without the slash the browser keeps going and your whole page shifts." },
+        ],
+        task: "The starter page has a heading and a paragraph. Add a list with three items, a link, and a second heading. Then try deleting a closing tag and running it again — notice the browser doesn't show an error, it just guesses. That's why typos hide.",
+        extra: { label: "Debugging challenge", xp: 15, text: "Three things are broken in the commented-out block at the bottom of index.html. Uncomment it, find all three, and fix them." },
+        files: {
+          html: `<h1>Hello, world!</h1>
+<p>This is my first web page. Everything you see here
+   started as plain text.</p>
+
+<!-- Add a list, a link, and an <h2> below -->
+
+
+<!-- DEBUGGING CHALLENGE — uncomment and fix three errors:
+<h2>Broken section<h2>
+<p>This paragraph never closes
+<a href=https://example.com>A link with a problem</a>
+-->`,
+          css: `body {
+  font-family: system-ui, sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  line-height: 1.6;
+  color: #1e293b;
+}`,
+          js: `// No JavaScript yet — that comes in Unit 2.
+console.log("Page loaded.");`,
+        },
+      },
+      practice: {
+      subtitle: "Practice: tags & structure",
+      intro: "Nine short drills. Each one asks you to write a specific tag from scratch — no copying from the lesson above. Work down the list in the sandbox and run it as you go.",
+      drills: [
+        { text: "Write an <h1> with your name in it.", hint: "Opening tag, content, closing tag with a slash." },
+        { text: "Add two <p> paragraphs underneath it.", hint: "Each paragraph needs its own opening and closing tag." },
+        { text: "Create an ordered list of 5 steps for making a sandwich.", hint: "<ol> wraps the list; each step is its own <li>." },
+        { text: "Create an unordered list of 3 things you like.", hint: "Same structure, but <ul> instead of <ol>." },
+        { text: "Insert an image using the placeholder URL in the comments, with real alt text.", hint: "Self-closing: <img src=\"...\" alt=\"...\">. The alt should describe the image, not say \"image\"." },
+        { text: "Add a link that opens example.com.", hint: "<a href=\"https://example.com\">Link text</a>" },
+        { text: "Add an <h2> and an <h3> in the correct order.", hint: "Never skip from h1 to h3 just to get a smaller size." },
+        { text: "Nest a list inside a list item.", hint: "A <ul> can go inside an <li> — that makes a sublist." },
+        { text: "Add a comment to your HTML explaining one section.", hint: "<!-- like this -->" },
+      ],
+      xp: 20,
+      files: {
+        html: `<!-- Work through the drills one at a time.
+     Run the code after each one.
+
+     Placeholder image URL for drill 5:
+     https://placehold.co/400x200
+
+     Delete these comments when you're done. -->
+
+
+`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  line-height: 1.6;
+}
+
+img { max-width: 100%; }`,
+        js: `// Not needed for these drills.`,
+      },
+    },
+    build: {
+        subtitle: "Build: About Me page",
+        brief: "Build an \"About Me\" page from scratch. It needs a main heading, at least two paragraphs, one list, one link, and one image. The topic, tone, and content are entirely yours — write about a hobby, a game you like, a place you've been.",
+        requirements: [
+          "Type <!DOCTYPE html> on the first line.",
+          "Add <html> at the top. Add </html> at the bottom.",
+          "Inside <html>, add <head> and </head>.",
+          "Inside <head>, add a title: <title>My page</title>",
+          "Under </head>, add <body> and </body>.",
+          "Put everything below inside <body>.",
+          "Add one heading: <h1>Your name</h1>",
+          "Add a paragraph: <p>Write one sentence about you.</p>",
+          "Add a second paragraph with <p> and </p>.",
+          "Add a smaller heading: <h2>Things I like</h2>",
+          "Under it, start a list with <ul> and end it with </ul>.",
+          "Inside the list, add 3 items. Each one looks like <li>Your item</li>",
+          "Add a picture: <img src=\"https://placehold.co/400x200\" alt=\"Describe the picture\">",
+          "Add a link: <a href=\"https://example.com\">Visit this site</a>",
+          "Click Run. Check every tag you opened is also closed.",
+        ],
+        deploy: true,
+        xp: 25,
+        files: {
+          html: ``,
+          css: ``,
+          js: ``,
+        },
+      },
+    },
+
+    // ─────────────────────────────── 2
+    {
+      title: "Structure & semantics",
+      blurb: "Landmarks, meaning, and how forms are actually built.",
+      xp: 65,
+      learn: {
+        subtitle: "Meaning over appearance",
+        check: {
+          q: "Why does <main> work better than <div class=\"main\">?",
+          a: "A screen reader can jump straight to <main>, because it is a real landmark. A class name is just a word you made up, so it means nothing to the browser.",
+        },
+        ref: [
+          { label: "Landmarks", body: "header is the top. nav holds links. main is the page content. footer is the bottom." },
+          { label: "Sections", body: "section groups related content. article is content that makes sense on its own." },
+          { label: "Form parts", body: "form wraps it all. label names a box. input is the box. button sends it." },
+          { label: "Label rule", body: "The for in the label must match the id in the input. Same word, both times." },
+          { label: "Good habit", body: "Click a label. If the box lights up, your for and id match." },
+        ],
+        blocks: [
+          { type: "text", body: "You can build an entire website using nothing but <div>. It will look completely normal. And it will be much worse — because a <div> means literally nothing. It's a generic box. A page made of them is a page with no structure, only appearance." },
+          { type: "text", body: "Semantic tags solve this. They look identical to a <div> by default, but they tell the browser, search engines, and assistive technology what each region of your page IS. A screen reader user can jump straight to <main>. They cannot jump to <div class=\"main\">, because that class name is just a word you made up." },
+          { type: "heading", body: "The landmark tags" },
+          { type: "reference", items: [
+            { code: "<header>", what: "Introductory content for the page or a section — usually a logo, site title, and top navigation." },
+            { code: "<nav>", what: "A block of navigation links. You don't need it for every link, just the main navigation groups." },
+            { code: "<main>", what: "The primary content of this page. Exactly one per page, and it shouldn't contain the header, nav, or footer.", note: "Screen readers offer a \"skip to main content\" jump. This tag is what makes that work." },
+            { code: "<section>", what: "A thematic grouping of content, usually with its own heading. Think chapters." },
+            { code: "<article>", what: "Content that would still make sense on its own — a blog post, a news story, a product card." },
+            { code: "<aside>", what: "Related but non-essential content: a sidebar, a pull quote, related links." },
+            { code: "<footer>", what: "Closing content — copyright, contact info, secondary links." },
+          ]},
+          { type: "tip", body: "A quick test: if you removed all your CSS, could someone still understand the structure of your page? If it turns into an undifferentiated wall of text, your HTML isn't carrying enough meaning." },
+          { type: "heading", body: "Forms" },
+          { type: "text", body: "A form collects input from a person. Even though nothing will submit anywhere yet — that needs JavaScript or a server, which comes later — the structure matters now, because forms are where accessibility mistakes do the most damage." },
+          { type: "reference", items: [
+            { code: "<form>", what: "Wraps the whole set of inputs. Groups them as one thing being filled out." },
+            { code: "<label for=\"x\">", what: "Names a field. The for attribute must match the input's id.", note: "This connection makes clicking the label focus the input, and tells screen readers what the box is for. Without it, a field is an unlabeled mystery box." },
+            { code: "<input type=\"text\">", what: "A single-line text box. The type attribute changes its behavior." },
+            { code: "<input type=\"email\">", what: "Same box, but phones show an email keyboard and browsers can validate the format." },
+            { code: "<textarea>", what: "A multi-line text box, for longer answers. Unlike input, it has a closing tag." },
+            { code: "<button type=\"submit\">", what: "Submits the form. A <button> does something; an <a> goes somewhere." },
+          ]},
+          { type: "heading", body: "Why the label connection matters" },
+          { type: "code", body: "<!-- Broken: label isn't connected -->\n<label>Email</label>\n<input type=\"email\">\n\n<!-- Correct: for matches id -->\n<label for=\"email\">Email</label>\n<input id=\"email\" type=\"email\">" },
+          { type: "mistake", body: "Writing a label but not connecting it. The for and the id must be the same word, or the label does nothing." },
+        ],
+        task: "Refactor the div soup into proper semantic tags. When you're done the page should look exactly the same — that's the point. Then finish the contact form: add an email input and a textarea, each with a properly connected label.",
+        extra: { label: "Exit ticket", xp: 5, text: "In one sentence: why does an input need a <label> even when the form already looks clear?" },
+        files: {
+          html: `<div class="top">
+  <div class="title">My site</div>
+  <div class="links">
+    <a href="#">Home</a>
+    <a href="#">About</a>
+  </div>
+</div>
+
+<div class="content">
+  <div class="block">
+    <h2>About this page</h2>
+    <p>Replace the divs above and below with semantic tags.</p>
+  </div>
+
+  <form>
+    <label for="name">Your name</label>
+    <input id="name" type="text">
+
+    <!-- Add an email input and a textarea, each with a label -->
+
+    <button type="submit">Send</button>
+  </form>
+</div>
+
+<div class="bottom">
+  <p>&copy; 2026</p>
+</div>`,
+          css: `body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  line-height: 1.6;
+  color: #1e293b;
+}
+.top {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: #f1f5f9;
+}
+.title { font-weight: 700; }
+.links { display: flex; gap: 16px; }
+.content { padding: 24px; max-width: 600px; }
+.bottom { padding: 16px 24px; background: #f1f5f9; font-size: 14px; }
+
+form { display: flex; flex-direction: column; gap: 8px; max-width: 320px; margin-top: 24px; }
+label { font-size: 14px; font-weight: 600; }
+input, textarea {
+  padding: 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font: inherit;
+}
+button {
+  margin-top: 8px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #0f172a;
+  color: white;
+  font-weight: 600;
+}`,
+          js: `console.log("Semantic tags look the same — but mean much more.");`,
+        },
+      },
+      practice: {
+      subtitle: "Practice: semantics & forms",
+      intro: "Build a small page section by section using the right tag each time. Don't reach for <div> unless nothing else fits.",
+      drills: [
+        { text: "Write a <header> containing a site title and a <nav> with 3 links.", hint: "The nav goes inside the header." },
+        { text: "Add a <main> with two <section>s, each with its own <h2>.", hint: "One <main> per page, and it shouldn't include the header or footer." },
+        { text: "Put an <article> inside one of the sections.", hint: "Use <article> for content that would make sense on its own." },
+        { text: "Add an <aside> with a related link.", hint: "Aside is for supporting content, not the main point." },
+        { text: "Write a <footer> with a copyright line.", hint: "&copy; gives you the © symbol." },
+        { text: "Build a form with a text input for a name, properly labelled.", hint: "The label's for must match the input's id exactly." },
+        { text: "Add an email input to the same form, labelled.", hint: "type=\"email\" gives phones the right keyboard." },
+        { text: "Add a <textarea> for a message, labelled.", hint: "Textarea has a closing tag, unlike input." },
+        { text: "Add a submit button.", hint: "<button type=\"submit\">" },
+        { text: "Click each label and check the matching input gets focus.", hint: "If it doesn't, your for and id don't match." },
+      ],
+      xp: 20,
+      files: {
+        html: `<!-- Build the page structure with semantic tags.
+     Header → Main → Footer, then the form.
+     Delete these comments as you go. -->
+
+
+`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px;
+  line-height: 1.6;
+}
+
+nav { display: flex; gap: 16px; }
+
+form { display: flex; flex-direction: column; gap: 8px; max-width: 320px; }
+label { font-size: 14px; font-weight: 600; }
+input, textarea { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font: inherit; }
+button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; color: white; font-weight: 600; }`,
+        js: `// Not needed for these drills.`,
+      },
+    },
+    build: {
+        subtitle: "Build: structured About Me",
+        brief: "Rebuild your About Me page using semantic tags throughout, and add a working contact form. The form doesn't need to submit anywhere — you're building the structure. You decide which fields to ask for and why.",
+        requirements: [
+          "Start with the page skeleton: <!DOCTYPE html>, <html>, <head>, <body>.",
+          "At the top of <body>, add <header> and </header>.",
+          "Inside <header>, add <h1>Your name</h1>",
+          "Still inside <header>, add <nav> and </nav>.",
+          "Inside <nav>, add 2 links like <a href=\"#about\">About</a>",
+          "After </header>, add <main> and </main>.",
+          "Inside <main>, add <section id=\"about\"> and </section>.",
+          "Inside that section, add <h2>About</h2> and one <p>.",
+          "Add a second <section id=\"contact\"> with <h2>Contact</h2>.",
+          "Inside the contact section, add <form> and </form>.",
+          "In the form, add: <label for=\"name\">Name</label>",
+          "Right under it, add: <input id=\"name\" type=\"text\">",
+          "The for and the id must be the same word. Check them now.",
+          "Add a second label and an <input id=\"email\" type=\"email\">",
+          "Add a message box: <label for=\"msg\">Message</label> then <textarea id=\"msg\"></textarea>",
+          "Add a button: <button type=\"submit\">Send</button>",
+          "After </main>, add <footer><p>&copy; 2026</p></footer>",
+          "Click each label. The matching box should light up. If not, fix the for and id.",
+        ],
+        deploy: true,
+        xp: 25,
+        files: {
+          html: ``,
+          css: ``,
+          js: ``,
+        },
+      },
+    },
+
+    // ─────────────────────────────── 3
+    {
+      title: "CSS fundamentals",
+      blurb: "Selectors, the box model, and making text genuinely readable.",
+      xp: 70,
+      learn: {
+        subtitle: "How styling works",
+        check: {
+          q: "In color: green;  which word is the property?",
+          a: "color is the property. It names what changes. green is the value. It says how it changes.",
+        },
+        ref: [
+          { label: "CSS rule", body: "A selector chooses the HTML. A property says what changes. A value says how it changes." },
+          { label: "Syntax", body: "A rule uses braces { }. Every style line ends with a semicolon." },
+          { label: "Selectors", body: "p picks every paragraph. .card picks class=\"card\". The dot means class." },
+          { label: "Box model", body: "padding is space inside the box. margin is space outside it. border is the edge between them." },
+          { label: "Good habit", body: "Change one value. Run the code. Read the result. Then change the next one." },
+        ],
+        blocks: [
+          { type: "text", body: "CSS answers a question HTML doesn't: what should this look like? A CSS rule has two halves — a selector that picks which elements to affect, and a block of declarations saying what to change." },
+          { type: "code", body: "h1 {              ← selector: which elements\n  color: navy;    ← declaration: property + value\n  font-size: 32px;\n}" },
+          { type: "heading", body: "Selectors" },
+          { type: "reference", items: [
+            { code: "p", what: "Element selector. Hits every <p> on the page." },
+            { code: ".card", what: "Class selector. Hits every element with class=\"card\". Reusable — this is what you'll use most." },
+            { code: "#header", what: "ID selector. Hits the one element with id=\"header\". IDs must be unique on a page.", note: "Prefer classes. IDs are hard to override later and can only be used once." },
+            { code: ".card p", what: "Descendant selector. Every <p> inside a .card, at any depth." },
+            { code: ".card, .box", what: "Comma means \"or\" — applies to both." },
+          ]},
+          { type: "heading", body: "The box model" },
+          { type: "text", body: "Every element on a page is a rectangle, even when it doesn't look like one. That rectangle has four layers, from the inside out. Almost every \"why won't this line up\" problem is really \"I'm adjusting the wrong layer.\"" },
+          { type: "reference", items: [
+            { code: "content", what: "The text or image itself." },
+            { code: "padding", what: "Space INSIDE the border, between the content and the edge. Padding is part of the element — the background color extends through it." },
+            { code: "border", what: "The edge itself. Has a width, style, and color." },
+            { code: "margin", what: "Space OUTSIDE the border, pushing other elements away. Margin is always transparent.", note: "Padding makes an element bigger. Margin pushes its neighbors away. Mixing them up is the single most common CSS mistake." },
+          ]},
+          { type: "tip", body: "box-sizing: border-box changes the math so that width includes padding and border. Without it, a 200px box with 20px padding is actually 240px wide, which surprises everyone at least once." },
+          { type: "heading", body: "Color" },
+          { type: "reference", items: [
+            { code: "color", what: "The text color." },
+            { code: "background", what: "The color behind the element, extending through the padding." },
+            { code: "#0f172a", what: "Hex notation — red, green, and blue in pairs. #000 is black, #fff is white." },
+            { code: "rgb(15 23 42)", what: "The same thing in decimal, 0–255 per channel. Easier to adjust by hand." },
+          ]},
+          { type: "heading", body: "Typography that people can actually read" },
+          { type: "reference", items: [
+            { code: "font-family", what: "Which typeface. Give a fallback list — the browser uses the first one available." },
+            { code: "font-size", what: "How big. 16px is a typical body size; going below 14px makes most people squint." },
+            { code: "font-weight", what: "How bold. 400 is normal, 700 is bold." },
+            { code: "line-height", what: "Vertical space between lines. 1.5–1.6 for body text.", note: "This one property does more for readability than any font choice you'll make." },
+            { code: "max-width", what: "Caps how wide a text block gets. Around 60–70 characters per line is comfortable; a full-screen-width paragraph is exhausting to read." },
+          ]},
+          { type: "tip", body: "Contrast is an accessibility requirement, not a preference. Light grey text on white looks elegant on your bright laptop and becomes unreadable in sunlight or for anyone with low vision. Aim for at least 4.5:1 between text and background." },
+          { type: "mistake", body: "Forgetting the semicolon at the end of a style line. The browser then ignores that line and often the next one too." },
+        ],
+        task: "Three tasks in the starter file. First, change margin, padding, and border on the cards one at a time and watch which ones move the neighbors. Second, fix the unreadable paragraph at the bottom — it has poor contrast, cramped line-height, and lines that run too long. Third, set a font pairing you actually like.",
+        extra: { label: "Debugging challenge", xp: 15, text: "The .wide box overflows its container. The cause is box-sizing. Fix it without changing the width value." },
+        files: {
+          html: `<h1>Styling practice</h1>
+
+<div class="card">
+  <h2>Card one</h2>
+  <p>Change the spacing values and watch what moves.</p>
+</div>
+<div class="card">
+  <h2>Card two</h2>
+  <p>Compare this one against the first.</p>
+</div>
+
+<div class="container">
+  <div class="wide">This box overflows. Fix it with box-sizing.</div>
+</div>
+
+<p class="hard-to-read">This paragraph is difficult to read on purpose. The contrast is too low, the line height is cramped, and the line length runs far too long for comfortable reading, which forces your eye to travel a long way to find the start of the next line. Fix all three problems.</p>`,
+          css: `body {
+  font-family: system-ui, sans-serif;
+  background: #f8fafc;
+  padding: 24px;
+  color: #1e293b;
+}
+
+.card {
+  margin: 16px;
+  padding: 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+}
+
+.container {
+  width: 300px;
+  background: #fee2e2;
+  margin: 24px 0;
+}
+
+.wide {
+  width: 300px;
+  padding: 20px;
+  border: 4px solid #ef4444;
+  background: #fecaca;
+  /* Add box-sizing here */
+}
+
+.hard-to-read {
+  color: #cbd5e1;
+  line-height: 1.1;
+  font-size: 14px;
+}`,
+          js: `console.log("Open dev tools and hover an element to see its box model.");`,
+        },
+      },
+      practice: {
+      subtitle: "Practice: selectors & the box model",
+      intro: "The HTML is written for you. All the work here is in the CSS — write every rule yourself.",
+      drills: [
+        { text: "Use an element selector to make all <p> text 16px.", hint: "Just the tag name, no dot or hash." },
+        { text: "Use a class selector to give .card a white background.", hint: "Class selectors start with a dot." },
+        { text: "Use an ID selector to give #intro a coloured left border.", hint: "ID selectors start with a hash." },
+        { text: "Use a descendant selector to style only the <h2> inside .card.", hint: "Two selectors with a space between them." },
+        { text: "Give .card 20px of padding and 16px of margin.", hint: "Padding is inside the border, margin is outside." },
+        { text: "Add a 2px solid border to .card.", hint: "border: width style colour;" },
+        { text: "Set box-sizing: border-box on .box and watch its width change.", hint: "It makes width include padding and border." },
+        { text: "Set a max-width on the body so lines don't run too long.", hint: "Around 60-70 characters is comfortable." },
+        { text: "Set line-height to 1.6 on body text.", hint: "No units needed — it multiplies the font size." },
+        { text: "Fix the contrast on .faint so it's actually readable.", hint: "Aim for at least 4.5:1 against the background." },
+      ],
+      xp: 20,
+      files: {
+        html: `<h1>Styling drills</h1>
+
+<p id="intro">This paragraph has an ID.</p>
+
+<div class="card">
+  <h2>Card heading</h2>
+  <p>A paragraph inside the card.</p>
+</div>
+
+<div class="box">A box with padding and a border.</div>
+
+<p class="faint">This text needs better contrast.</p>`,
+        css: `/* Write every rule yourself.
+   Work down the drill list one at a time. */
+
+body {
+  font-family: system-ui, sans-serif;
+  padding: 24px;
+}
+
+.box {
+  width: 200px;
+  padding: 20px;
+  border: 4px solid #0ea5e9;
+  background: #e0f2fe;
+}
+
+.faint {
+  color: #e2e8f0;
+}`,
+        js: `// Not needed for these drills.`,
+      },
+    },
+    build: {
+        subtitle: "Build: style sprint",
+        brief: "Fully style your About Me page. No unstyled HTML left anywhere. Pick a colour palette and a font pairing you can defend in one sentence — not just \"it looked nice,\" but what it's doing for the page.",
+        requirements: [
+          "Write your HTML first: a heading, two paragraphs, and a list.",
+          "Give one part a class, like <div class=\"card\">.",
+          "Open style.css.",
+          "Add a rule: body { }",
+          "Inside it, add: font-family: system-ui, sans-serif;",
+          "Add: line-height: 1.6;   (this spaces out the lines)",
+          "Add: max-width: 600px;   (this stops lines getting too long)",
+          "Add: margin: 0 auto;   (this centres the page)",
+          "Make a new rule for your class: .card { }",
+          "Inside it, add: padding: 20px;   (space INSIDE the box)",
+          "Add: margin: 16px;   (space OUTSIDE the box)",
+          "Add: border: 1px solid #cbd5e1;",
+          "Add: box-sizing: border-box;   (keeps the width correct)",
+          "Make a rule: h1 { font-size: 32px; }",
+          "Make a rule: p { font-size: 16px; }",
+          "Pick one main colour. Use it on your h1.",
+          "Check your text is dark enough to read easily.",
+        ],
+        deploy: true,
+        xp: 30,
+        files: {
+          html: ``,
+          css: ``,
+          js: ``,
+        },
+      },
+    },
+
+    // ─────────────────────────────── 4
+    {
+      title: "Flexbox",
+      blurb: "Arranging things in a row or column without fighting the browser.",
+      xp: 65,
+      learn: {
+        subtitle: "Layout along one axis",
+        check: {
+          q: "You set justify-content but nothing moved. What should you check first?",
+          a: "Check your flex-direction. justify-content works along the main axis. If direction is column, the main axis runs down, not across.",
+        },
+        ref: [
+          { label: "Turn it on", body: "display: flex on the parent. The children become flex items." },
+          { label: "Two axes", body: "row means the main axis goes across. column means it goes down." },
+          { label: "Main axis", body: "justify-content moves items along the main axis." },
+          { label: "Cross axis", body: "align-items moves items along the other axis." },
+          { label: "Sharing space", body: "flex: 1 on each child makes them all the same width. gap adds space between them." },
+        ],
+        blocks: [
+          { type: "text", body: "By default, block elements stack vertically — one after another down the page. That's fine for an article and useless for a nav bar. Flexbox is how you take control of that arrangement." },
+          { type: "text", body: "Setting display: flex on a parent changes how its direct children are laid out. The parent becomes a flex container; the children become flex items. Every flexbox property goes on the parent, except a few that fine-tune individual children." },
+          { type: "heading", body: "The two axes" },
+          { type: "text", body: "This is the concept everything else depends on. A flex container has a main axis and a cross axis. By default the main axis runs horizontally (left to right) and the cross axis runs vertically. If you set flex-direction: column, they swap." },
+          { type: "code", body: "flex-direction: row  (default)\n  main axis  →→→→→→→\n  cross axis ↓\n\nflex-direction: column\n  main axis  ↓\n  cross axis →→→→→→→" },
+          { type: "tip", body: "Nearly all flexbox confusion comes from forgetting which axis you're on. justify-content always works along the main axis; align-items always works along the cross axis. When a property does nothing, check your flex-direction first." },
+          { type: "heading", body: "Container properties" },
+          { type: "reference", items: [
+            { code: "display: flex", what: "Turns this element into a flex container. Nothing else works without it." },
+            { code: "flex-direction", what: "row (default) or column. Decides which way the main axis points." },
+            { code: "justify-content", what: "Positions items along the MAIN axis.", note: "flex-start · center · flex-end · space-between · space-around · space-evenly" },
+            { code: "align-items", what: "Positions items along the CROSS axis.", note: "stretch (default) · flex-start · center · flex-end · baseline" },
+            { code: "gap", what: "Space between items. Much cleaner than putting margins on children and then fighting the extra one at the end." },
+            { code: "flex-wrap", what: "nowrap (default) squeezes items to fit; wrap lets them fall onto a new line." },
+          ]},
+          { type: "heading", body: "Item properties" },
+          { type: "reference", items: [
+            { code: "flex: 1", what: "Tells an item to grow and share leftover space equally with its siblings. Three items each at flex: 1 become three equal columns." },
+            { code: "flex-grow", what: "How greedily this item takes free space, relative to siblings. 2 takes twice as much as 1." },
+            { code: "flex-shrink", what: "How readily it gives up space when things get tight. Set to 0 to stop an item shrinking." },
+            { code: "margin-left: auto", what: "An old trick that still works beautifully: pushes this item and everything after it to the far end." },
+          ]},
+          { type: "heading", body: "The pattern you'll use most" },
+          { type: "code", body: "/* Logo left, links right — the classic nav bar */\n.nav {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}" },
+          { type: "mistake", body: "Putting flexbox properties on the child instead of the parent. display: flex goes on the container." },
+        ],
+        task: "Three exercises in the CSS. First, cycle the .row through every justify-content value and predict each before you run it. Second, make the nav bar put the logo on the left and links on the right. Third, make the three cards sit in an equal-width row.",
+        extra: { label: "Debugging challenge", xp: 15, text: "The .broken-nav wraps onto two lines when it shouldn't. Find out why and fix it." },
+        files: {
+          html: `<div class="row">
+  <div class="box">1</div>
+  <div class="box">2</div>
+  <div class="box">3</div>
+</div>
+
+<nav class="nav">
+  <span class="logo">My site</span>
+  <div class="links">
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<div class="cards">
+  <div class="card">One</div>
+  <div class="card">Two</div>
+  <div class="card">Three</div>
+</div>
+
+<nav class="broken-nav">
+  <span class="logo">Fix me</span>
+  <div class="links">
+    <a href="#">A longer link</a>
+    <a href="#">Another long one</a>
+    <a href="#">And a third</a>
+  </div>
+</nav>`,
+          css: `body {
+  font-family: system-ui, sans-serif;
+  padding: 24px;
+  margin: 0;
+}
+
+/* 1. Try each justify-content value */
+.row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 12px;
+  background: #f1f5f9;
+  padding: 16px;
+  border-radius: 8px;
+  min-height: 110px;
+}
+/* flex-start · center · flex-end · space-between · space-evenly */
+
+.box {
+  background: #0ea5e9;
+  color: white;
+  padding: 20px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+/* 2. Make this a row: logo left, links right */
+.nav {
+  margin-top: 24px;
+  padding: 16px;
+  background: #0f172a;
+  color: white;
+  border-radius: 8px;
+}
+.logo { font-weight: 700; }
+.links { display: flex; gap: 16px; }
+.links a { color: #7dd3fc; text-decoration: none; }
+
+/* 3. Make these three equal-width in a row */
+.cards {
+  margin-top: 24px;
+}
+.card {
+  background: #e0f2fe;
+  padding: 32px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Debugging challenge — why does this wrap? */
+.broken-nav {
+  display: flex;
+  flex-wrap: wrap;
+  width: 320px;
+  margin-top: 24px;
+  padding: 16px;
+  background: #1e293b;
+  color: white;
+  border-radius: 8px;
+}`,
+          js: `console.log("Check flex-direction first when a property seems to do nothing.");`,
+        },
+      },
+      practice: {
+      subtitle: "Practice: flexbox",
+      intro: "Each container below needs different flexbox settings. Work out which properties to use — check your flex-direction first when something doesn't behave.",
+      drills: [
+        { text: "Make .one a flex row with all three boxes centred horizontally.", hint: "justify-content works along the main axis." },
+        { text: "Make .two a flex row with boxes pushed to opposite ends.", hint: "space-between puts all the gap in the middle." },
+        { text: "Make .three centre its box both horizontally and vertically.", hint: "You need justify-content AND align-items." },
+        { text: "Make .four a vertical column with 12px gaps.", hint: "flex-direction: column swaps which axis is which." },
+        { text: "Make the three cards in .five equal width.", hint: "flex: 1 on each child." },
+        { text: "In .six, make the first card twice as wide as the others.", hint: "flex-grow: 2 versus 1." },
+        { text: "Build a nav bar in .seven: logo left, links right.", hint: "space-between, or margin-left: auto on the links." },
+        { text: "Make .eight wrap onto a new line when it runs out of room.", hint: "flex-wrap: wrap" },
+        { text: "Stop the logo in .nine from shrinking when space is tight.", hint: "flex-shrink: 0" },
+      ],
+      xp: 20,
+      files: {
+        html: `<div class="one"><b>1</b><b>2</b><b>3</b></div>
+<div class="two"><b>1</b><b>2</b></div>
+<div class="three"><b>centre me</b></div>
+<div class="four"><b>1</b><b>2</b><b>3</b></div>
+<div class="five"><b>1</b><b>2</b><b>3</b></div>
+<div class="six"><b>wide</b><b>2</b><b>3</b></div>
+<div class="seven"><b>Logo</b><span><b>A</b><b>B</b></span></div>
+<div class="eight"><b>one</b><b>two</b><b>three</b><b>four</b><b>five</b><b>six</b></div>
+<div class="nine"><b>A very long logo name</b><b>x</b></div>`,
+        css: /* eslint-disable */ `body { font-family: system-ui, sans-serif; padding: 16px; }
+
+div {
+  background: #f1f5f9;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  min-height: 70px;
+}
+
+b {
+  display: block;
+  background: #0ea5e9;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.nine, .eight { width: 260px; }
+
+/* Write your flexbox rules below. */
+
+.one {
+}
+
+.two {
+}
+
+.three {
+}
+
+.four {
+}
+
+.five {
+}
+
+.six {
+}
+
+.seven {
+}
+
+.eight {
+}
+
+.nine {
+}`,
+        js: `// Not needed for these drills.`,
+      },
+    },
+    build: {
+        subtitle: "Build: landing page",
+        brief: "Design and build a three-section landing page — a hero, a features row, and a footer — using Flexbox for every layout decision. The subject is yours: a club, a game, a fake product, a band.",
+        requirements: [
+          "Write the HTML first: <section class=\"hero\">, <section class=\"features\">, <footer class=\"footer\">.",
+          "Inside .features, add 3 boxes like <div class=\"feature\">One</div>",
+          "Open style.css.",
+          "Make a rule: .hero { }",
+          "Inside it, add: display: flex;",
+          "Add: flex-direction: column;   (stacks the items)",
+          "Add: justify-content: center;   (centres them)",
+          "Add: align-items: center;   (centres them the other way)",
+          "Add: padding: 64px 24px;   (makes the hero big)",
+          "Make a rule: .features { display: flex; }",
+          "Add: gap: 16px;   (space between the boxes)",
+          "Make a rule: .feature { flex: 1; }   (makes all 3 the same width)",
+          "Make a rule: .footer { display: flex; }",
+          "Add: justify-content: space-between;   (pushes items apart)",
+          "Add: flex-wrap: wrap; to .features so boxes drop down on small screens.",
+          "Click Run. Make the preview narrow. Check nothing is squashed.",
+        ],
+        deploy: true,
+        xp: 30,
+        files: {
+          html: ``,
+          css: ``,
+          js: ``,
+        },
+      },
+    },
+
+    // ─────────────────────────────── 5
+    {
+      title: "CSS grid",
+      blurb: "Two-dimensional layout, and knowing which tool to reach for.",
+      xp: 55,
+      learn: {
+        subtitle: "Rows and columns at once",
+        check: {
+          q: "What does 1fr mean?",
+          a: "One share of the space that is left over. 1fr 2fr means the second column gets twice as much as the first.",
+        },
+        ref: [
+          { label: "Turn it on", body: "display: grid on the parent." },
+          { label: "Columns", body: "grid-template-columns sets the columns. Each value is one column." },
+          { label: "fr unit", body: "fr is a share of the leftover space. repeat(3, 1fr) makes 3 equal columns." },
+          { label: "Named areas", body: "grid-template-areas lets you draw the layout. Then give each part a grid-area name." },
+          { label: "Which tool", body: "One direction, use Flexbox. Two directions at once, use Grid." },
+        ],
+        blocks: [
+          { type: "text", body: "Flexbox handles one direction at a time — a row, or a column. Grid handles both simultaneously. If you're laying out a page with a header, a sidebar, a content area, and a footer, Grid describes that in a few lines where Flexbox would need nested wrappers." },
+          { type: "text", body: "Like Flexbox, you turn a parent into a grid container and its direct children become grid items." },
+          { type: "heading", body: "Defining the tracks" },
+          { type: "reference", items: [
+            { code: "display: grid", what: "Makes this element a grid container." },
+            { code: "grid-template-columns", what: "Defines the columns. Each value is one column's width." },
+            { code: "grid-template-rows", what: "Same for rows. Often you can leave this out and let rows size themselves." },
+            { code: "gap", what: "Space between tracks, both directions. row-gap and column-gap set them separately." },
+          ]},
+          { type: "heading", body: "The fr unit" },
+          { type: "text", body: "fr means \"one share of the leftover space.\" It's what makes grids flexible without doing percentage arithmetic." },
+          { type: "code", body: "grid-template-columns: 1fr 1fr;      → two equal columns\ngrid-template-columns: 1fr 2fr;      → second is twice as wide\ngrid-template-columns: 200px 1fr;    → fixed sidebar, flexible content\ngrid-template-columns: repeat(3, 1fr); → three equal columns" },
+          { type: "tip", body: "repeat() saves typing and makes intent obvious. repeat(4, 1fr) is clearer than 1fr 1fr 1fr 1fr, especially at larger counts." },
+          { type: "heading", body: "Named areas" },
+          { type: "text", body: "grid-template-areas lets you draw the layout in your CSS as ASCII art. Each item gets a name, and the container arranges them into the shape you've drawn. It's unusually readable — you can see the layout by looking at the code." },
+          { type: "code", body: ".page {\n  display: grid;\n  grid-template-columns: 200px 1fr;\n  grid-template-areas:\n    \"head head\"\n    \"side main\"\n    \"foot foot\";\n}\n\n.head { grid-area: head; }\n.side { grid-area: side; }\n.main { grid-area: main; }\n.foot { grid-area: foot; }" },
+          { type: "heading", body: "Which one do I use?" },
+          { type: "reference", items: [
+            { code: "Flexbox", what: "One direction. A nav bar, a row of buttons, a stack of form fields, anything where items should flow and wrap naturally." },
+            { code: "Grid", what: "Two directions. Page layouts, image galleries, dashboards, anything where things need to line up across both rows and columns." },
+            { code: "Both together", what: "Extremely common. A Grid page layout, with Flexbox inside individual cells. They aren't rivals." },
+          ]},
+          { type: "mistake", body: "Mixing up rows and columns. grid-template-columns sets how many go ACROSS, not down." },
+        ],
+        task: "First, cycle .grid through the column values listed in the comments and watch how fr distributes space. Then rebuild the .page layout using grid-template-areas so it has a header across the top, a sidebar and main area in the middle, and a footer across the bottom.",
+        extra: { label: "Exit ticket", xp: 5, text: "Name one layout where Grid is clearly the better choice than Flexbox, and explain why in a sentence." },
+        files: {
+          html: `<h2>Track sizing</h2>
+<div class="grid">
+  <div class="cell">A</div>
+  <div class="cell">B</div>
+  <div class="cell">C</div>
+  <div class="cell">D</div>
+</div>
+
+<h2>Page layout</h2>
+<div class="page">
+  <header class="head">Header</header>
+  <aside class="side">Sidebar</aside>
+  <main class="main">Main content</main>
+  <footer class="foot">Footer</footer>
+</div>`,
+          css: `body {
+  font-family: system-ui, sans-serif;
+  padding: 24px;
+  margin: 0;
+}
+
+/* Try each of these in turn */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+/* 1fr 2fr · 200px 1fr · repeat(4, 1fr) */
+
+.cell {
+  background: #c7d2fe;
+  padding: 28px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* Rebuild this using grid-template-areas */
+.page {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.head, .side, .main, .foot {
+  padding: 24px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+.head { background: #fecaca; }
+.side { background: #fed7aa; }
+.main { background: #bbf7d0; }
+.foot { background: #bfdbfe; }`,
+          js: `console.log("grid-template-areas lets you draw the layout in code.");`,
+        },
+      },
+      practice: {
+      subtitle: "Practice: grid",
+      intro: "Six grid layouts to build. Pay attention to when fr is the right tool and when a fixed width is.",
+      drills: [
+        { text: "Make .one a grid with three equal columns.", hint: "repeat(3, 1fr)" },
+        { text: "Make .two a grid where the second column is twice the first.", hint: "1fr 2fr" },
+        { text: "Make .three a grid with a fixed 150px sidebar and flexible content.", hint: "150px 1fr" },
+        { text: "Give .four a 16px gap between all cells.", hint: "gap works in both directions at once." },
+        { text: "Make .five a 2x2 grid.", hint: "Two columns and two rows — or just two columns and let rows fill." },
+        { text: "Build the page layout in .six using grid-template-areas.", hint: "Draw it as strings: \"head head\" then \"side main\"." },
+        { text: "Write a comment saying which of these would be easier with Flexbox.", hint: "One-directional layouts usually are." },
+      ],
+      xp: 20,
+      files: {
+        html: `<div class="one"><b>1</b><b>2</b><b>3</b></div>
+<div class="two"><b>1</b><b>2</b></div>
+<div class="three"><b>side</b><b>main</b></div>
+<div class="four"><b>1</b><b>2</b><b>3</b><b>4</b></div>
+<div class="five"><b>1</b><b>2</b><b>3</b><b>4</b></div>
+
+<div class="six">
+  <b class="head">head</b>
+  <b class="side">side</b>
+  <b class="main">main</b>
+  <b class="foot">foot</b>
+</div>`,
+        css: `body { font-family: system-ui, sans-serif; padding: 16px; }
+
+div {
+  background: #f1f5f9;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+b {
+  display: block;
+  background: #818cf8;
+  color: white;
+  padding: 16px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 700;
+}
+
+/* Write your grid rules below. */
+
+.one {
+}
+
+.two {
+}
+
+.three {
+}
+
+.four {
+}
+
+.five {
+}
+
+.six {
+}`,
+        js: `// Not needed for these drills.`,
+      },
+    },
+    build: {
+        subtitle: "Build: rebuild with Grid",
+        brief: "Rebuild your Lesson 4 landing page using Grid instead of Flexbox. Then answer honestly in a comment at the top of your CSS: which tool was better for this particular layout, and why?",
+        requirements: [
+          "Write the HTML: one <div class=\"page\"> around everything.",
+          "Inside it, add <header class=\"head\">, <section class=\"features\">, <footer class=\"foot\">.",
+          "Open style.css.",
+          "Make a rule: .page { }",
+          "Inside it, add: display: grid;",
+          "Add: gap: 16px;   (space between all cells)",
+          "Make a rule: .features { display: grid; }",
+          "Add: grid-template-columns: repeat(3, 1fr);   (makes 3 equal columns)",
+          "Click Run. You should see 3 columns.",
+          "Now try: grid-template-columns: 1fr 2fr;   (the second is twice as wide)",
+          "Now try: grid-template-columns: 200px 1fr;   (the first stays fixed)",
+          "Pick the one you like best and keep it.",
+          "In .page, add: grid-template-areas: \"head\" \"features\" \"foot\";",
+          "Give each part its name: .head { grid-area: head; }",
+          "Do the same for .features and .foot.",
+          "At the top of style.css write: /* Grid or Flexbox was easier here because... */",
+        ],
+        deploy: true,
+        xp: 30,
+        files: {
+          html: ``,
+          css: ``,
+          js: ``,
+        },
+      },
+    },
+
+    // ─────────────────────────────── 6
+    {
+      title: "Responsive design",
+      blurb: "One page that works on a phone, a tablet, and a laptop.",
+      xp: 65,
+      learn: {
+        subtitle: "Designing for unknown screens",
+        check: {
+          q: "Your page looks fine on a laptop but tiny on a phone. What is probably missing?",
+          a: "The viewport meta tag in your head. Without it, phones pretend to be a laptop and shrink the whole page.",
+        },
+        ref: [
+          { label: "First step", body: "Add the viewport meta tag to your head. Nothing responsive works without it." },
+          { label: "Media query", body: "@media (min-width: 700px) { } holds styles that only apply at 700px and wider." },
+          { label: "Mobile first", body: "Write the phone layout as your normal styles. Then add wider screens with min-width." },
+          { label: "Images", body: "img { max-width: 100%; } stops pictures overflowing." },
+          { label: "Good habit", body: "Drag the preview narrow after every change. If you can scroll sideways, something is too wide." },
+        ],
+        blocks: [
+          { type: "text", body: "You have no idea what size screen someone will use. Phone, tablet, laptop, a TV, a phone rotated sideways. Responsive design means building one page that reshapes itself rather than three separate sites." },
+          { type: "heading", body: "The viewport meta tag" },
+          { type: "text", body: "Without this line in your <head>, phones pretend to be desktop-width and shrink your whole page to fit — so your careful mobile layout never appears. It's one line, and forgetting it is a rite of passage." },
+          { type: "code", body: '<meta name="viewport" content="width=device-width, initial-scale=1">' },
+          { type: "heading", body: "Media queries" },
+          { type: "text", body: "A media query wraps a block of CSS in a condition. The styles inside only apply when the condition is true." },
+          { type: "code", body: "/* Applies only at 600px wide and below */\n@media (max-width: 600px) {\n  .cards { flex-direction: column; }\n}\n\n/* Applies only at 600px and above */\n@media (min-width: 600px) {\n  .cards { flex-direction: row; }\n}" },
+          { type: "tip", body: "Choose breakpoints by resizing your own page until it looks wrong, then putting a breakpoint there. Don't copy a list of device widths — those go stale, and your layout breaks where YOUR content breaks, not where someone's phone happens to be." },
+          { type: "heading", body: "Mobile-first" },
+          { type: "text", body: "Mobile-first means your base CSS describes the phone layout, and min-width queries ADD complexity as the screen grows. The alternative — desktop-first with max-width queries — means constantly undoing things. Adding is easier to reason about than removing." },
+          { type: "code", body: "/* Base: phone. Simple, single column. */\n.cards { display: flex; flex-direction: column; gap: 16px; }\n\n/* Bigger screens: add the row */\n@media (min-width: 700px) {\n  .cards { flex-direction: row; }\n}" },
+          { type: "heading", body: "Units that flex" },
+          { type: "reference", items: [
+            { code: "%", what: "Relative to the parent's size. Good for widths." },
+            { code: "rem", what: "Relative to the root font size (usually 16px). The best default for spacing and type, because it respects a user's browser font settings." },
+            { code: "vw / vh", what: "1% of the viewport width or height. Useful for full-screen sections; risky for text, which can become comically large." },
+            { code: "max-width: 100%", what: "On images, stops them overflowing their container. Nearly always what you want." },
+            { code: "min() / max() / clamp()", what: "Pick between values. clamp(1rem, 4vw, 2rem) scales with the screen but never gets too small or too large." },
+          ]},
+          { type: "mistake", body: "Leaving out the viewport meta tag, then wondering why the phone layout never appears." },
+        ],
+        task: "Drag the preview pane narrow and wide to see the current breakpoint working. Then add a tablet breakpoint to the nav. Finally, rewrite the .cards block mobile-first: strip the desktop assumptions out of the base rule and add them back in a min-width query.",
+        extra: { label: "Debugging challenge", xp: 15, text: "The .gallery images overflow their container on narrow screens. Fix it with one line." },
+        files: {
+          html: `<nav class="nav">
+  <span class="logo">My site</span>
+  <div class="links">
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+</nav>
+
+<div class="cards">
+  <div class="card">One</div>
+  <div class="card">Two</div>
+  <div class="card">Three</div>
+</div>
+
+<div class="gallery">
+  <img src="https://placehold.co/800x300/0ea5e9/white?text=Too+wide" alt="Placeholder">
+</div>
+
+<p class="hint">Drag the edge of this preview to resize.</p>`,
+          css: `body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 16px;
+  line-height: 1.6;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #0f172a;
+  color: white;
+  border-radius: 8px;
+}
+.logo { font-weight: 700; }
+.links { display: flex; gap: 16px; }
+.links a { color: #7dd3fc; text-decoration: none; }
+
+@media (max-width: 500px) {
+  .nav { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
+
+/* Add a tablet breakpoint for the nav here */
+
+
+/* Rewrite this mobile-first */
+.cards {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+.card {
+  flex: 1;
+  background: #e0e7ff;
+  padding: 32px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+@media (max-width: 600px) {
+  .cards { flex-direction: column; }
+}
+
+/* Debugging challenge: the image overflows */
+.gallery {
+  margin-top: 16px;
+  border: 2px dashed #ef4444;
+}
+
+.hint { color: #64748b; font-size: 14px; }`,
+          js: `console.log("Resize the preview and watch the breakpoints fire.");`,
+        },
+      },
+      practice: {
+      subtitle: "Practice: responsive",
+      intro: "Drag the preview edge to test as you go. Every drill should be checked at more than one width.",
+      drills: [
+        { text: "Make .cards stack vertically below 600px.", hint: "@media (max-width: 600px) with flex-direction: column." },
+        { text: "Rewrite that same rule mobile-first instead.", hint: "Base = column, then min-width query switches to row." },
+        { text: "Add a tablet breakpoint where .cards show two across.", hint: "You may find grid easier than flexbox here." },
+        { text: "Stop .photo overflowing on narrow screens.", hint: "One property on the img." },
+        { text: "Make the nav stack vertically on phones.", hint: "Change flex-direction inside a media query." },
+        { text: "Make the h1 scale with the screen using clamp().", hint: "clamp(min, preferred, max) — try 1.5rem, 5vw, 3rem." },
+        { text: "Give body horizontal padding in rem, not px.", hint: "rem respects the user's browser font settings." },
+        { text: "Check the whole page at 375px wide with no horizontal scrolling.", hint: "Horizontal scroll usually means something has a fixed width." },
+      ],
+      xp: 20,
+      files: {
+        html: `<nav class="nav">
+  <span class="logo">My site</span>
+  <div class="links"><a href="#">Home</a><a href="#">About</a></div>
+</nav>
+
+<h1>Responsive drills</h1>
+
+<div class="cards">
+  <div class="card">One</div>
+  <div class="card">Two</div>
+  <div class="card">Three</div>
+</div>
+
+<img class="photo" src="https://placehold.co/900x300/0ea5e9/white?text=Wide+image" alt="Placeholder">
+
+<p>Drag the preview edge to test each change.</p>`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  padding: 16px;
+  line-height: 1.6;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: #0f172a;
+  color: white;
+  border-radius: 8px;
+}
+.links { display: flex; gap: 12px; }
+.links a { color: #7dd3fc; text-decoration: none; }
+
+.cards { display: flex; gap: 12px; }
+.card {
+  flex: 1;
+  background: #e0e7ff;
+  padding: 24px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Write your media queries below. */
+`,
+        js: `// Not needed for these drills.`,
+      },
+    },
+    build: {
+        subtitle: "Build: make it responsive",
+        brief: "Take your full portfolio — About Me plus your landing page — and make it work properly on phone, tablet, and desktop. Choose your own breakpoints based on where your layout actually breaks when you resize it.",
+        requirements: [
+          "In <head>, add: <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
+          "Open style.css.",
+          "Write your styles for a PHONE first. One column. Nothing side by side.",
+          "Add a rule: img { max-width: 100%; }   (stops pictures overflowing)",
+          "Stack your cards: .cards { display: flex; flex-direction: column; }",
+          "Click Run. Make the preview narrow. It should look good.",
+          "Now add: @media (min-width: 700px) { }",
+          "Inside those curly braces, add: .cards { flex-direction: row; }",
+          "Click Run. Make the preview wide. The cards should go side by side.",
+          "Add a second one: @media (min-width: 480px) { }",
+          "Inside it, change something small, like padding or font-size.",
+          "Stack your nav on phones: .nav { flex-direction: column; }",
+          "Inside your 700px block, add: .nav { flex-direction: row; }",
+          "Make your h1 grow with the screen: font-size: clamp(1.5rem, 5vw, 3rem);",
+          "Make the preview very narrow. You must NOT be able to scroll sideways.",
+        ],
+        deploy: true,
+        xp: 30,
+        files: {
+          html: ``,
+          css: ``,
+          js: ``,
+        },
+      },
+    },
+
+    // ─────────────────────────────── 7
+    {
+      title: "Visual design principles",
+      blurb: "Hierarchy, whitespace, and making choices on purpose.",
+      xp: 55,
+      learn: {
+        subtitle: "Why some pages just look better",
+        check: {
+          q: "Everything on your page looks equally important. Which three tools fix that?",
+          a: "Size, weight, and space. Make the important thing bigger, bolder, and give it more room around it. You do not need colour.",
+        },
+        ref: [
+          { label: "Hierarchy", body: "Size, weight, colour, and space decide what the eye reads first." },
+          { label: "Whitespace", body: "Empty space is not wasted. It makes the rest readable." },
+          { label: "Proximity", body: "Things close together look related. Push unrelated things apart." },
+          { label: "Colour", body: "One primary. One accent, used once or twice. Grey for everything else." },
+          { label: "Good habit", body: "Build it in grey first. Add colour only when the hierarchy already works." },
+        ],
+        blocks: [
+          { type: "text", body: "At this point you can build any layout you can describe. This lesson is about deciding what to build — the difference between a page that works and a page that looks like someone meant it." },
+          { type: "heading", body: "Visual hierarchy" },
+          { type: "text", body: "Hierarchy is the order your eye travels. On a well-designed page you know instantly what to read first, second, and third — without being told. You create it with size, weight, colour, and space, in roughly that order of power." },
+          { type: "reference", items: [
+            { code: "Size", what: "Bigger reads as more important. The strongest and bluntest tool you have." },
+            { code: "Weight", what: "Bolder pulls the eye. Useful when you want emphasis without taking up more room." },
+            { code: "Colour", what: "A single accent colour draws attention hard — which is why it stops working the moment you use it five times." },
+            { code: "Space", what: "Isolation creates importance. Something with room around it reads as significant." },
+          ]},
+          { type: "tip", body: "If everything is emphasised, nothing is. Three levels of hierarchy is usually plenty: a headline, a supporting line, and body text." },
+          { type: "heading", body: "Whitespace" },
+          { type: "text", body: "Whitespace — the empty area between things — isn't wasted space. It's what makes the non-empty parts legible. Beginner pages are almost always too cramped, because empty space feels like something's missing. It isn't." },
+          { type: "text", body: "A useful habit: group related things close together and push unrelated things apart. Proximity implies relationship. A heading sitting right above its paragraph clearly belongs to it; the same heading floating equidistant between two paragraphs belongs to neither." },
+          { type: "heading", body: "Alignment" },
+          { type: "text", body: "Every element should line up with something else. Invisible vertical lines running down a page are what make it feel organised, even to people who could never explain why. Pick a small number of alignment points and stick to them." },
+          { type: "heading", body: "Colour, used sparingly" },
+          { type: "reference", items: [
+            { code: "One primary", what: "Your main brand or mood colour. Used for the most important element on a screen." },
+            { code: "One accent", what: "For calls to action and highlights. Should contrast the primary." },
+            { code: "Neutrals", what: "Greys and off-whites for backgrounds, borders, and body text. Most of your page should be neutral." },
+            { code: "Semantic colours", what: "Red for errors, green for success. Don't reuse these decoratively — people read meaning into them." },
+          ]},
+          { type: "tip", body: "A reliable shortcut: start greyscale. Build the whole page in black, white, and grey, get the hierarchy and spacing right, and only then add colour. If it works in greyscale, colour will improve it. If it doesn't, colour was hiding the problem." },
+          { type: "mistake", body: "Using five different spacing values. Pick four numbers and reuse them everywhere." },
+        ],
+        task: "The starter page has no hierarchy — everything is the same size and weight. Fix it using only font-size, font-weight, and spacing. No new colours allowed. Then fix the second block, where the spacing groups the wrong things together.",
+        extra: { label: "Critique", xp: 10, text: "Pick two real websites and describe each one's hierarchy in a sentence: what does your eye hit first, second, third, and how did they do it?" },
+        files: {
+          html: `<div class="flat">
+  <p>Student builder</p>
+  <p>Alex makes tiny web things</p>
+  <p>Learning to turn ideas into useful pages, one experiment at a time.</p>
+  <p>Get in touch</p>
+</div>
+
+<div class="grouping">
+  <h3>Section one</h3>
+  <p>This paragraph belongs to the heading above it.</p>
+  <h3>Section two</h3>
+  <p>So does this one. But the spacing suggests otherwise — fix it.</p>
+</div>`,
+          css: `body {
+  font-family: system-ui, sans-serif;
+  padding: 24px;
+  color: #0f172a;
+  max-width: 480px;
+}
+
+/* Everything looks identical. Build a hierarchy using
+   ONLY font-size, font-weight, and margin. */
+.flat p {
+  font-size: 16px;
+  font-weight: 400;
+  margin: 8px 0;
+}
+
+/* The spacing here groups the wrong things together.
+   Headings should sit close to their own paragraph. */
+.grouping {
+  margin-top: 48px;
+}
+.grouping h3 {
+  margin: 8px 0 24px 0;
+}
+.grouping p {
+  margin: 0 0 8px 0;
+}`,
+          js: `console.log("No new colours. Size, weight, and space only.");`,
+        },
+      },
+      practice: {
+      subtitle: "Practice: hierarchy & spacing",
+      intro: "No new colours in any of these drills. Everything is size, weight, and space — the tools that matter most.",
+      drills: [
+        { text: "Give the four lines in .flat three clear levels of hierarchy.", hint: "Eyebrow smallest, headline biggest, body in between." },
+        { text: "Make the eyebrow text small, uppercase, and letter-spaced.", hint: "text-transform and letter-spacing." },
+        { text: "Fix .grouping so each heading sits closer to its own paragraph.", hint: "Reduce margin-bottom on the heading, increase margin-top." },
+        { text: "Set a consistent spacing scale and use only those values.", hint: "Pick 8/16/24/32 and stick to them everywhere." },
+        { text: "Give the page a max-width so lines stop running too long.", hint: "Around 60-70 characters." },
+        { text: "Align every element to the same left edge.", hint: "Check for stray padding or margin on individual items." },
+        { text: "Make the .cta visually the most prominent thing on the page.", hint: "Size, weight, and surrounding space — no colour." },
+        { text: "Convert the whole page to greyscale and check the hierarchy still reads.", hint: "If it stops working, colour was doing the hierarchy's job." },
+      ],
+      xp: 20,
+      files: {
+        html: `<div class="flat">
+  <p class="eyebrow">Student builder</p>
+  <p class="headline">Alex makes tiny web things</p>
+  <p class="body">Learning to turn ideas into useful pages, one experiment at a time, and writing about what breaks along the way.</p>
+  <p class="cta">Get in touch</p>
+</div>
+
+<div class="grouping">
+  <h3>Section one</h3>
+  <p>This paragraph belongs to the heading above it.</p>
+  <h3>Section two</h3>
+  <p>So does this one.</p>
+</div>`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  padding: 24px;
+  color: #0f172a;
+}
+
+/* Everything is identical. Build the hierarchy using
+   ONLY font-size, font-weight, and spacing. */
+.flat p {
+  font-size: 16px;
+  font-weight: 400;
+  margin: 8px 0;
+}
+
+/* The spacing groups the wrong things together. */
+.grouping { margin-top: 48px; }
+.grouping h3 { margin: 8px 0 24px 0; }
+.grouping p { margin: 0 0 8px 0; }`,
+        js: `// Not needed for these drills.`,
+      },
+    },
+    build: {
+        subtitle: "Build: redesign your portfolio",
+        brief: "Redesign your portfolio with an intentional visual identity. Sketch it first — on paper or in a design tool — then build it. Every choice should trace back to a decision you made, not a default you left alone.",
+        requirements: [
+          "Draw your layout on paper first. Just boxes with labels.",
+          "Open style.css.",
+          "At the top, add: :root { }",
+          "Inside it, add: --primary: #0f172a;",
+          "Add: --accent: #0ea5e9;",
+          "Add: --muted: #64748b;",
+          "Build the whole page in grey first. No colour yet.",
+          "Make your h1 big: font-size: 32px; font-weight: 700;",
+          "Make your intro line medium: font-size: 18px;",
+          "Make your body text normal: font-size: 16px;",
+          "You now have 3 sizes. That is your hierarchy.",
+          "Choose 4 spacing numbers: 8px, 16px, 24px, 32px.",
+          "Use ONLY those 4 numbers for every margin and padding.",
+          "Put each heading close to its own paragraph. Push other sections further away.",
+          "Now add colour. Use var(--primary) for headings.",
+          "Use var(--accent) only once or twice. Not everywhere.",
+          "Use var(--muted) for less important text.",
+        ],
+        deploy: true,
+        xp: 30,
+        files: {
+          html: ``,
+          css: ``,
+          js: ``,
+        },
+      },
+    },
+
+    // ─────────────────────────────── 8
+    {
+      title: "Capstone: plan & build",
+      blurb: "Plan your portfolio properly, then build the bulk of it.",
+      xp: 60,
+      learn: {
+        subtitle: "Planning before building",
+        check: {
+          q: "Why write real content instead of placeholder text?",
+          a: "Placeholder text hides layout problems. Real headings are longer or shorter than you expect, and that is when things break.",
+        },
+        ref: [
+          { label: "Plan first", body: "Decide your pages, content, and colours before you open the editor." },
+          { label: "Wireframe", body: "Draw boxes with labels. No colour, no styling. Moving a box on paper is free." },
+          { label: "Page parts", body: "header, then main with your sections, then footer." },
+          { label: "Rubric", body: "Structure, responsiveness, design choices, clean code, and a short reflection." },
+          { label: "Good habit", body: "Sketch the phone layout first. It forces you to choose what matters." },
+        ],
+        blocks: [
+          { type: "text", body: "A capstone without a plan turns into three hours of choosing fonts. The work here is deciding what you're making before you open an editor — and the plan is worth XP precisely because skipping it is so tempting." },
+          { type: "heading", body: "What your plan needs" },
+          { type: "reference", items: [
+            { code: "Pages", what: "Which pages exist and what lives on each. Home, About, Projects, Contact is a sensible default." },
+            { code: "Content", what: "Actual words and images, at least roughly. \"Lorem ipsum\" hides layout problems until it's too late to fix them." },
+            { code: "Visual identity", what: "Your palette and font pairing, decided up front. One primary, one accent, two fonts maximum." },
+            { code: "Wireframe", what: "A rough sketch of each page's layout. Boxes and labels — this is not meant to be pretty." },
+          ]},
+          { type: "heading", body: "Sketching a wireframe" },
+          { type: "text", body: "A wireframe is a drawing of where things go, with no styling at all. Rectangles for images, lines for text, a box labelled \"nav.\" The point is to make layout decisions cheaply — moving a box on paper takes two seconds, moving a section in CSS takes twenty minutes." },
+          { type: "tip", body: "Sketch the phone layout first. It forces you to decide what actually matters, because there's only room for the essentials. Widening a good mobile layout is much easier than cramming a desktop one down." },
+          { type: "heading", body: "How you'll be assessed" },
+          { type: "reference", items: [
+            { code: "Structure & semantics", what: "Correct, meaningful HTML. Landmarks present, headings in order, labels connected." },
+            { code: "Responsiveness", what: "Works at phone, tablet, and desktop widths without horizontal scrolling or broken layouts." },
+            { code: "Design intentionality", what: "Choices you can explain. A consistent palette, spacing scale, and clear hierarchy." },
+            { code: "Code cleanliness", what: "Readable CSS, sensible class names, no huge blocks of dead commented-out code." },
+            { code: "Reflection", what: "A short write-up: what was hard, what you'd change, what you'd do differently next time." },
+          ]},
+          { type: "mistake", body: "Filling the page with placeholder text. Real content is the only way to find real layout problems." },
+        ],
+        task: "Produce your plan: a wireframe for each page, your palette and fonts, and a paragraph describing what the site is. Get it signed off, then start building the structure in the sandbox below.",
+        extra: { label: "Peer review", xp: 10, text: "Swap plans with a classmate and give three specific, actionable notes on theirs." },
+        files: {
+          html: `<!-- Start building your portfolio structure here.
+     Semantic tags, real content, layout first. -->
+
+<header>
+  <h1>Your name</h1>
+  <nav>
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section id="about">
+    <h2>About</h2>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2026</p>
+</footer>`,
+          css: `:root {
+  /* Your palette, decided in planning */
+  --primary: #0f172a;
+  --accent: #0ea5e9;
+  --muted: #64748b;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  line-height: 1.6;
+}`,
+          js: `// Optional.`,
+        },
+      },
+      practice: {
+      subtitle: "Practice: wireframe in code",
+      intro: "Before building your real portfolio, block out the structure with grey boxes. No content, no colour — just layout. This is a wireframe you can resize.",
+      drills: [
+        { text: "Block out a header with a title area and a nav area.", hint: "Two boxes in a row." },
+        { text: "Block out a hero section below it.", hint: "One wide box, taller than the others." },
+        { text: "Block out a projects area with three equal cards.", hint: "Grid or flexbox, three columns." },
+        { text: "Block out an about section with text and an image area side by side.", hint: "Two columns, one wider than the other." },
+        { text: "Block out a contact area with a form shape.", hint: "Stacked rectangles for fields." },
+        { text: "Block out a footer.", hint: "Full width, short." },
+        { text: "Make the whole wireframe stack into one column on narrow screens.", hint: "One media query should handle most of it." },
+        { text: "Label each box with what goes in it.", hint: "Plain text inside each box is enough." },
+      ],
+      xp: 20,
+      files: {
+        html: `<!-- Block out your portfolio layout with labelled boxes.
+     No real content yet — this is a wireframe. -->
+
+
+`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 16px;
+}
+
+/* Use this class on every wireframe box */
+.box {
+  background: #e2e8f0;
+  border: 2px dashed #94a3b8;
+  padding: 24px;
+  border-radius: 6px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}`,
+        js: `// Not needed for this drill.`,
+      },
+    },
+    build: {
+        subtitle: "Build: portfolio structure",
+        brief: "Build out the full structure and content of your portfolio: all four sections, real content, semantic HTML throughout. Styling can stay rough — this part is about getting everything in place.",
+        requirements: [
+          "Start a new file with the full skeleton: <!DOCTYPE html>, <html>, <head>, <body>.",
+          "In <head>, add a <title> and the viewport meta tag.",
+          "Add <header> with your <h1> and a <nav>.",
+          "In the nav, add 3 links: About, Projects, Contact.",
+          "Add <main> and </main>.",
+          "Inside main, add <section id=\"about\"> with <h2>About</h2>.",
+          "Write 2 real paragraphs about you. Do not use fake text.",
+          "Add <section id=\"projects\"> with <h2>Projects</h2>.",
+          "Add your first project: an <h3> title and a <p> description.",
+          "Add a second project the same way.",
+          "Add <section id=\"contact\"> with <h2>Contact</h2>.",
+          "Build a form with 3 inputs. Every input needs its own <label>.",
+          "Add <footer> with a copyright line.",
+          "Check: only ONE <h1> on the whole page.",
+          "Check: every <img> has alt text.",
+          "Click each nav link. It should jump to the right section.",
+        ],
+        deploy: false,
+        xp: 25,
+        files: {
+          html: ``,
+          css: ``,
+          js: ``,
+        },
+      },
+    },
+
+    // ─────────────────────────────── 9
+    {
+      title: "Capstone: polish & ship",
+      blurb: "Accessibility pass, final polish, and getting it live.",
+      xp: 130,
+      learn: {
+        subtitle: "Finishing properly",
+        check: {
+          q: "You removed the focus outline because it looked ugly. What did you break?",
+          a: "Keyboard navigation. People who cannot use a mouse rely on that outline to see where they are. Replace it with your own style, never delete it.",
+        },
+        ref: [
+          { label: "Images", body: "Every img needs alt. Decorative pictures use alt=\"\" — empty, but still there." },
+          { label: "Headings", body: "One h1 per page. Go h1, h2, h3 in order. Never skip a level." },
+          { label: "Labels", body: "Every input needs a label. A placeholder is not a label — it disappears." },
+          { label: "Keyboard", body: "Press Tab through the page. You must reach everything and see where you are." },
+          { label: "Ship it", body: "Done means live. Put it on GitHub Pages and open it on a real phone." },
+        ],
+        blocks: [
+          { type: "text", body: "There's a real difference between a site that's built and a site that's finished. Finishing is an accessibility pass, a responsiveness check, and actually deploying it — and it takes less time than people expect." },
+          { type: "heading", body: "The accessibility checklist" },
+          { type: "reference", items: [
+            { code: "Alt text", what: "Every <img> has alt describing what it shows. Decorative images get alt=\"\" — empty, but present." },
+            { code: "Heading order", what: "One <h1>, then <h2>s, then <h3>s. Never skip a level to get a particular size." },
+            { code: "Labels", what: "Every form input has a connected <label> with a matching for and id." },
+            { code: "Contrast", what: "Text and background differ by at least 4.5:1. Browser dev tools will check this for you." },
+            { code: "Keyboard", what: "Tab through the whole page. Can you reach every link and button? Can you see where you are?" },
+            { code: "Focus visible", what: "Never remove focus outlines without replacing them. Keyboard users rely on them entirely." },
+          ]},
+          { type: "heading", body: "Responsiveness check" },
+          { type: "text", body: "Open dev tools, switch to the device toolbar, and walk through phone, tablet, and desktop widths. You're looking for horizontal scrolling, overflowing images, text that runs edge to edge, and tap targets too small to hit with a thumb." },
+          { type: "heading", body: "Deploying" },
+          { type: "text", body: "Done means live. A site on your laptop isn't finished; a site at a URL you can send someone is. GitHub Pages is free and takes a few minutes: push your files to a repository, enable Pages in the settings, and your site gets a public address." },
+          { type: "tip", body: "Deploy earlier than you think you should — ideally well before the deadline. Deployment always surfaces something: a broken image path, a file named Index.html instead of index.html, a stylesheet link that worked locally and doesn't now." },
+          { type: "heading", body: "Presenting your work" },
+          { type: "text", body: "You'll give a two-minute walkthrough. Don't narrate every feature — pick one decision you made and explain why. \"I chose this layout because...\" is far more interesting than a tour, and explaining a decision out loud is how you find out whether you actually made one." },
+          { type: "mistake", body: "Deleting a focus outline because it looked ugly. Restyle it instead — never remove it." },
+        ],
+        task: "Run the full accessibility checklist against your site and fix everything it surfaces. Then check it at three widths. Use the sandbox to test any fixes before applying them to your real files.",
+        extra: { label: "Reflection", xp: 20, text: "Write a short reflection: what was hardest, what you'd change, and what you'd do differently on the next build." },
+        files: {
+          html: `<!-- This page has SIX accessibility problems.
+     Find and fix them all, then apply the same
+     checks to your own portfolio. -->
+
+<div class="header">
+  <h3>My portfolio</h3>
+</div>
+
+<h1>Welcome</h1>
+
+<img src="https://placehold.co/400x200/0ea5e9/white?text=Photo">
+
+<p class="faint">This text is hard to read.</p>
+
+<form>
+  <input type="email" placeholder="Email">
+  <button style="outline: none">Subscribe</button>
+</form>
+
+<a href="#" class="no-focus">A link you can't see when tabbing</a>`,
+          css: `body {
+  font-family: system-ui, sans-serif;
+  padding: 24px;
+  line-height: 1.6;
+}
+
+.faint {
+  color: #d1d5db;
+}
+
+.no-focus:focus {
+  outline: none;
+}
+
+form {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+input, button {
+  padding: 8px;
+  font: inherit;
+}`,
+          js: `console.log("Tab through this page. What can't you see?");`,
+        },
+      },
+      practice: {
+      subtitle: "Practice: accessibility audit",
+      intro: "This page has ten accessibility problems. Find and fix every one, then run the same checks against your own portfolio.",
+      drills: [
+        { text: "Add alt text to the image that's missing it.", hint: "Describe what it shows, don't start with \"image of\"." },
+        { text: "Give the decorative divider an empty alt attribute.", hint: "alt=\"\" — present but empty tells screen readers to skip it." },
+        { text: "Fix the heading order — it skips from h1 to h4.", hint: "Never skip levels to get a size. Use CSS for size." },
+        { text: "There are two <h1>s. Fix it.", hint: "One per page." },
+        { text: "Connect the label to the email input.", hint: "for must match id." },
+        { text: "Replace the placeholder-only input with a real label.", hint: "Placeholders vanish when you type — they aren't labels." },
+        { text: "Fix the contrast on .faint text.", hint: "4.5:1 minimum against the background." },
+        { text: "Restore a visible focus outline on the links.", hint: "Never remove it without replacing it." },
+        { text: "Make the <div> that acts as a button an actual <button>.", hint: "A div can't be reached by keyboard." },
+        { text: "Tab through the whole page and confirm you can reach everything.", hint: "Click the preview first, then press Tab repeatedly." },
+      ],
+      xp: 20,
+      files: {
+        html: `<h1>My portfolio</h1>
+
+<img src="https://placehold.co/400x150/0ea5e9/white?text=Photo">
+
+<h4>Projects</h4>
+<p>This heading skipped from h1 to h4.</p>
+
+<img src="https://placehold.co/400x8/cbd5e1/cbd5e1?text=+">
+
+<h1>Contact</h1>
+
+<form>
+  <label>Email address</label>
+  <input id="email" type="email">
+
+  <input type="text" placeholder="Your name">
+
+  <div class="fake-button">Submit</div>
+</form>
+
+<p class="faint">Low contrast text that's hard to read.</p>
+
+<a href="#" class="link">A link</a>
+<a href="#" class="link">Another link</a>`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  padding: 24px;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+img { max-width: 100%; }
+
+.faint { color: #e2e8f0; }
+
+.link:focus { outline: none; }
+
+.fake-button {
+  display: inline-block;
+  background: #0f172a;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+form { display: flex; flex-direction: column; gap: 8px; max-width: 320px; margin: 16px 0; }
+input { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font: inherit; }`,
+        js: `// Click the preview, then press Tab repeatedly.`,
+      },
+    },
+    build: {
+        subtitle: "Build: ship your portfolio",
+        brief: "Final build. Polish your portfolio, fix everything the accessibility pass surfaced, make sure it holds up at every width — then deploy it to a live, shareable URL.",
+        requirements: [
+          "Look at every <img> on your page.",
+          "Add alt text to any image that is missing it.",
+          "If a picture is only decoration, use alt=\"\" (empty, but still there).",
+          "Check your headings go h1, then h2, then h3. Never skip one.",
+          "Check there is only ONE <h1>.",
+          "Look at every <label>. Its for must match an input id.",
+          "Fix any input that has only a placeholder and no label.",
+          "Check your text colour is dark enough against the background.",
+          "Click a link, then press Tab. You should SEE where you are.",
+          "If you cannot see it, delete any outline: none; from your CSS.",
+          "Find any <div> that people click. Change it to <button>.",
+          "Press Tab through the whole page. You must reach every link and button.",
+          "Make the preview 375px wide. You must NOT be able to scroll sideways.",
+          "Make it tablet width. Check it still looks right.",
+          "Make it full width. Check your lines are not too long.",
+          "Put your files on GitHub and turn on GitHub Pages.",
+          "Open your live link on a real phone.",
+          "Write 3 sentences: what was hardest, and what you would change.",
+        ],
+        deploy: true,
+        xp: 100,
+        files: {
+          html: ``,
+          css: ``,
+          js: ``,
+        },
+      },
+    },
+  ],
+};
+
+
+const LOCKED_UNITS = [
+  { title: "Bringing pages to life", sub: "JavaScript", icon: Braces },
+  { title: "Scaling up", sub: "React", icon: Boxes },
+  { title: "Building with AI", sub: "AI integration", icon: Sparkles },
+];
+
+const TABS = [
+  { key: "html", name: "index.html" },
+  { key: "css", name: "style.css" },
+  { key: "js", name: "script.js" },
+];
+
+
+
+// ------------------------------------------------------------
+// Persistence
+//
+// This mirrors the interface in data.js. Right now it writes to
+// localStorage; swapping in the Supabase version means changing
+// these four functions and nothing else in the component.
+// ------------------------------------------------------------
+
+const STORE = {
+  read(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch {
+      return fallback;
+    }
+  },
+  write(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      // Storage blocked or full — the session still works,
+      // it just will not survive a refresh.
+    }
+  },
+};
+
+const codeKey = (l, p) => `cs:code:0:${l}:${p}`;
+
+// Highlights HTML tags and CSS declarations inside step text so the code
+// stands out from the instruction — important when reading in a second language.
+function StepText({ text }) {
+  const PROPS =
+    "font-family|line-height|max-width|margin|padding|border|box-sizing|font-size|" +
+    "font-weight|display|flex-direction|justify-content|align-items|gap|flex-wrap|flex|" +
+    "grid-template-columns|grid-template-areas|grid-area|color|outline|background";
+  const src = `(<[^>]+>|(?:${PROPS}):\\s*[^;]+;|alt="")`;
+  const pattern = new RegExp(src, "g");
+  const isCode = (p) => new RegExp(`^${src}$`).test(p);
+  const pieces = text.split(pattern);
+  return (
+    <>
+      {pieces.map((p, i) =>
+        isCode(p) ? (
+          <code
+            key={i}
+            className="mx-0.5 rounded bg-slate-800/80 px-1 py-0.5 font-mono text-[11px] text-cyan-300"
+          >
+            {p}
+          </code>
+        ) : (
+          <span key={i}>{p}</span>
+        )
+      )}
+    </>
+  );
+}
+
+function ConceptBlocks({ blocks }) {
+  return (
+    <div className="space-y-4">
+      {blocks.map((b, i) => {
+        if (b.type === "heading")
+          return (
+            <h3 key={i} className="pt-2 text-sm font-bold tracking-tight text-cyan-300">
+              {b.body}
+            </h3>
+          );
+
+        if (b.type === "text")
+          return (
+            <p key={i} className="text-sm leading-relaxed text-slate-300">
+              {b.body}
+            </p>
+          );
+
+        if (b.type === "code")
+          return (
+            <pre key={i} className="overflow-x-auto rounded-lg border border-slate-800 bg-slate-950 p-3">
+              <code className="font-mono text-xs leading-relaxed text-cyan-200">{b.body}</code>
+            </pre>
+          );
+
+        if (b.type === "tip")
+          return (
+            <div key={i} className="flex gap-3 rounded-lg border border-amber-500/25 bg-amber-500/5 p-3">
+              <Lightbulb className="h-4 w-4 shrink-0 text-amber-400" />
+              <p className="text-xs leading-relaxed text-slate-300">{b.body}</p>
+            </div>
+          );
+
+        if (b.type === "mistake")
+          return (
+            <div key={i} className="flex gap-3 rounded-lg border border-rose-500/25 bg-rose-500/5 p-3">
+              <AlertTriangle className="h-4 w-4 shrink-0 text-rose-400" />
+              <p className="text-xs leading-relaxed text-slate-300">
+                <span className="font-bold text-rose-300">Common mistake: </span>
+                {b.body}
+              </p>
+            </div>
+          );
+
+        if (b.type === "reference")
+          return (
+            <div key={i} className="overflow-hidden rounded-lg border border-slate-800">
+              {b.items.map((item, j) => (
+                <div
+                  key={j}
+                  className={`p-3 ${j % 2 ? "bg-slate-950/40" : "bg-slate-950/70"} ${
+                    j > 0 ? "border-t border-slate-800" : ""
+                  }`}
+                >
+                  <code className="font-mono text-xs font-bold text-cyan-300">{item.code}</code>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-300">{item.what}</p>
+                  {item.note && (
+                    <p className="mt-1.5 border-l-2 border-slate-700 pl-2 text-xs italic leading-relaxed text-slate-500">
+                      {item.note}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          );
+
+        return null;
+      })}
+    </div>
+  );
+}
+
+function Prototype() {
+  const [screen, setScreen] = useState("map");
+  const [xp, setXp] = useState(() => STORE.read("cs:xp", 0));
+  const [furthest, setFurthest] = useState(() => STORE.read("cs:furthest", 0));
+  const [selected, setSelected] = useState(0);
+  const [openLesson, setOpenLesson] = useState(null);
+  const [activePart, setActivePart] = useState(0); // 0 = learn, 1 = build
+  const [done, setDone] = useState(() => STORE.read("cs:done", {}));
+  const [checked, setChecked] = useState(() => STORE.read("cs:checked", {}));
+  const [showRef, setShowRef] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [gaining, setGaining] = useState(null);
+
+  const [files, setFiles] = useState(null);
+  const [tab, setTab] = useState("html");
+  const [srcDoc, setSrcDoc] = useState("");
+  const [ran, setRan] = useState(false);
+
+  const lesson = openLesson !== null ? UNIT_1.lessons[openLesson] : null;
+  const part = lesson
+    ? [lesson.learn, lesson.practice, lesson.build][activePart]
+    : null;
+  const isPractice = activePart === 1;
+  const isBuild = activePart === 2;
+
+  function buildDoc(f) {
+    return `<!DOCTYPE html>
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>${f.css}</style></head>
+<body>${f.html}<script>${f.js}<\/script></body></html>`;
+  }
+
+  function run() {
+    if (!files) return;
+    setSrcDoc(buildDoc(files));
+    setRan(true);
+    setTimeout(() => setRan(false), 1000);
+  }
+
+  // Load this part's files: the student's saved version if they
+  // have one, otherwise the starter code.
+  useEffect(() => {
+    if (screen !== "lesson" || !part?.files) return;
+    const saved = STORE.read(codeKey(openLesson, activePart), null);
+    const next = saved ?? part.files;
+    setFiles(next);
+    setTab("html");
+    setSrcDoc(buildDoc(next));
+  }, [screen, openLesson, activePart]);
+
+  // Save after typing stops, not on every keystroke.
+  useEffect(() => {
+    if (screen !== "lesson" || !files || !part?.files) return;
+    const t = setTimeout(() => {
+      STORE.write(codeKey(openLesson, activePart), files);
+    }, 1000);
+    return () => clearTimeout(t);
+  }, [files, screen, openLesson, activePart]);
+
+  const key = (l, p) => `${l}:${p}`;
+
+  useEffect(() => {
+    setShowAnswer(false);
+  }, [openLesson, activePart]);
+
+  useEffect(() => STORE.write("cs:xp", xp), [xp]);
+  useEffect(() => STORE.write("cs:done", done), [done]);
+  useEffect(() => STORE.write("cs:checked", checked), [checked]);
+  useEffect(() => STORE.write("cs:furthest", furthest), [furthest]);
+
+  function markComplete() {
+    const k = key(openLesson, activePart);
+    if (done[k]) return;
+    const gained = (part.xp ?? 0) + (part.extra?.xp ?? 0);
+    const next = { ...done, [k]: true };
+    setDone(next);
+    setXp((x) => x + gained);
+    setGaining(gained);
+    setTimeout(() => setGaining(null), 1000);
+
+    if (activePart < 2) {
+      setTimeout(() => setActivePart(activePart + 1), 700);
+    } else if (next[key(openLesson, 0)] && next[key(openLesson, 1)]) {
+      if (openLesson === UNIT_1.lessons.length - 1) {
+        setTimeout(() => setScreen("levelup"), 900);
+      } else {
+        setFurthest((f) => Math.max(f, openLesson + 1));
+        setTimeout(() => {
+          setSelected(openLesson + 1);
+          setScreen("map");
+        }, 900);
+      }
+    }
+  }
+
+  function handleTabKey(e) {
+    if (e.key !== "Tab") return;
+    e.preventDefault();
+    const el = e.target;
+    const s = el.selectionStart;
+    const updated = el.value.slice(0, s) + "  " + el.value.slice(el.selectionEnd);
+    setFiles((f) => ({ ...f, [tab]: updated }));
+    requestAnimationFrame(() => {
+      el.selectionStart = el.selectionEnd = s + 2;
+    });
+  }
+
+  const Lab = () =>
+    files && (
+      <div className="mb-4 overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
+        <div className="flex items-center justify-between border-b border-slate-800 px-4 py-3">
+          <div className="flex items-center gap-2">
+            <Code2 className="h-4 w-4 text-cyan-400" />
+            <p className="text-sm font-bold">{isBuild ? "Your project" : isPractice ? "Practice sandbox" : "Build lab"}</p>
+            <span className="hidden text-[10px] text-slate-600 sm:inline">saved automatically</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                setFiles(part.files);
+                STORE.write(codeKey(openLesson, activePart), part.files);
+              }}
+              className="flex items-center gap-1.5 rounded-lg border border-slate-700 px-2.5 py-1.5 text-xs font-bold text-slate-400 hover:text-slate-200"
+            >
+              <RotateCcw className="h-3 w-3" /> Reset
+            </button>
+            <button
+              onClick={run}
+              className="flex items-center gap-1.5 rounded-lg bg-cyan-400 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-cyan-300"
+            >
+              {ran ? <Check className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+              {ran ? "Ran" : "Run code"}
+            </button>
+          </div>
+        </div>
+
+        <div className="flex border-b border-slate-800">
+          {TABS.map((t) => (
+            <button
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              className={`border-b-2 px-4 py-2.5 font-mono text-xs ${
+                tab === t.key
+                  ? "border-cyan-400 text-slate-100"
+                  : "border-transparent text-slate-500 hover:text-slate-300"
+              }`}
+            >
+              {t.name}
+            </button>
+          ))}
+        </div>
+
+        <textarea
+          value={files[tab]}
+          spellCheck={false}
+          onChange={(e) => setFiles((f) => ({ ...f, [tab]: e.target.value }))}
+          onKeyDown={handleTabKey}
+          className={`w-full resize-none bg-slate-950 p-4 font-mono text-xs leading-relaxed text-cyan-100 outline-none ${
+            isBuild ? "h-72" : "h-60"
+          }`}
+        />
+
+        <div className="flex items-center gap-2 border-y border-slate-800 px-4 py-2">
+          <Eye className="h-3.5 w-3.5 text-slate-500" />
+          <span className="font-mono text-xs text-slate-500">live preview</span>
+        </div>
+        <iframe
+          title="preview"
+          srcDoc={srcDoc}
+          sandbox="allow-scripts"
+          className={`w-full border-0 bg-white ${isBuild ? "h-80" : "h-64"}`}
+        />
+      </div>
+    );
+
+  const StatusBar = () => (
+    <div className="sticky top-0 z-10 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
+      <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-3">
+        <div className="flex items-center gap-2">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-cyan-500/30 bg-cyan-500/10">
+            <Flame className="h-4 w-4 text-cyan-400" />
+          </div>
+          <div>
+            <p className="text-sm font-bold leading-tight">Level 1</p>
+            <p className="text-xs leading-tight text-slate-500">{UNIT_1.badge}</p>
+          </div>
+        </div>
+        <div className="flex flex-1 items-center px-5">
+          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-800">
+            <div
+              className="h-full rounded-full bg-cyan-400 transition-all duration-500"
+              style={{ width: `${Math.min(100, (xp / UNIT_1.totalXp) * 100)}%` }}
+            />
+          </div>
+        </div>
+        <div className="relative flex items-center gap-1 rounded-lg border border-fuchsia-500/30 bg-fuchsia-500/10 px-2.5 py-1">
+          <Zap className="h-3.5 w-3.5 text-fuchsia-400" />
+          <span className="text-sm font-bold text-fuchsia-300">{xp}</span>
+          {gaining && (
+            <span className="absolute -top-6 right-0 animate-bounce text-sm font-bold text-fuchsia-400">
+              +{gaining}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  if (screen === "map") {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100">
+        <StatusBar />
+        <div className="mx-auto max-w-3xl px-5 py-8">
+          <div className="mb-6 flex items-start justify-between gap-4">
+            <div>
+              <h1 className="mb-1 text-2xl font-bold tracking-tight">Your course map</h1>
+              <p className="text-sm text-slate-400">Four units. Unit 1 is live.</p>
+            </div>
+            {xp > 0 && (
+              <button
+                onClick={() => {
+                  if (!confirm("Clear all progress and saved code on this device?")) return;
+                  Object.keys(localStorage)
+                    .filter((k) => k.startsWith("cs:"))
+                    .forEach((k) => localStorage.removeItem(k));
+                  setXp(0);
+                  setDone({});
+                  setChecked({});
+                  setFurthest(0);
+                  setSelected(0);
+                }}
+                className="shrink-0 rounded-lg border border-slate-800 px-2.5 py-1.5 text-[11px] font-bold text-slate-500 hover:border-slate-700 hover:text-slate-300"
+              >
+                Reset all
+              </button>
+            )}
+          </div>
+
+          <div className="mb-8 grid grid-cols-2 gap-3">
+            <div className="rounded-xl border border-cyan-500/50 bg-cyan-500/10 p-4">
+              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800">
+                <Code2 className="h-4 w-4 text-cyan-400" />
+              </div>
+              <p className="text-sm font-bold text-slate-100">{UNIT_1.title}</p>
+              <p className="text-xs text-slate-500">{UNIT_1.sub}</p>
+            </div>
+            {LOCKED_UNITS.map((u, i) => (
+              <div key={i} className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 opacity-50">
+                <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800">
+                  <Lock className="h-3.5 w-3.5 text-slate-500" />
+                </div>
+                <p className="text-sm font-bold text-slate-100">{u.title}</p>
+                <p className="text-xs text-slate-500">{u.sub}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-sm font-bold text-slate-300">{UNIT_1.title}</h2>
+            <span className="flex items-center gap-1 text-xs text-slate-500">
+              <Trophy className="h-3.5 w-3.5 text-amber-400" /> {UNIT_1.badge}
+            </span>
+          </div>
+
+          <div className="relative rounded-xl border border-slate-800 bg-slate-900 p-5">
+            <div className="absolute bottom-9 left-9 top-9 w-0.5 bg-slate-800" />
+            <div className="flex flex-col gap-1">
+              {UNIT_1.lessons.map((l, i) => {
+                const parts = [done[key(i, 0)], done[key(i, 1)], done[key(i, 2)]].filter(Boolean).length;
+                const complete = parts === 3;
+                const locked = i > furthest;
+                const current = i === selected;
+                return (
+                  <button
+                    key={i}
+                    onClick={() => !locked && setSelected(i)}
+                    disabled={locked}
+                    className={`relative z-[1] flex items-center gap-3 rounded-lg px-2 py-2.5 text-left ${
+                      current ? "bg-slate-800/60" : "hover:bg-slate-800/30"
+                    }`}
+                  >
+                    <div
+                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[11px] font-bold ${
+                        complete
+                          ? "border-emerald-400 bg-emerald-400 text-slate-950"
+                          : current
+                          ? "border-cyan-400 bg-cyan-500/20 text-cyan-300"
+                          : locked
+                          ? "border-slate-700 bg-slate-800 text-slate-600"
+                          : "border-slate-600 bg-slate-800 text-slate-400"
+                      }`}
+                    >
+                      {complete ? <Check className="h-3 w-3" /> : locked ? <Lock className="h-2.5 w-2.5" /> : i + 1}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p
+                        className={`text-sm ${
+                          locked ? "text-slate-600" : current ? "font-medium text-slate-100" : "text-slate-300"
+                        }`}
+                      >
+                        {l.title}
+                      </p>
+                      {!locked && <p className="truncate text-xs text-slate-500">{l.blurb}</p>}
+                    </div>
+                    {!locked && parts > 0 && !complete && (
+                      <span className="shrink-0 text-[10px] font-bold text-cyan-300">{parts}/3</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4">
+            <div className="min-w-0">
+              <p className="text-xs text-slate-500">Selected · {UNIT_1.lessons[selected].xp} XP available</p>
+              <p className="truncate text-sm font-bold text-slate-100">{UNIT_1.lessons[selected].title}</p>
+            </div>
+            <button
+              onClick={() => {
+                setOpenLesson(selected);
+                setActivePart(0);
+                setScreen("lesson");
+              }}
+              className="ml-3 flex shrink-0 items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-white"
+            >
+              <Play className="h-3.5 w-3.5" /> Start
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === "lesson") {
+    const isDone = done[key(openLesson, activePart)];
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100">
+        <StatusBar />
+        <div className="mx-auto max-w-3xl px-5 py-8">
+          <button
+            onClick={() => setScreen("map")}
+            className="mb-4 flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-slate-300"
+          >
+            <ChevronLeft className="h-3.5 w-3.5" /> Back to map
+          </button>
+
+          <div className="mb-6 flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-lg font-bold text-cyan-400">
+              {openLesson + 1}
+            </div>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-2xl font-bold tracking-tight">{lesson.title}</h1>
+              <p className="mt-1 text-sm text-slate-400">{lesson.blurb}</p>
+            </div>
+          </div>
+
+          {/* collapsible core reference — hidden until asked for */}
+          <div className="mb-6">
+            <button
+              onClick={() => setShowRef((v) => !v)}
+              className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2.5 text-left ${
+                showRef ? "border-slate-700 bg-slate-900" : "border-slate-800 bg-slate-900/50 hover:border-slate-700"
+              }`}
+            >
+              <BookMarked className="h-4 w-4 shrink-0 text-emerald-400" />
+              <span className="text-xs font-bold text-slate-300">Core reference</span>
+              <span className="truncate text-xs text-slate-600">— open this when you forget a word</span>
+              <ChevronDown
+                className={`ml-auto h-4 w-4 shrink-0 text-slate-500 transition-transform ${
+                  showRef ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {showRef && (
+              <div className="mt-2 overflow-hidden rounded-lg border border-slate-800">
+                {lesson.learn.ref.map((r, i) => (
+                  <div
+                    key={i}
+                    className={`p-3 ${i % 2 ? "bg-slate-950/40" : "bg-slate-950/70"} ${
+                      i > 0 ? "border-t border-slate-800" : ""
+                    }`}
+                  >
+                    <p className="font-mono text-xs font-bold text-emerald-300">{r.label}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-300">
+                      <StepText text={r.body} />
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* part switcher */}
+          <div className="mb-6 flex gap-1.5 sm:gap-2">
+            {[
+              { icon: BookOpen, label: "Learn", sub: lesson.learn.subtitle },
+              { icon: Dumbbell, label: "Practice", sub: lesson.practice.subtitle },
+              { icon: Rocket, label: "Build", sub: lesson.build.subtitle },
+            ].map((p, i) => {
+              const Icon = p.icon;
+              return (
+                <button
+                  key={i}
+                  onClick={() => setActivePart(i)}
+                  className={`min-w-0 flex-1 rounded-lg border px-2 py-2 text-left sm:px-3 sm:py-2.5 ${
+                    activePart === i
+                      ? i === 2
+                        ? "border-fuchsia-500/50 bg-fuchsia-500/10"
+                        : i === 1
+                        ? "border-violet-500/50 bg-violet-500/10"
+                        : "border-cyan-500/50 bg-cyan-500/10"
+                      : "border-slate-800 bg-slate-900 hover:border-slate-700"
+                  }`}
+                >
+                  <div className="flex items-center gap-1.5">
+                    {done[key(openLesson, i)] ? (
+                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                    ) : (
+                      <Icon className={`h-3.5 w-3.5 shrink-0 ${activePart === i ? "text-slate-200" : "text-slate-600"}`} />
+                    )}
+                    <span
+                      className={`truncate text-[11px] font-bold sm:text-xs ${
+                        activePart === i
+                          ? i === 2
+                            ? "text-fuchsia-300"
+                            : i === 1
+                            ? "text-violet-300"
+                            : "text-cyan-300"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      {p.label}
+                    </span>
+                  </div>
+                  <p className="mt-0.5 hidden truncate text-xs text-slate-500 sm:block">{p.sub}</p>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* LEARN */}
+          {!isPractice && !isBuild && (
+            <>
+              <div className="mb-4 rounded-xl border border-slate-800 bg-slate-900 p-5">
+                <ConceptBlocks blocks={lesson.learn.blocks} />
+              </div>
+              <Lab />
+              <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
+                <div className="mb-2 flex items-center gap-2">
+                  <ListChecks className="h-4 w-4 text-cyan-400" />
+                  <h2 className="text-sm font-bold text-slate-200">Your turn</h2>
+                </div>
+                <p className="mb-4 text-sm leading-relaxed text-slate-300">{part.task}</p>
+
+                <div className="mb-4 rounded-lg border border-slate-800 bg-slate-950/60 p-3">
+                  <div className="mb-2 flex items-center gap-2">
+                    <HelpCircle className="h-3.5 w-3.5 text-cyan-400" />
+                    <span className="text-xs font-bold text-slate-300">Check your learning</span>
+                  </div>
+                  <p className="mb-3 text-xs leading-relaxed text-slate-300">
+                    <StepText text={lesson.learn.check.q} />
+                  </p>
+                  <button
+                    onClick={() => setShowAnswer((v) => !v)}
+                    className="rounded-md border border-slate-700 px-2.5 py-1.5 font-mono text-[11px] font-bold text-slate-300 hover:border-slate-600 hover:text-slate-100"
+                  >
+                    {showAnswer ? "Hide answer" : "Show answer"}
+                  </button>
+                  {showAnswer && (
+                    <p className="mt-3 border-t border-slate-800 pt-3 text-xs leading-relaxed text-slate-400">
+                      <StepText text={lesson.learn.check.a} />
+                    </p>
+                  )}
+                </div>
+
+                {part.extra && (
+                  <div className="mb-4 rounded-lg border border-slate-800 bg-slate-950/60 p-3">
+                    <div className="mb-1 flex items-center gap-2">
+                      <span className="text-xs font-bold text-cyan-300">{part.extra.label}</span>
+                      <span className="rounded bg-fuchsia-500/15 px-1.5 py-0.5 text-[10px] font-bold text-fuchsia-300">
+                        +{part.extra.xp} XP
+                      </span>
+                    </div>
+                    <p className="text-xs leading-relaxed text-slate-400">{part.extra.text}</p>
+                  </div>
+                )}
+
+                <button
+                  onClick={markComplete}
+                  disabled={isDone}
+                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold ${
+                    isDone
+                      ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                      : "bg-slate-100 text-slate-950 hover:bg-white"
+                  }`}
+                >
+                  {isDone ? (
+                    <>
+                      <CheckCircle2 className="h-4 w-4" /> Completed
+                    </>
+                  ) : (
+                    <>Mark complete · +{(part.xp ?? 0) + (part.extra?.xp ?? 0)} XP</>
+                  )}
+                </button>
+              </div>
+            </>
+          )}
+
+
+          {/* PRACTICE */}
+          {isPractice && (
+            <>
+              <div className="mb-4 rounded-xl border border-violet-500/30 bg-violet-500/5 p-5">
+                <div className="mb-2 flex items-center gap-2">
+                  <Dumbbell className="h-4 w-4 text-violet-400" />
+                  <h2 className="text-sm font-bold text-slate-200">Drills</h2>
+                  <span className="ml-auto text-xs font-bold text-violet-300">
+                    {part.drills.filter((_, i) => checked[`${openLesson}:${i}`]).length}/{part.drills.length}
+                  </span>
+                </div>
+                <p className="mb-4 text-sm leading-relaxed text-slate-300">{part.intro}</p>
+
+                <div className="space-y-1.5">
+                  {part.drills.map((d, i) => {
+                    const k = `${openLesson}:${i}`;
+                    const on = checked[k];
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => setChecked((c) => ({ ...c, [k]: !c[k] }))}
+                        className="flex w-full items-start gap-2.5 rounded-lg border border-slate-800 bg-slate-950/50 p-3 text-left hover:border-slate-700"
+                      >
+                        {on ? (
+                          <CheckSquare className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                        ) : (
+                          <Square className="mt-0.5 h-4 w-4 shrink-0 text-slate-600" />
+                        )}
+                        <div className="min-w-0">
+                          <p className={`text-xs leading-relaxed ${on ? "text-slate-500 line-through" : "text-slate-200"}`}>
+                            <span className="mr-1.5 font-bold text-violet-400">{i + 1}.</span>
+                            <StepText text={d.text} />
+                          </p>
+                          {d.hint && !on && (
+                            <p className="mt-1 text-[11px] leading-relaxed text-slate-500">{d.hint}</p>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <Lab />
+
+              <div className="rounded-xl border border-violet-500/30 bg-violet-500/5 p-5">
+                <button
+                  onClick={markComplete}
+                  disabled={isDone}
+                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold ${
+                    isDone
+                      ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                      : "bg-slate-100 text-slate-950 hover:bg-white"
+                  }`}
+                >
+                  {isDone ? (
+                    <>
+                      <CheckCircle2 className="h-4 w-4" /> Drills complete
+                    </>
+                  ) : (
+                    <>Mark drills complete · +{part.xp} XP</>
+                  )}
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* BUILD */}
+          {isBuild && (
+            <>
+              <div className="mb-4 rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/5 p-5">
+                <div className="mb-2 flex items-center gap-2">
+                  <Rocket className="h-4 w-4 text-fuchsia-400" />
+                  <h2 className="text-sm font-bold text-slate-200">Project brief</h2>
+                </div>
+                <p className="mb-4 text-sm leading-relaxed text-slate-300">{part.brief}</p>
+
+                <div className="mb-2 flex items-center gap-2">
+                  <p className="text-xs font-bold text-slate-500">Build steps</p>
+                  <span className="ml-auto text-xs font-bold text-fuchsia-300">
+                    {part.requirements.filter((_, i) => checked[`b${openLesson}:${i}`]).length}/
+                    {part.requirements.length}
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  {part.requirements.map((r, i) => {
+                    const k = `b${openLesson}:${i}`;
+                    const on = checked[k];
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => setChecked((c) => ({ ...c, [k]: !c[k] }))}
+                        className="flex w-full items-start gap-2.5 rounded-lg border border-slate-800 bg-slate-950/50 p-2.5 text-left hover:border-slate-700"
+                      >
+                        {on ? (
+                          <CheckSquare className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                        ) : (
+                          <Square className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-600" />
+                        )}
+                        <span
+                          className={`text-xs leading-relaxed ${
+                            on ? "text-slate-500 line-through" : "text-slate-200"
+                          }`}
+                        >
+                          <span className="mr-1.5 font-bold text-fuchsia-400">{i + 1}.</span>
+                          <StepText text={r} />
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-4 flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2.5">
+                  <Code2 className="h-4 w-4 shrink-0 text-fuchsia-400" />
+                  <p className="text-xs text-slate-400">
+                    The files below are empty on purpose. Build this from scratch.
+                  </p>
+                </div>
+
+                {part.deploy && (
+                  <div className="mt-2 flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2.5">
+                    <Globe className="h-4 w-4 shrink-0 text-cyan-400" />
+                    <p className="text-xs text-slate-400">
+                      When it's working here, move it to your own editor, commit it, and deploy it live.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <Lab />
+
+              <div className="rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/5 p-5">
+                <button
+                  onClick={markComplete}
+                  disabled={isDone}
+                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold ${
+                    isDone
+                      ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                      : "bg-slate-100 text-slate-950 hover:bg-white"
+                  }`}
+                >
+                  {isDone ? (
+                    <>
+                      <CheckCircle2 className="h-4 w-4" /> Project submitted
+                    </>
+                  ) : (
+                    <>Submit project · +{part.xp} XP</>
+                  )}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4">
+      <div className="w-full max-w-sm rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center">
+        <div className="relative mx-auto mb-5 flex h-20 w-20 items-center justify-center">
+          <span className="absolute h-20 w-20 animate-ping rounded-full bg-cyan-500/10" style={{ animationDuration: "2s" }} />
+          <span className="absolute h-16 w-16 rounded-full bg-cyan-500/20" />
+          <div className="relative flex h-14 w-14 items-center justify-center rounded-full border border-cyan-400/40 bg-cyan-500/20">
+            <PartyPopper className="h-6 w-6 text-cyan-300" />
+          </div>
+        </div>
+        <p className="mb-1 text-xs font-bold uppercase tracking-wider text-cyan-400">Unit complete</p>
+        <h1 className="mb-2 text-2xl font-bold tracking-tight text-slate-50">{UNIT_1.badge} unlocked</h1>
+        <p className="mb-6 text-sm text-slate-400">
+          You finished {UNIT_1.title} with {xp} XP. JavaScript is next.
+        </p>
+        <div className="mb-6 flex items-center gap-3 rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/5 p-3 text-left">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-fuchsia-500/30 bg-fuchsia-500/20">
+            <Star className="h-5 w-5 text-fuchsia-300" />
+          </div>
+          <div>
+            <p className="text-xs text-slate-500">New badge earned</p>
+            <p className="text-sm font-bold text-slate-100">{UNIT_1.badge}</p>
+          </div>
+        </div>
+        <button
+          onClick={() => setScreen("map")}
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-slate-100 py-2.5 text-sm font-bold text-slate-950 hover:bg-white"
+        >
+          Back to map <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
+const rootEl = document.getElementById("root");
+rootEl.innerHTML = "";
+ReactDOM.createRoot(rootEl).render(<Prototype />);
+</script>
+</body>
+</html>
