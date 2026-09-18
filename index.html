@@ -2,21 +2,110 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Web Foundations</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Web Foundations · Code Learning Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7/babel.min.js" crossorigin></script>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  html, body, #root { background: #020617; min-height: 100%; }
-  body { margin: 0; }
-  #boot { color:#94a3b8; font-family: system-ui, sans-serif; padding: 40px; text-align:center; }
+  :root { color-scheme: dark; }
+  html, body, #root { min-height: 100%; }
+  body {
+    margin: 0;
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #060a15;
+    color: #f1f5f9;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .font-display { font-family: "Plus Jakarta Sans", system-ui, sans-serif; letter-spacing: -0.02em; }
+  .font-mono2 { font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+  /* Ambient background: two soft color glows + a faint dot grid, fixed behind everything */
+  .bg-scene { position: fixed; inset: 0; z-index: -2; overflow: hidden; background: #060a15; }
+  .bg-scene::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      radial-gradient(42rem 30rem at 12% -6%, rgba(34,211,238,.14), transparent 60%),
+      radial-gradient(46rem 34rem at 88% 4%, rgba(232,121,249,.10), transparent 60%),
+      radial-gradient(50rem 36rem at 50% 110%, rgba(99,102,241,.12), transparent 60%);
+  }
+  .bg-scene::after {
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(148,163,184,.13) 1px, transparent 1px);
+    background-size: 26px 26px;
+    mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
+  }
+
+  #boot { color:#94a3b8; font-family: "Plus Jakarta Sans", system-ui, sans-serif; padding: 48px 24px; text-align:center; }
+  .boot-ring {
+    width: 46px; height: 46px; margin: 0 auto 16px; border-radius: 9999px;
+    border: 3px solid rgba(34,211,238,.18); border-top-color: #22d3ee;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Motion */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes popIn { 0% { opacity: 0; transform: scale(.92); } 100% { opacity: 1; transform: scale(1); } }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(220%); } }
+  @keyframes xpFloat { 0% { opacity: 0; transform: translateY(6px) scale(.8); } 20% { opacity: 1; transform: translateY(0) scale(1.1); } 100% { opacity: 0; transform: translateY(-26px) scale(1); } }
+  @keyframes confettiFall {
+    0% { opacity: 1; transform: translateY(-12px) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(46vh) rotate(340deg); }
+  }
+  @keyframes pulseDot { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: .45; transform: scale(.8); } }
+  .screen-enter { animation: fadeUp .38s cubic-bezier(.22,.8,.32,1) both; }
+  .pop-in { animation: popIn .3s cubic-bezier(.22,.8,.32,1) both; }
+  .floaty { animation: floaty 5s ease-in-out infinite; }
+  .pulse-dot { animation: pulseDot 1.6s ease-in-out infinite; }
+  .xp-float {
+    position: absolute; top: -1.4rem; right: .1rem; white-space: nowrap;
+    font-size: .8rem; font-weight: 800; color: #f0abfc;
+    animation: xpFloat 1s ease-out both; pointer-events: none;
+  }
+  .progress-sheen { position: relative; overflow: hidden; }
+  .progress-sheen::after {
+    content: ""; position: absolute; inset: 0; width: 45%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.45), transparent);
+    animation: shimmer 2.6s ease-in-out infinite;
+  }
+  .confetti-bit { position: absolute; top: -8px; border-radius: 2px; animation: confettiFall linear both; }
+
+  /* Code editor */
+  .code-area { caret-color: #22d3ee; }
+  .code-area::-webkit-scrollbar { width: 10px; height: 10px; }
+  .code-area::-webkit-scrollbar-track { background: transparent; }
+  .code-area::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 8px; border: 2px solid #0b1120; }
+  .code-area::-webkit-scrollbar-thumb:hover { background: #334155; }
+  .code-area:focus { box-shadow: inset 0 0 0 2px rgba(34,211,238,.35); }
+
+  .clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+  button { touch-action: manipulation; }
+  button:focus-visible, a:focus-visible, textarea:focus-visible {
+    outline: 2px solid #22d3ee; outline-offset: 2px; border-radius: 8px;
+  }
+  ::selection { background: rgba(34,211,238,.32); }
+
+  .pressable { transition: transform .12s ease, box-shadow .2s ease, border-color .2s ease, background-color .2s ease; }
+  .pressable:active { transform: scale(.97); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
 </style>
 </head>
 <body>
-<div id="root"><div id="boot">Loading&hellip;</div></div>
+<div class="bg-scene" aria-hidden="true"></div>
+<div id="root"><div id="boot"><div class="boot-ring"></div>Loading your course&hellip;</div></div>
 
 <script type="text/babel" data-type="module">
 const { useState, useEffect, useRef } = React;
@@ -33,9 +122,29 @@ const {
   RotateCcw = blank, Eye = blank, Globe = blank, Lightbulb = blank,
   ListChecks = blank, Dumbbell = blank, Square = blank, CheckSquare = blank,
   AlertTriangle = blank, BookMarked = blank, HelpCircle = blank, ChevronDown = blank,
+  X = blank, Info = blank, Pencil = blank, Bug = blank,
 } = L;
 
+// One accent identity per lesson, so every lesson feels like its own place
+// instead of eight identical cyan screens.
+const THEMES = [
+  { a: "#22d3ee", b: "#0e7490", soft: "rgba(34,211,238,.12)",  ring: "rgba(34,211,238,.45)" },
+  { a: "#a78bfa", b: "#6d28d9", soft: "rgba(167,139,250,.12)", ring: "rgba(167,139,250,.45)" },
+  { a: "#e879f9", b: "#a21caf", soft: "rgba(232,121,249,.11)", ring: "rgba(232,121,249,.45)" },
+  { a: "#fbbf24", b: "#b45309", soft: "rgba(251,191,36,.11)",  ring: "rgba(251,191,36,.45)" },
+  { a: "#34d399", b: "#047857", soft: "rgba(52,211,153,.11)",  ring: "rgba(52,211,153,.45)" },
+  { a: "#fb7185", b: "#be123c", soft: "rgba(251,113,133,.11)", ring: "rgba(251,113,133,.45)" },
+  { a: "#38bdf8", b: "#0369a1", soft: "rgba(56,189,248,.12)",  ring: "rgba(56,189,248,.45)" },
+  { a: "#fb923c", b: "#c2410c", soft: "rgba(251,146,60,.11)",  ring: "rgba(251,146,60,.45)" },
+];
+const themeFor = (i) => THEMES[i % THEMES.length];
 
+// The three parts of every lesson keep their own color everywhere.
+const PARTS = [
+  { key: "learn",    label: "Learn",    icon: BookOpen, color: "#22d3ee", deep: "#0e7490" },
+  { key: "practice", label: "Practice", icon: Dumbbell, color: "#a78bfa", deep: "#6d28d9" },
+  { key: "build",    label: "Build",    icon: Rocket,   color: "#e879f9", deep: "#a21caf" },
+];
 const UNIT_1 = {
   title: "Web foundations",
   sub: "HTML & CSS",
@@ -61,50 +170,59 @@ const UNIT_1 = {
           { label: "Good habit", body: "Write one tag. Run the code. Look at the result. Then write the next tag." },
         ],
         blocks: [
-          { type: "text", body: "When you open a web page, your browser downloads a text file and reads it top to bottom. That's it. There's no magic — an HTML file is a plain text document with labels around the content, and the browser's job is to turn those labels into something you can see." },
-          { type: "text", body: "Those labels are called tags. A tag wraps content and tells the browser what that content IS. An <h1> means \"this is the most important heading on the page.\" A <p> means \"this is a paragraph.\" The browser then applies default styling — headings get big and bold, paragraphs get normal-sized — but the styling is a consequence of the meaning, not the point of it." },
+          { type: "text", body: "When you open a web page, your browser downloads a text file and reads it top to bottom. That's it. There's no magic. An HTML file is a plain text document with labels around the content, and the browser's job is to turn those labels into something you can see." },
+          { type: "text", body: "Those labels are called tags. A tag wraps content and tells the browser what that content IS. An <h1> means \"this is the most important heading on the page.\" A <p> means \"this is a paragraph.\" The browser then applies default styling. Headings get big and bold, paragraphs get normal-sized. But the styling is a consequence of the meaning, not the point of it." },
           { type: "heading", body: "Anatomy of a tag" },
           { type: "text", body: "Most tags come in pairs: an opening tag and a closing tag, with content in between. The closing tag has a forward slash." },
           { type: "code", body: "<h1>Hello, world!</h1>\n ↑        ↑        ↑\nopening  content  closing" },
-          { type: "text", body: "A few tags are self-closing, because they have no content to wrap — an image isn't wrapped around anything, it just IS. Those are written as a single tag: <img src=\"cat.jpg\">." },
+          { type: "text", body: "A few tags are self-closing, because they have no content to wrap. An image isn't wrapped around anything, it just IS. Those are written as a single tag: <img src=\"cat.jpg\">." },
           { type: "heading", body: "The skeleton every page needs" },
           { type: "reference", items: [
-            { code: "<!DOCTYPE html>", what: "Tells the browser \"this is modern HTML.\" Not really a tag — it's an instruction, and it must be the very first line." },
+            { code: "<!DOCTYPE html>", what: "Tells the browser \"this is modern HTML.\" Not really a tag. It's an instruction, and it must be the very first line." },
             { code: "<html>", what: "Wraps the entire document. Everything else lives inside it." },
             { code: "<head>", what: "Information ABOUT the page that visitors don't see directly: the title, links to stylesheets, character encoding." },
             { code: "<title>", what: "The text in the browser tab. Also what shows up in search results and bookmarks, so it matters more than it looks." },
             { code: "<body>", what: "Everything a visitor actually sees. All your visible content goes here." },
           ]},
-          { type: "tip", body: "If you write content outside <body>, browsers will usually fix it for you silently. That sounds helpful, but it means your mistakes don't announce themselves — which is exactly why HTML bugs can be sneaky." },
+          { type: "structure" },
+          { type: "tip", body: "If you write content outside <body>, browsers will usually fix it for you silently. That sounds helpful, but it means your mistakes don't announce themselves. That is exactly why HTML bugs can be sneaky." },
           { type: "heading", body: "Text tags you'll use constantly" },
           { type: "reference", items: [
-            { code: "<h1> … <h6>", what: "Headings, in order of importance. <h1> is the page's main title, <h2> is a section, <h3> a subsection.", note: "Use one <h1> per page, and never skip levels just to get a smaller size — that's CSS's job." },
+            { code: "<h1> … <h6>", what: "Headings, in order of importance. <h1> is the page's main title, <h2> is a section, <h3> a subsection.", note: "Use one <h1> per page, and never skip levels just to get a smaller size. That is CSS's job." },
             { code: "<p>", what: "A paragraph of text. The browser adds space above and below automatically." },
             { code: "<ul> / <ol>", what: "An unordered (bulleted) or ordered (numbered) list. The list itself is just a container." },
-            { code: "<li>", what: "A single list item. These go inside a <ul> or <ol> — never on their own." },
+            { code: "<li>", what: "A single list item. These go inside a <ul> or <ol>. Never on their own." },
             { code: "<a href=\"...\">", what: "A link. The href attribute says where it goes.", note: "Links navigate somewhere. If clicking should DO something instead, you want a <button>." },
             { code: "<img src=\"...\" alt=\"...\">", what: "An image. src is the file path; alt describes it for screen readers and shows if the image fails to load.", note: "alt is not optional. An image without it is invisible to anyone using a screen reader." },
           ]},
+          { type: "demo", label: "headings and paragraphs",
+            code: "<h1>My page</h1>\n<h2>About me</h2>\n<p>I love football.</p>",
+            html: "<h1>My page</h1><h2>About me</h2><p>I love football.</p>" },
+          { type: "demo", label: "lists",
+            code: "<ul>\n  <li>Apples</li>\n  <li>Bread</li>\n  <li>Milk</li>\n</ul>",
+            html: "<ul><li>Apples</li><li>Bread</li><li>Milk</li></ul>" },
+          { type: "demo", label: "links",
+            code: "<a href=\"https://example.com\">Visit example</a>",
+            html: "<a href=\"https://example.com\">Visit example</a>" },
           { type: "heading", body: "Attributes" },
-          { type: "text", body: "Some tags need extra information to do their job. A link needs to know where to go; an image needs to know which file to show. That extra information goes in the opening tag as an attribute — a name, an equals sign, and a value in quotes." },
+          { type: "text", body: "Some tags need extra information to do their job. A link needs to know where to go; an image needs to know which file to show. That extra information goes in the opening tag as an attribute: a name, an equals sign, and a value in quotes." },
           { type: "code", body: "<a href=\"https://example.com\">Visit example</a>\n    └─ attribute name\n         └─ value, always in quotes" },
           { type: "mistake", body: "Forgetting the slash in a closing tag. <p> opens. </p> closes. Without the slash the browser keeps going and your whole page shifts." },
         ],
-        task: "The starter page has a heading and a paragraph. Add a list with three items, a link, and a second heading. Then try deleting a closing tag and running it again — notice the browser doesn't show an error, it just guesses. That's why typos hide.",
-        extra: { label: "Debugging challenge", xp: 15, text: "Three things are broken in the commented-out block at the bottom of index.html. Uncomment it, find all three, and fix them." },
+        task: "The starter page has a heading and a paragraph. Add a list with three items, a link, and a second heading. Then try deleting a closing tag and running it again. Notice the browser doesn't show an error. It just guesses. That's why typos hide.",
+        extra: { label: "Debugging challenge", xp: 15, text: "Finished the task above? Scroll down to the Debug challenge box. It has its own code for you to fix." },
+        debug: {
+          html: `<h2>Broken section<h2>
+<p>This paragraph never closes
+<a href=https://example.com>A link with a problem</a>`,
+        },
         files: {
           html: `<h1>Hello, world!</h1>
 <p>This is my first web page. Everything you see here
    started as plain text.</p>
 
 <!-- Add a list, a link, and an <h2> below -->
-
-
-<!-- DEBUGGING CHALLENGE — uncomment and fix three errors:
-<h2>Broken section<h2>
-<p>This paragraph never closes
-<a href=https://example.com>A link with a problem</a>
--->`,
+`,
           css: `body {
   font-family: system-ui, sans-serif;
   max-width: 600px;
@@ -113,24 +231,24 @@ const UNIT_1 = {
   line-height: 1.6;
   color: #1e293b;
 }`,
-          js: `// No JavaScript yet — that comes in Unit 2.
+          js: `// No JavaScript yet. That comes in Unit 2.
 console.log("Page loaded.");`,
         },
       },
       practice: {
       subtitle: "Practice: tags & structure",
-      intro: "Nine short drills. Each one asks you to write a specific tag from scratch — no copying from the lesson above. Work down the list in the sandbox and run it as you go.",
+      intro: "Nine short drills. Each one asks you to write a specific tag from scratch. No copying from the lesson above. Work down the list in the sandbox and run it as you go.",
       drills: [
-        { text: "Write an <h1> with your name in it.", hint: "Opening tag, content, closing tag with a slash." },
-        { text: "Add two <p> paragraphs underneath it.", hint: "Each paragraph needs its own opening and closing tag." },
-        { text: "Create an ordered list of 5 steps for making a sandwich.", hint: "<ol> wraps the list; each step is its own <li>." },
-        { text: "Create an unordered list of 3 things you like.", hint: "Same structure, but <ul> instead of <ol>." },
-        { text: "Insert an image using the placeholder URL in the comments, with real alt text.", hint: "Self-closing: <img src=\"...\" alt=\"...\">. The alt should describe the image, not say \"image\"." },
-        { text: "Add a link that opens example.com.", hint: "<a href=\"https://example.com\">Link text</a>" },
-        { text: "Add an <h2> and an <h3> in the correct order.", hint: "Never skip from h1 to h3 just to get a smaller size." },
-        { text: "Nest a list inside a list item.", hint: "A <ul> can go inside an <li> — that makes a sublist." },
-        { text: "Add a comment to your HTML explaining one section.", hint: "<!-- like this -->" },
-      ],
+    { text: "Type a main heading with your name: <h1>Your name</h1>.", hint: "Three parts: opening tag, your text, closing tag with a slash." },
+    { text: "Under it, add two paragraphs. Each one sits on its own line like <p>Text</p>.", hint: "Two paragraphs means two opening tags and two closing tags." },
+    { text: "Start an ordered list on the next line. Just type <ol>.", hint: "ol is the container. The list items go inside it." },
+    { text: "Add 5 steps inside the list. Each step is one line like <li>Boil water</li>.", hint: "li means list item. One item per line." },
+    { text: "Close the list with </ol>. Then add an image using the placeholder URL in the comments.", hint: "Type <img src=\"URL\" alt=\"describe the picture\">. Replace URL with the real one." },
+    { text: "Under the image, add a link: <a href=\"https://example.com\">Visit example</a>.", hint: "The address must sit inside quotes." },
+    { text: "Add a smaller heading under the link: <h2>My favourites</h2>.", hint: "h2 comes after h1. Never jump from h1 to h3." },
+    { text: "Under the h2, type <ul>, then 3 lines of <li> items, then </ul>.", hint: "ul gives bullet points. ol gives numbers." },
+    { text: "At the very top, add a comment: <!-- My first page -->.", hint: "Comments start with <!-- and end with -->. Visitors never see them." },
+  ],
       xp: 20,
       files: {
         html: `<!-- Work through the drills one at a time.
@@ -157,24 +275,17 @@ img { max-width: 100%; }`,
     },
     build: {
         subtitle: "Build: About Me page",
-        brief: "Build an \"About Me\" page from scratch. It needs a main heading, at least two paragraphs, one list, one link, and one image. The topic, tone, and content are entirely yours — write about a hobby, a game you like, a place you've been.",
+        brief: "Build an \"About Me\" page from scratch. It needs a main heading, at least two paragraphs, one list, one link, and one image. The topic, tone, and content are entirely yours. Write about a hobby, a game you like, a place you've been.",
         requirements: [
-          "Type <!DOCTYPE html> on the first line.",
-          "Add <html> at the top. Add </html> at the bottom.",
-          "Inside <html>, add <head> and </head>.",
-          "Inside <head>, add a title: <title>My page</title>",
-          "Under </head>, add <body> and </body>.",
-          "Put everything below inside <body>.",
-          "Add one heading: <h1>Your name</h1>",
-          "Add a paragraph: <p>Write one sentence about you.</p>",
-          "Add a second paragraph with <p> and </p>.",
-          "Add a smaller heading: <h2>Things I like</h2>",
-          "Under it, start a list with <ul> and end it with </ul>.",
-          "Inside the list, add 3 items. Each one looks like <li>Your item</li>",
-          "Add a picture: <img src=\"https://placehold.co/400x200\" alt=\"Describe the picture\">",
-          "Add a link: <a href=\"https://example.com\">Visit this site</a>",
-          "Click Run. Check every tag you opened is also closed.",
-        ],
+    "The page has the full skeleton: doctype, html, head with a title, and body.",
+    "The browser tab shows your page title.",
+    "One <h1> with the main title of the page.",
+    "At least two paragraphs of real writing about you.",
+    "One <h2> with a list under it. The list has at least 3 items.",
+    "One image with alt text that describes the picture.",
+    "One link that goes to a real page.",
+    "Run it. Every tag you opened is closed and nothing looks broken.",
+  ],
         deploy: true,
         xp: 25,
         files: {
@@ -204,21 +315,21 @@ img { max-width: 100%; }`,
           { label: "Good habit", body: "Click a label. If the box lights up, your for and id match." },
         ],
         blocks: [
-          { type: "text", body: "You can build an entire website using nothing but <div>. It will look completely normal. And it will be much worse — because a <div> means literally nothing. It's a generic box. A page made of them is a page with no structure, only appearance." },
+          { type: "text", body: "You can build an entire website using nothing but <div>. It will look completely normal. And it will be much worse, because a <div> means literally nothing. It's a generic box. A page made of them is a page with no structure, only appearance." },
           { type: "text", body: "Semantic tags solve this. They look identical to a <div> by default, but they tell the browser, search engines, and assistive technology what each region of your page IS. A screen reader user can jump straight to <main>. They cannot jump to <div class=\"main\">, because that class name is just a word you made up." },
           { type: "heading", body: "The landmark tags" },
           { type: "reference", items: [
-            { code: "<header>", what: "Introductory content for the page or a section — usually a logo, site title, and top navigation." },
+            { code: "<header>", what: "Introductory content for the page or a section. Usually a logo, site title, and top navigation." },
             { code: "<nav>", what: "A block of navigation links. You don't need it for every link, just the main navigation groups." },
             { code: "<main>", what: "The primary content of this page. Exactly one per page, and it shouldn't contain the header, nav, or footer.", note: "Screen readers offer a \"skip to main content\" jump. This tag is what makes that work." },
             { code: "<section>", what: "A thematic grouping of content, usually with its own heading. Think chapters." },
-            { code: "<article>", what: "Content that would still make sense on its own — a blog post, a news story, a product card." },
+            { code: "<article>", what: "Content that would still make sense on its own, like a blog post, a news story, a product card." },
             { code: "<aside>", what: "Related but non-essential content: a sidebar, a pull quote, related links." },
-            { code: "<footer>", what: "Closing content — copyright, contact info, secondary links." },
+            { code: "<footer>", what: "Closing content, like copyright, contact info, secondary links." },
           ]},
           { type: "tip", body: "A quick test: if you removed all your CSS, could someone still understand the structure of your page? If it turns into an undifferentiated wall of text, your HTML isn't carrying enough meaning." },
           { type: "heading", body: "Forms" },
-          { type: "text", body: "A form collects input from a person. Even though nothing will submit anywhere yet — that needs JavaScript or a server, which comes later — the structure matters now, because forms are where accessibility mistakes do the most damage." },
+          { type: "text", body: "A form collects input from a person. Even though nothing will submit anywhere yet. That needs JavaScript or a server, which comes later. But the structure matters now, because forms are where accessibility mistakes do the most damage." },
           { type: "reference", items: [
             { code: "<form>", what: "Wraps the whole set of inputs. Groups them as one thing being filled out." },
             { code: "<label for=\"x\">", what: "Names a field. The for attribute must match the input's id.", note: "This connection makes clicking the label focus the input, and tells screen readers what the box is for. Without it, a field is an unlabeled mystery box." },
@@ -231,7 +342,7 @@ img { max-width: 100%; }`,
           { type: "code", body: "<!-- Broken: label isn't connected -->\n<label>Email</label>\n<input type=\"email\">\n\n<!-- Correct: for matches id -->\n<label for=\"email\">Email</label>\n<input id=\"email\" type=\"email\">" },
           { type: "mistake", body: "Writing a label but not connecting it. The for and the id must be the same word, or the label does nothing." },
         ],
-        task: "Refactor the div soup into proper semantic tags. When you're done the page should look exactly the same — that's the point. Then finish the contact form: add an email input and a textarea, each with a properly connected label.",
+        task: "Refactor the div soup into proper semantic tags. When you're done the page should look exactly the same. That is the point. Then finish the contact form: add an email input and a textarea, each with a properly connected label.",
         extra: { label: "Exit ticket", xp: 5, text: "In one sentence: why does an input need a <label> even when the form already looks clear?" },
         files: {
           html: `<div class="top">
@@ -295,24 +406,24 @@ button {
   color: white;
   font-weight: 600;
 }`,
-          js: `console.log("Semantic tags look the same — but mean much more.");`,
+          js: `console.log("Semantic tags look the same, but mean much more.");`,
         },
       },
       practice: {
       subtitle: "Practice: semantics & forms",
       intro: "Build a small page section by section using the right tag each time. Don't reach for <div> unless nothing else fits.",
       drills: [
-        { text: "Write a <header> containing a site title and a <nav> with 3 links.", hint: "The nav goes inside the header." },
-        { text: "Add a <main> with two <section>s, each with its own <h2>.", hint: "One <main> per page, and it shouldn't include the header or footer." },
-        { text: "Put an <article> inside one of the sections.", hint: "Use <article> for content that would make sense on its own." },
-        { text: "Add an <aside> with a related link.", hint: "Aside is for supporting content, not the main point." },
-        { text: "Write a <footer> with a copyright line.", hint: "&copy; gives you the © symbol." },
-        { text: "Build a form with a text input for a name, properly labelled.", hint: "The label's for must match the input's id exactly." },
-        { text: "Add an email input to the same form, labelled.", hint: "type=\"email\" gives phones the right keyboard." },
-        { text: "Add a <textarea> for a message, labelled.", hint: "Textarea has a closing tag, unlike input." },
-        { text: "Add a submit button.", hint: "<button type=\"submit\">" },
-        { text: "Click each label and check the matching input gets focus.", hint: "If it doesn't, your for and id don't match." },
-      ],
+    { text: "Type <header> on one line and </header> on the next.", hint: "The header is the top of the page. It holds the title and the navigation." },
+    { text: "Between them, add <h1>My site</h1>.", hint: "It must sit inside the header tags, not above them." },
+    { text: "Still inside the header, add a nav with 3 links: <nav>, then 3 lines like <a href=\"#\">Home</a>, then </nav>.", hint: "Use # as the address for now. Real pages come later." },
+    { text: "After </header>, add <main> and </main>.", hint: "Main wraps the primary content. A page has exactly one." },
+    { text: "Inside main, add a section with a heading and a paragraph: <section>, <h2>About</h2>, <p>Text</p>, </section>.", hint: "A section is one themed chunk, like a chapter." },
+    { text: "After the section, still inside main, add an <aside> with one related link inside.", hint: "Aside is for supporting content, not the main point." },
+    { text: "After </main>, add a footer: <footer><p>(c) 2026 My site</p></footer>.", hint: "The footer closes the page: copyright and small links." },
+    { text: "Add a form with a labelled name field: <form>, then <label for=\"name\">Name</label>, then <input id=\"name\" type=\"text\">, then </form>.", hint: "for and id must be the exact same word." },
+    { text: "Inside the form, add a labelled email field the same way, with type=\"email\".", hint: "Same pattern: label for, input id, matching words." },
+    { text: "Add <button type=\"submit\">Send</button> inside the form. Then click each label and check the right box lights up.", hint: "If a label does nothing when clicked, its for and id do not match." },
+  ],
       xp: 20,
       files: {
         html: `<!-- Build the page structure with semantic tags.
@@ -340,27 +451,17 @@ button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; c
     },
     build: {
         subtitle: "Build: structured About Me",
-        brief: "Rebuild your About Me page using semantic tags throughout, and add a working contact form. The form doesn't need to submit anywhere — you're building the structure. You decide which fields to ask for and why.",
+        brief: "Rebuild your About Me page using semantic tags throughout, and add a working contact form. The form doesn't need to submit anywhere. You are building the structure. You decide which fields to ask for and why.",
         requirements: [
-          "Start with the page skeleton: <!DOCTYPE html>, <html>, <head>, <body>.",
-          "At the top of <body>, add <header> and </header>.",
-          "Inside <header>, add <h1>Your name</h1>",
-          "Still inside <header>, add <nav> and </nav>.",
-          "Inside <nav>, add 2 links like <a href=\"#about\">About</a>",
-          "After </header>, add <main> and </main>.",
-          "Inside <main>, add <section id=\"about\"> and </section>.",
-          "Inside that section, add <h2>About</h2> and one <p>.",
-          "Add a second <section id=\"contact\"> with <h2>Contact</h2>.",
-          "Inside the contact section, add <form> and </form>.",
-          "In the form, add: <label for=\"name\">Name</label>",
-          "Right under it, add: <input id=\"name\" type=\"text\">",
-          "The for and the id must be the same word. Check them now.",
-          "Add a second label and an <input id=\"email\" type=\"email\">",
-          "Add a message box: <label for=\"msg\">Message</label> then <textarea id=\"msg\"></textarea>",
-          "Add a button: <button type=\"submit\">Send</button>",
-          "After </main>, add <footer><p>&copy; 2026</p></footer>",
-          "Click each label. The matching box should light up. If not, fix the for and id.",
-        ],
+    "Full skeleton: doctype, html, head with a title, body.",
+    "A <header> with the site title and a <nav> of at least 2 links.",
+    "One <main> with <section>s inside. Each section has its own heading.",
+    "No <div> where a semantic tag fits better.",
+    "A <footer> with a copyright line.",
+    "A contact form with at least 2 labelled fields and a submit button.",
+    "Every label is connected: click it and the right input gets focus.",
+    "The page reads top to bottom: header, main, footer.",
+  ],
         deploy: true,
         xp: 25,
         files: {
@@ -390,21 +491,21 @@ button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; c
           { label: "Good habit", body: "Change one value. Run the code. Read the result. Then change the next one." },
         ],
         blocks: [
-          { type: "text", body: "CSS answers a question HTML doesn't: what should this look like? A CSS rule has two halves — a selector that picks which elements to affect, and a block of declarations saying what to change." },
+          { type: "text", body: "CSS answers a question HTML doesn't: what should this look like? A CSS rule has two halves: a selector that picks which elements to affect, and a block of declarations saying what to change." },
           { type: "code", body: "h1 {              ← selector: which elements\n  color: navy;    ← declaration: property + value\n  font-size: 32px;\n}" },
           { type: "heading", body: "Selectors" },
           { type: "reference", items: [
             { code: "p", what: "Element selector. Hits every <p> on the page." },
-            { code: ".card", what: "Class selector. Hits every element with class=\"card\". Reusable — this is what you'll use most." },
+            { code: ".card", what: "Class selector. Hits every element with class=\"card\". Reusable. This is what you'll use most." },
             { code: "#header", what: "ID selector. Hits the one element with id=\"header\". IDs must be unique on a page.", note: "Prefer classes. IDs are hard to override later and can only be used once." },
             { code: ".card p", what: "Descendant selector. Every <p> inside a .card, at any depth." },
-            { code: ".card, .box", what: "Comma means \"or\" — applies to both." },
+            { code: ".card, .box", what: "Comma means \"or\". It applies to both." },
           ]},
           { type: "heading", body: "The box model" },
           { type: "text", body: "Every element on a page is a rectangle, even when it doesn't look like one. That rectangle has four layers, from the inside out. Almost every \"why won't this line up\" problem is really \"I'm adjusting the wrong layer.\"" },
           { type: "reference", items: [
             { code: "content", what: "The text or image itself." },
-            { code: "padding", what: "Space INSIDE the border, between the content and the edge. Padding is part of the element — the background color extends through it." },
+            { code: "padding", what: "Space INSIDE the border, between the content and the edge. Padding is part of the element. The background color extends through it." },
             { code: "border", what: "The edge itself. Has a width, style, and color." },
             { code: "margin", what: "Space OUTSIDE the border, pushing other elements away. Margin is always transparent.", note: "Padding makes an element bigger. Margin pushes its neighbors away. Mixing them up is the single most common CSS mistake." },
           ]},
@@ -413,12 +514,12 @@ button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; c
           { type: "reference", items: [
             { code: "color", what: "The text color." },
             { code: "background", what: "The color behind the element, extending through the padding." },
-            { code: "#0f172a", what: "Hex notation — red, green, and blue in pairs. #000 is black, #fff is white." },
+            { code: "#0f172a", what: "Hex notation: red, green, and blue in pairs. #000 is black, #fff is white." },
             { code: "rgb(15 23 42)", what: "The same thing in decimal, 0–255 per channel. Easier to adjust by hand." },
           ]},
           { type: "heading", body: "Typography that people can actually read" },
           { type: "reference", items: [
-            { code: "font-family", what: "Which typeface. Give a fallback list — the browser uses the first one available." },
+            { code: "font-family", what: "Which typeface. Give a fallback list. The browser uses the first one available." },
             { code: "font-size", what: "How big. 16px is a typical body size; going below 14px makes most people squint." },
             { code: "font-weight", what: "How bold. 400 is normal, 700 is bold." },
             { code: "line-height", what: "Vertical space between lines. 1.5–1.6 for body text.", note: "This one property does more for readability than any font choice you'll make." },
@@ -427,7 +528,7 @@ button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; c
           { type: "tip", body: "Contrast is an accessibility requirement, not a preference. Light grey text on white looks elegant on your bright laptop and becomes unreadable in sunlight or for anyone with low vision. Aim for at least 4.5:1 between text and background." },
           { type: "mistake", body: "Forgetting the semicolon at the end of a style line. The browser then ignores that line and often the next one too." },
         ],
-        task: "Three tasks in the starter file. First, change margin, padding, and border on the cards one at a time and watch which ones move the neighbors. Second, fix the unreadable paragraph at the bottom — it has poor contrast, cramped line-height, and lines that run too long. Third, set a font pairing you actually like.",
+        task: "Three tasks in the starter file. First, change margin, padding, and border on the cards one at a time and watch which ones move the neighbors. Second, fix the unreadable paragraph at the bottom. It has poor contrast, cramped line-height, and lines that run too long. Third, set a font pairing you actually like.",
         extra: { label: "Debugging challenge", xp: 15, text: "The .wide box overflows its container. The cause is box-sizing. Fix it without changing the width value." },
         files: {
           html: `<h1>Styling practice</h1>
@@ -485,19 +586,19 @@ button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; c
       },
       practice: {
       subtitle: "Practice: selectors & the box model",
-      intro: "The HTML is written for you. All the work here is in the CSS — write every rule yourself.",
+      intro: "The HTML is written for you. All the work here is in the CSS. Write every rule yourself.",
       drills: [
-        { text: "Use an element selector to make all <p> text 16px.", hint: "Just the tag name, no dot or hash." },
-        { text: "Use a class selector to give .card a white background.", hint: "Class selectors start with a dot." },
-        { text: "Use an ID selector to give #intro a coloured left border.", hint: "ID selectors start with a hash." },
-        { text: "Use a descendant selector to style only the <h2> inside .card.", hint: "Two selectors with a space between them." },
-        { text: "Give .card 20px of padding and 16px of margin.", hint: "Padding is inside the border, margin is outside." },
-        { text: "Add a 2px solid border to .card.", hint: "border: width style colour;" },
-        { text: "Set box-sizing: border-box on .box and watch its width change.", hint: "It makes width include padding and border." },
-        { text: "Set a max-width on the body so lines don't run too long.", hint: "Around 60-70 characters is comfortable." },
-        { text: "Set line-height to 1.6 on body text.", hint: "No units needed — it multiplies the font size." },
-        { text: "Fix the contrast on .faint so it's actually readable.", hint: "Aim for at least 4.5:1 against the background." },
-      ],
+    { text: "Add a rule that sets every paragraph to 16px: p { font-size: 16px; }.", hint: "Just the tag name. No dot, no hash." },
+    { text: "Add a rule for the card: .card { background: white; }.", hint: "Class selectors start with a dot. The HTML already has class=\"card\"." },
+    { text: "Add a rule for the intro: #intro { border-left: 4px solid blue; }.", hint: "ID selectors start with a hash. Pick any colour you like." },
+    { text: "Add a rule for only the h2 inside the card: .card h2 { color: navy; }.", hint: "Two selectors with a space between them." },
+    { text: "Inside the .card rule, add padding: 20px;.", hint: "Padding is space inside the box." },
+    { text: "In the same rule, add margin: 16px;.", hint: "Margin is space outside the box." },
+    { text: "In the same rule, add border: 2px solid #cbd5e1;.", hint: "A border needs three parts: width, style, colour." },
+    { text: "Find the .box rule. Add box-sizing: border-box; to it.", hint: "Watch the box get smaller. Width now includes padding and border." },
+    { text: "Find the body rule. Add max-width: 700px; and margin: 0 auto;.", hint: "Shorter lines are easier to read. Auto margins centre the page." },
+    { text: "Find the .faint rule. Change its color to #334155.", hint: "Text must stand out clearly from its background." },
+  ],
       xp: 20,
       files: {
         html: `<h1>Styling drills</h1>
@@ -535,26 +636,17 @@ body {
     },
     build: {
         subtitle: "Build: style sprint",
-        brief: "Fully style your About Me page. No unstyled HTML left anywhere. Pick a colour palette and a font pairing you can defend in one sentence — not just \"it looked nice,\" but what it's doing for the page.",
+        brief: "Fully style your About Me page. No unstyled HTML left anywhere. Pick a colour palette and a font pairing you can defend in one sentence. Not just \"it looked nice,\" but what it's doing for the page.",
         requirements: [
-          "Write your HTML first: a heading, two paragraphs, and a list.",
-          "Give one part a class, like <div class=\"card\">.",
-          "Open style.css.",
-          "Add a rule: body { }",
-          "Inside it, add: font-family: system-ui, sans-serif;",
-          "Add: line-height: 1.6;   (this spaces out the lines)",
-          "Add: max-width: 600px;   (this stops lines getting too long)",
-          "Add: margin: 0 auto;   (this centres the page)",
-          "Make a new rule for your class: .card { }",
-          "Inside it, add: padding: 20px;   (space INSIDE the box)",
-          "Add: margin: 16px;   (space OUTSIDE the box)",
-          "Add: border: 1px solid #cbd5e1;",
-          "Add: box-sizing: border-box;   (keeps the width correct)",
-          "Make a rule: h1 { font-size: 32px; }",
-          "Make a rule: p { font-size: 16px; }",
-          "Pick one main colour. Use it on your h1.",
-          "Check your text is dark enough to read easily.",
-        ],
+    "The HTML is finished first: heading, paragraphs, list, link, image.",
+    "Body text has a readable font, comfortable line height, and a sensible max-width.",
+    "At least one class used for a card or panel, with padding and a border.",
+    "Headings are clearly bigger than body text.",
+    "One main colour and one accent, used on purpose.",
+    "Every word is easy to read against its background.",
+    "Nothing looks like a default unstyled page.",
+    "One sentence written down: what your palette and fonts are doing for the page.",
+  ],
         deploy: true,
         xp: 30,
         files: {
@@ -584,7 +676,7 @@ body {
           { label: "Sharing space", body: "flex: 1 on each child makes them all the same width. gap adds space between them." },
         ],
         blocks: [
-          { type: "text", body: "By default, block elements stack vertically — one after another down the page. That's fine for an article and useless for a nav bar. Flexbox is how you take control of that arrangement." },
+          { type: "text", body: "By default, block elements stack vertically, one after another down the page. That's fine for an article and useless for a nav bar. Flexbox is how you take control of that arrangement." },
           { type: "text", body: "Setting display: flex on a parent changes how its direct children are laid out. The parent becomes a flex container; the children become flex items. Every flexbox property goes on the parent, except a few that fine-tune individual children." },
           { type: "heading", body: "The two axes" },
           { type: "text", body: "This is the concept everything else depends on. A flex container has a main axis and a cross axis. By default the main axis runs horizontally (left to right) and the cross axis runs vertically. If you set flex-direction: column, they swap." },
@@ -607,7 +699,7 @@ body {
             { code: "margin-left: auto", what: "An old trick that still works beautifully: pushes this item and everything after it to the far end." },
           ]},
           { type: "heading", body: "The pattern you'll use most" },
-          { type: "code", body: "/* Logo left, links right — the classic nav bar */\n.nav {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}" },
+          { type: "code", body: "/* Logo left, links right: the classic nav bar */\n.nav {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}" },
           { type: "mistake", body: "Putting flexbox properties on the child instead of the parent. display: flex goes on the container." },
         ],
         task: "Three exercises in the CSS. First, cycle the .row through every justify-content value and predict each before you run it. Second, make the nav bar put the logo on the left and links on the right. Third, make the three cards sit in an equal-width row.",
@@ -693,7 +785,7 @@ body {
   font-weight: 600;
 }
 
-/* Debugging challenge — why does this wrap? */
+/* Debugging challenge: why does this wrap? */
 .broken-nav {
   display: flex;
   flex-wrap: wrap;
@@ -709,18 +801,18 @@ body {
       },
       practice: {
       subtitle: "Practice: flexbox",
-      intro: "Each container below needs different flexbox settings. Work out which properties to use — check your flex-direction first when something doesn't behave.",
+      intro: "Each container below needs different flexbox settings. Work out which properties to use. Check your flex-direction first when something doesn't behave.",
       drills: [
-        { text: "Make .one a flex row with all three boxes centred horizontally.", hint: "justify-content works along the main axis." },
-        { text: "Make .two a flex row with boxes pushed to opposite ends.", hint: "space-between puts all the gap in the middle." },
-        { text: "Make .three centre its box both horizontally and vertically.", hint: "You need justify-content AND align-items." },
-        { text: "Make .four a vertical column with 12px gaps.", hint: "flex-direction: column swaps which axis is which." },
-        { text: "Make the three cards in .five equal width.", hint: "flex: 1 on each child." },
-        { text: "In .six, make the first card twice as wide as the others.", hint: "flex-grow: 2 versus 1." },
-        { text: "Build a nav bar in .seven: logo left, links right.", hint: "space-between, or margin-left: auto on the links." },
-        { text: "Make .eight wrap onto a new line when it runs out of room.", hint: "flex-wrap: wrap" },
-        { text: "Stop the logo in .nine from shrinking when space is tight.", hint: "flex-shrink: 0" },
-      ],
+    { text: "Add a rule: .one { display: flex; justify-content: center; }.", hint: "display: flex switches on flexbox. justify-content lines boxes up along the row." },
+    { text: "Add a rule: .two { display: flex; justify-content: space-between; }.", hint: "The first box goes left, the last goes right, space fills the middle." },
+    { text: "Add a rule: .three { display: flex; justify-content: center; align-items: center; }.", hint: "justify-content is horizontal here, align-items is vertical. You need both." },
+    { text: "Add a rule: .four { display: flex; flex-direction: column; gap: 12px; }.", hint: "column stacks boxes top to bottom. gap puts space between them." },
+    { text: "Add .five { display: flex; }. Then add .five b { flex: 1; }.", hint: ".five b means every <b> inside .five. flex: 1 gives each an equal share." },
+    { text: "Add .six { display: flex; } and .six b { flex: 1; }. Then add .six b:first-child { flex: 2; }.", hint: ":first-child picks the first box. 2 against 1 means twice the width." },
+    { text: "Add .seven { display: flex; justify-content: space-between; align-items: center; }.", hint: "The logo goes left, the links go right." },
+    { text: "Add .eight { display: flex; flex-wrap: wrap; gap: 8px; }.", hint: "Without wrap, flexbox squeezes everything onto one line." },
+    { text: "Add .nine { display: flex; }. Then add .nine b:first-child { flex-shrink: 0; }.", hint: "flex-shrink: 0 goes on the box itself. It stops that box shrinking." },
+  ],
       xp: 20,
       files: {
         html: `<div class="one"><b>1</b><b>2</b><b>3</b></div>
@@ -786,25 +878,16 @@ b {
     },
     build: {
         subtitle: "Build: landing page",
-        brief: "Design and build a three-section landing page — a hero, a features row, and a footer — using Flexbox for every layout decision. The subject is yours: a club, a game, a fake product, a band.",
+        brief: "Design and build a three-section landing page: a hero, a features row, and a footer. Use Flexbox for every layout decision. The subject is yours: a club, a game, a fake product, a band.",
         requirements: [
-          "Write the HTML first: <section class=\"hero\">, <section class=\"features\">, <footer class=\"footer\">.",
-          "Inside .features, add 3 boxes like <div class=\"feature\">One</div>",
-          "Open style.css.",
-          "Make a rule: .hero { }",
-          "Inside it, add: display: flex;",
-          "Add: flex-direction: column;   (stacks the items)",
-          "Add: justify-content: center;   (centres them)",
-          "Add: align-items: center;   (centres them the other way)",
-          "Add: padding: 64px 24px;   (makes the hero big)",
-          "Make a rule: .features { display: flex; }",
-          "Add: gap: 16px;   (space between the boxes)",
-          "Make a rule: .feature { flex: 1; }   (makes all 3 the same width)",
-          "Make a rule: .footer { display: flex; }",
-          "Add: justify-content: space-between;   (pushes items apart)",
-          "Add: flex-wrap: wrap; to .features so boxes drop down on small screens.",
-          "Click Run. Make the preview narrow. Check nothing is squashed.",
-        ],
+    "Three sections: hero, features row, footer.",
+    "Hero content centred, with generous space around it.",
+    "Three feature boxes, equal width, in one row.",
+    "Footer items pushed to opposite ends.",
+    "Flexbox used for every layout choice.",
+    "The features row adapts on narrow screens. Nothing gets squashed.",
+    "Checked at phone, tablet, and desktop widths.",
+  ],
         deploy: true,
         xp: 30,
         files: {
@@ -834,7 +917,7 @@ b {
           { label: "Which tool", body: "One direction, use Flexbox. Two directions at once, use Grid." },
         ],
         blocks: [
-          { type: "text", body: "Flexbox handles one direction at a time — a row, or a column. Grid handles both simultaneously. If you're laying out a page with a header, a sidebar, a content area, and a footer, Grid describes that in a few lines where Flexbox would need nested wrappers." },
+          { type: "text", body: "Flexbox handles one direction at a time: a row, or a column. Grid handles both simultaneously. If you're laying out a page with a header, a sidebar, a content area, and a footer, Grid describes that in a few lines where Flexbox would need nested wrappers." },
           { type: "text", body: "Like Flexbox, you turn a parent into a grid container and its direct children become grid items." },
           { type: "heading", body: "Defining the tracks" },
           { type: "reference", items: [
@@ -848,7 +931,7 @@ b {
           { type: "code", body: "grid-template-columns: 1fr 1fr;      → two equal columns\ngrid-template-columns: 1fr 2fr;      → second is twice as wide\ngrid-template-columns: 200px 1fr;    → fixed sidebar, flexible content\ngrid-template-columns: repeat(3, 1fr); → three equal columns" },
           { type: "tip", body: "repeat() saves typing and makes intent obvious. repeat(4, 1fr) is clearer than 1fr 1fr 1fr 1fr, especially at larger counts." },
           { type: "heading", body: "Named areas" },
-          { type: "text", body: "grid-template-areas lets you draw the layout in your CSS as ASCII art. Each item gets a name, and the container arranges them into the shape you've drawn. It's unusually readable — you can see the layout by looking at the code." },
+          { type: "text", body: "grid-template-areas lets you draw the layout in your CSS as ASCII art. Each item gets a name, and the container arranges them into the shape you've drawn. It's unusually readable. You can see the layout by looking at the code." },
           { type: "code", body: ".page {\n  display: grid;\n  grid-template-columns: 200px 1fr;\n  grid-template-areas:\n    \"head head\"\n    \"side main\"\n    \"foot foot\";\n}\n\n.head { grid-area: head; }\n.side { grid-area: side; }\n.main { grid-area: main; }\n.foot { grid-area: foot; }" },
           { type: "heading", body: "Which one do I use?" },
           { type: "reference", items: [
@@ -921,14 +1004,14 @@ b {
       subtitle: "Practice: grid",
       intro: "Six grid layouts to build. Pay attention to when fr is the right tool and when a fixed width is.",
       drills: [
-        { text: "Make .one a grid with three equal columns.", hint: "repeat(3, 1fr)" },
-        { text: "Make .two a grid where the second column is twice the first.", hint: "1fr 2fr" },
-        { text: "Make .three a grid with a fixed 150px sidebar and flexible content.", hint: "150px 1fr" },
-        { text: "Give .four a 16px gap between all cells.", hint: "gap works in both directions at once." },
-        { text: "Make .five a 2x2 grid.", hint: "Two columns and two rows — or just two columns and let rows fill." },
-        { text: "Build the page layout in .six using grid-template-areas.", hint: "Draw it as strings: \"head head\" then \"side main\"." },
-        { text: "Write a comment saying which of these would be easier with Flexbox.", hint: "One-directional layouts usually are." },
-      ],
+    { text: "Inside the empty .one rule, add display: grid; and grid-template-columns: repeat(3, 1fr);.", hint: "1fr is one share of the space. repeat(3, 1fr) is three equal shares." },
+    { text: "Inside .two, add display: grid; and grid-template-columns: 1fr 2fr;.", hint: "The second column gets two shares. The first gets one." },
+    { text: "Inside .three, add display: grid; and grid-template-columns: 150px 1fr;.", hint: "The sidebar stays 150px wide. The rest takes what is left." },
+    { text: "Inside .four, add display: grid; and gap: 16px;.", hint: "One gap property spaces rows and columns at the same time." },
+    { text: "Inside .five, add display: grid; and grid-template-columns: 1fr 1fr;.", hint: "Two columns. The four boxes fill a 2 by 2 grid on their own." },
+    { text: "Inside .six, add display: grid; and grid-template-areas: \"head head\" \"side main\" \"foot foot\";.", hint: "Each quoted string is one row of your layout." },
+    { text: "Below, add .head { grid-area: head; }, .side { grid-area: side; }, .main { grid-area: main; }, .foot { grid-area: foot; }.", hint: "Each name must match a word in the template exactly." },
+  ],
       xp: 20,
       files: {
         html: `<div class="one"><b>1</b><b>2</b><b>3</b></div>
@@ -988,23 +1071,14 @@ b {
         subtitle: "Build: rebuild with Grid",
         brief: "Rebuild your Lesson 4 landing page using Grid instead of Flexbox. Then answer honestly in a comment at the top of your CSS: which tool was better for this particular layout, and why?",
         requirements: [
-          "Write the HTML: one <div class=\"page\"> around everything.",
-          "Inside it, add <header class=\"head\">, <section class=\"features\">, <footer class=\"foot\">.",
-          "Open style.css.",
-          "Make a rule: .page { }",
-          "Inside it, add: display: grid;",
-          "Add: gap: 16px;   (space between all cells)",
-          "Make a rule: .features { display: grid; }",
-          "Add: grid-template-columns: repeat(3, 1fr);   (makes 3 equal columns)",
-          "Click Run. You should see 3 columns.",
-          "Now try: grid-template-columns: 1fr 2fr;   (the second is twice as wide)",
-          "Now try: grid-template-columns: 200px 1fr;   (the first stays fixed)",
-          "Pick the one you like best and keep it.",
-          "In .page, add: grid-template-areas: \"head\" \"features\" \"foot\";",
-          "Give each part its name: .head { grid-area: head; }",
-          "Do the same for .features and .foot.",
-          "At the top of style.css write: /* Grid or Flexbox was easier here because... */",
-        ],
+    "The page wrapper is a Grid.",
+    "Features row: three equal columns.",
+    "Main regions placed with named grid areas.",
+    "Consistent gaps everywhere.",
+    "The layout works at phone width.",
+    "A comment at the top of the CSS says which tool fit this layout better, and why.",
+    "Checked at three widths. Nothing overlaps.",
+  ],
         deploy: true,
         xp: 30,
         files: {
@@ -1036,14 +1110,14 @@ b {
         blocks: [
           { type: "text", body: "You have no idea what size screen someone will use. Phone, tablet, laptop, a TV, a phone rotated sideways. Responsive design means building one page that reshapes itself rather than three separate sites." },
           { type: "heading", body: "The viewport meta tag" },
-          { type: "text", body: "Without this line in your <head>, phones pretend to be desktop-width and shrink your whole page to fit — so your careful mobile layout never appears. It's one line, and forgetting it is a rite of passage." },
+          { type: "text", body: "Without this line in your <head>, phones pretend to be desktop-width and shrink your whole page to fit, so your careful mobile layout never appears. It's one line, and forgetting it is a rite of passage." },
           { type: "code", body: '<meta name="viewport" content="width=device-width, initial-scale=1">' },
           { type: "heading", body: "Media queries" },
           { type: "text", body: "A media query wraps a block of CSS in a condition. The styles inside only apply when the condition is true." },
           { type: "code", body: "/* Applies only at 600px wide and below */\n@media (max-width: 600px) {\n  .cards { flex-direction: column; }\n}\n\n/* Applies only at 600px and above */\n@media (min-width: 600px) {\n  .cards { flex-direction: row; }\n}" },
-          { type: "tip", body: "Choose breakpoints by resizing your own page until it looks wrong, then putting a breakpoint there. Don't copy a list of device widths — those go stale, and your layout breaks where YOUR content breaks, not where someone's phone happens to be." },
+          { type: "tip", body: "Choose breakpoints by resizing your own page until it looks wrong, then putting a breakpoint there. Don't copy a list of device widths. Those go stale, and your layout breaks where YOUR content breaks, not where someone's phone happens to be." },
           { type: "heading", body: "Mobile-first" },
-          { type: "text", body: "Mobile-first means your base CSS describes the phone layout, and min-width queries ADD complexity as the screen grows. The alternative — desktop-first with max-width queries — means constantly undoing things. Adding is easier to reason about than removing." },
+          { type: "text", body: "Mobile-first means your base CSS describes the phone layout, and min-width queries ADD complexity as the screen grows. The alternative (desktop-first with max-width queries) means constantly undoing things. Adding is easier to reason about than removing." },
           { type: "code", body: "/* Base: phone. Simple, single column. */\n.cards { display: flex; flex-direction: column; gap: 16px; }\n\n/* Bigger screens: add the row */\n@media (min-width: 700px) {\n  .cards { flex-direction: row; }\n}" },
           { type: "heading", body: "Units that flex" },
           { type: "reference", items: [
@@ -1137,15 +1211,15 @@ b {
       subtitle: "Practice: responsive",
       intro: "Drag the preview edge to test as you go. Every drill should be checked at more than one width.",
       drills: [
-        { text: "Make .cards stack vertically below 600px.", hint: "@media (max-width: 600px) with flex-direction: column." },
-        { text: "Rewrite that same rule mobile-first instead.", hint: "Base = column, then min-width query switches to row." },
-        { text: "Add a tablet breakpoint where .cards show two across.", hint: "You may find grid easier than flexbox here." },
-        { text: "Stop .photo overflowing on narrow screens.", hint: "One property on the img." },
-        { text: "Make the nav stack vertically on phones.", hint: "Change flex-direction inside a media query." },
-        { text: "Make the h1 scale with the screen using clamp().", hint: "clamp(min, preferred, max) — try 1.5rem, 5vw, 3rem." },
-        { text: "Give body horizontal padding in rem, not px.", hint: "rem respects the user's browser font settings." },
-        { text: "Check the whole page at 375px wide with no horizontal scrolling.", hint: "Horizontal scroll usually means something has a fixed width." },
-      ],
+    { text: "In the HTML <head>, add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">. In the CSS, add .photo { max-width: 100%; }.", hint: "The meta tag goes in the head. The CSS stops the wide image overflowing." },
+    { text: "Add a rule that stacks the cards on phones: .cards { flex-direction: column; }.", hint: "The starter already makes .cards a flex row. This switches it to a column." },
+    { text: "At the bottom of the CSS, add an empty media query: @media (min-width: 700px) { }.", hint: "Rules inside these braces only apply at 700px and wider." },
+    { text: "Inside that query, add .cards { flex-direction: row; }.", hint: "Same selector, new value. Wide screens get the row back." },
+    { text: "Add a second query: @media (min-width: 480px) { .cards { display: grid; grid-template-columns: 1fr 1fr; } }.", hint: "Tablet size: two cards across. Grid makes this easy." },
+    { text: "Stack the nav on phones: add .nav { flex-direction: column; } before the queries. Inside the 700px query, add .nav { flex-direction: row; }.", hint: "Same pattern as the cards: column base, row inside the query." },
+    { text: "Make the h1 scale with the screen: h1 { font-size: clamp(1.5rem, 5vw, 3rem); }.", hint: "clamp sets a minimum, a preferred size, and a maximum." },
+    { text: "Drag the preview to 375px wide. The page must not scroll sideways.", hint: "Sideways scroll means something still has a fixed width. Find it." },
+  ],
       xp: 20,
       files: {
         html: `<nav class="nav">
@@ -1198,24 +1272,16 @@ b {
     },
     build: {
         subtitle: "Build: make it responsive",
-        brief: "Take your full portfolio — About Me plus your landing page — and make it work properly on phone, tablet, and desktop. Choose your own breakpoints based on where your layout actually breaks when you resize it.",
+        brief: "Take your full portfolio (About Me plus your landing page) and make it work properly on phone, tablet, and desktop. Choose your own breakpoints based on where your layout actually breaks when you resize it.",
         requirements: [
-          "In <head>, add: <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">",
-          "Open style.css.",
-          "Write your styles for a PHONE first. One column. Nothing side by side.",
-          "Add a rule: img { max-width: 100%; }   (stops pictures overflowing)",
-          "Stack your cards: .cards { display: flex; flex-direction: column; }",
-          "Click Run. Make the preview narrow. It should look good.",
-          "Now add: @media (min-width: 700px) { }",
-          "Inside those curly braces, add: .cards { flex-direction: row; }",
-          "Click Run. Make the preview wide. The cards should go side by side.",
-          "Add a second one: @media (min-width: 480px) { }",
-          "Inside it, change something small, like padding or font-size.",
-          "Stack your nav on phones: .nav { flex-direction: column; }",
-          "Inside your 700px block, add: .nav { flex-direction: row; }",
-          "Make your h1 grow with the screen: font-size: clamp(1.5rem, 5vw, 3rem);",
-          "Make the preview very narrow. You must NOT be able to scroll sideways.",
-        ],
+    "The viewport meta tag is in <head>.",
+    "Phone layout: a single column, everything readable.",
+    "Breakpoints picked from where your layout actually breaks.",
+    "No image overflows its container.",
+    "The nav works at phone width.",
+    "No sideways scrolling at 375px.",
+    "Checked at phone, tablet, and desktop widths.",
+  ],
         deploy: true,
         xp: 30,
         files: {
@@ -1245,18 +1311,18 @@ b {
           { label: "Good habit", body: "Build it in grey first. Add colour only when the hierarchy already works." },
         ],
         blocks: [
-          { type: "text", body: "At this point you can build any layout you can describe. This lesson is about deciding what to build — the difference between a page that works and a page that looks like someone meant it." },
+          { type: "text", body: "At this point you can build any layout you can describe. This lesson is about deciding what to build: the difference between a page that works and a page that looks like someone meant it." },
           { type: "heading", body: "Visual hierarchy" },
-          { type: "text", body: "Hierarchy is the order your eye travels. On a well-designed page you know instantly what to read first, second, and third — without being told. You create it with size, weight, colour, and space, in roughly that order of power." },
+          { type: "text", body: "Hierarchy is the order your eye travels. On a well-designed page you know instantly what to read first, second, and third, without being told. You create it with size, weight, colour, and space, in roughly that order of power." },
           { type: "reference", items: [
             { code: "Size", what: "Bigger reads as more important. The strongest and bluntest tool you have." },
             { code: "Weight", what: "Bolder pulls the eye. Useful when you want emphasis without taking up more room." },
-            { code: "Colour", what: "A single accent colour draws attention hard — which is why it stops working the moment you use it five times." },
+            { code: "Colour", what: "A single accent colour draws attention hard. That is why it stops working the moment you use it five times." },
             { code: "Space", what: "Isolation creates importance. Something with room around it reads as significant." },
           ]},
           { type: "tip", body: "If everything is emphasised, nothing is. Three levels of hierarchy is usually plenty: a headline, a supporting line, and body text." },
           { type: "heading", body: "Whitespace" },
-          { type: "text", body: "Whitespace — the empty area between things — isn't wasted space. It's what makes the non-empty parts legible. Beginner pages are almost always too cramped, because empty space feels like something's missing. It isn't." },
+          { type: "text", body: "Whitespace (the empty area between things) isn't wasted space. It's what makes the non-empty parts legible. Beginner pages are almost always too cramped, because empty space feels like something's missing. It isn't." },
           { type: "text", body: "A useful habit: group related things close together and push unrelated things apart. Proximity implies relationship. A heading sitting right above its paragraph clearly belongs to it; the same heading floating equidistant between two paragraphs belongs to neither." },
           { type: "heading", body: "Alignment" },
           { type: "text", body: "Every element should line up with something else. Invisible vertical lines running down a page are what make it feel organised, even to people who could never explain why. Pick a small number of alignment points and stick to them." },
@@ -1265,12 +1331,12 @@ b {
             { code: "One primary", what: "Your main brand or mood colour. Used for the most important element on a screen." },
             { code: "One accent", what: "For calls to action and highlights. Should contrast the primary." },
             { code: "Neutrals", what: "Greys and off-whites for backgrounds, borders, and body text. Most of your page should be neutral." },
-            { code: "Semantic colours", what: "Red for errors, green for success. Don't reuse these decoratively — people read meaning into them." },
+            { code: "Semantic colours", what: "Red for errors, green for success. Don't reuse these decoratively. People read meaning into them." },
           ]},
           { type: "tip", body: "A reliable shortcut: start greyscale. Build the whole page in black, white, and grey, get the hierarchy and spacing right, and only then add colour. If it works in greyscale, colour will improve it. If it doesn't, colour was hiding the problem." },
           { type: "mistake", body: "Using five different spacing values. Pick four numbers and reuse them everywhere." },
         ],
-        task: "The starter page has no hierarchy — everything is the same size and weight. Fix it using only font-size, font-weight, and spacing. No new colours allowed. Then fix the second block, where the spacing groups the wrong things together.",
+        task: "The starter page has no hierarchy. Everything is the same size and weight. Fix it using only font-size, font-weight, and spacing. No new colours allowed. Then fix the second block, where the spacing groups the wrong things together.",
         extra: { label: "Critique", xp: 10, text: "Pick two real websites and describe each one's hierarchy in a sentence: what does your eye hit first, second, third, and how did they do it?" },
         files: {
           html: `<div class="flat">
@@ -1284,7 +1350,7 @@ b {
   <h3>Section one</h3>
   <p>This paragraph belongs to the heading above it.</p>
   <h3>Section two</h3>
-  <p>So does this one. But the spacing suggests otherwise — fix it.</p>
+  <p>So does this one. But the spacing suggests otherwise. Fix it.</p>
 </div>`,
           css: `body {
   font-family: system-ui, sans-serif;
@@ -1317,17 +1383,17 @@ b {
       },
       practice: {
       subtitle: "Practice: hierarchy & spacing",
-      intro: "No new colours in any of these drills. Everything is size, weight, and space — the tools that matter most.",
+      intro: "No new colours in any of these drills. Everything is size, weight, and space. These are the tools that matter most.",
       drills: [
-        { text: "Give the four lines in .flat three clear levels of hierarchy.", hint: "Eyebrow smallest, headline biggest, body in between." },
-        { text: "Make the eyebrow text small, uppercase, and letter-spaced.", hint: "text-transform and letter-spacing." },
-        { text: "Fix .grouping so each heading sits closer to its own paragraph.", hint: "Reduce margin-bottom on the heading, increase margin-top." },
-        { text: "Set a consistent spacing scale and use only those values.", hint: "Pick 8/16/24/32 and stick to them everywhere." },
-        { text: "Give the page a max-width so lines stop running too long.", hint: "Around 60-70 characters." },
-        { text: "Align every element to the same left edge.", hint: "Check for stray padding or margin on individual items." },
-        { text: "Make the .cta visually the most prominent thing on the page.", hint: "Size, weight, and surrounding space — no colour." },
-        { text: "Convert the whole page to greyscale and check the hierarchy still reads.", hint: "If it stops working, colour was doing the hierarchy's job." },
-      ],
+    { text: "Add .eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; }.", hint: "text-transform changes the look without retyping the words." },
+    { text: "Add .headline { font-size: 32px; font-weight: 700; }.", hint: "Size plus weight marks the top of the hierarchy." },
+    { text: "Add .body { font-size: 16px; }.", hint: "Three levels now: eyebrow small, headline big, body in between." },
+    { text: "Change .grouping h3 to margin: 8px 0 4px 0;.", hint: "Things that belong together sit close together." },
+    { text: "Change .grouping p to margin: 0 0 32px 0;.", hint: "The gap between groups must be bigger than the gap inside a group." },
+    { text: "Pick four spacing numbers: 8, 16, 24, 32. Replace every other margin and padding with one of these.", hint: "Open each rule. Swap odd values for the closest step." },
+    { text: "Make the .cta the most prominent thing: .cta { font-size: 20px; font-weight: 700; }.", hint: "No colour allowed. Bigger and bolder is enough." },
+    { text: "Check the left edge. Every element must start at the same line.", hint: "Look down the left side. Fix any stray padding or margin." },
+  ],
       xp: 20,
       files: {
         html: `<div class="flat">
@@ -1366,26 +1432,17 @@ b {
     },
     build: {
         subtitle: "Build: redesign your portfolio",
-        brief: "Redesign your portfolio with an intentional visual identity. Sketch it first — on paper or in a design tool — then build it. Every choice should trace back to a decision you made, not a default you left alone.",
+        brief: "Redesign your portfolio with an intentional visual identity. Sketch it first, on paper or in a design tool, then build it. Every choice should trace back to a decision you made, not a default you left alone.",
         requirements: [
-          "Draw your layout on paper first. Just boxes with labels.",
-          "Open style.css.",
-          "At the top, add: :root { }",
-          "Inside it, add: --primary: #0f172a;",
-          "Add: --accent: #0ea5e9;",
-          "Add: --muted: #64748b;",
-          "Build the whole page in grey first. No colour yet.",
-          "Make your h1 big: font-size: 32px; font-weight: 700;",
-          "Make your intro line medium: font-size: 18px;",
-          "Make your body text normal: font-size: 16px;",
-          "You now have 3 sizes. That is your hierarchy.",
-          "Choose 4 spacing numbers: 8px, 16px, 24px, 32px.",
-          "Use ONLY those 4 numbers for every margin and padding.",
-          "Put each heading close to its own paragraph. Push other sections further away.",
-          "Now add colour. Use var(--primary) for headings.",
-          "Use var(--accent) only once or twice. Not everywhere.",
-          "Use var(--muted) for less important text.",
-        ],
+    "A sketch or plan made before any code.",
+    "Three type sizes at most: headline, body, small.",
+    "One spacing scale used everywhere.",
+    "Close things sit close. Separate things sit apart.",
+    "Colour used sparingly. It never carries the hierarchy alone.",
+    "Everything aligns to shared edges.",
+    "The key action is the most prominent thing on the page.",
+    "Each choice defended in one sentence.",
+  ],
         deploy: true,
         xp: 30,
         files: {
@@ -1415,16 +1472,16 @@ b {
           { label: "Good habit", body: "Sketch the phone layout first. It forces you to choose what matters." },
         ],
         blocks: [
-          { type: "text", body: "A capstone without a plan turns into three hours of choosing fonts. The work here is deciding what you're making before you open an editor — and the plan is worth XP precisely because skipping it is so tempting." },
+          { type: "text", body: "A capstone without a plan turns into three hours of choosing fonts. The work here is deciding what you're making before you open an editor. And the plan is worth XP precisely because skipping it is so tempting." },
           { type: "heading", body: "What your plan needs" },
           { type: "reference", items: [
             { code: "Pages", what: "Which pages exist and what lives on each. Home, About, Projects, Contact is a sensible default." },
             { code: "Content", what: "Actual words and images, at least roughly. \"Lorem ipsum\" hides layout problems until it's too late to fix them." },
             { code: "Visual identity", what: "Your palette and font pairing, decided up front. One primary, one accent, two fonts maximum." },
-            { code: "Wireframe", what: "A rough sketch of each page's layout. Boxes and labels — this is not meant to be pretty." },
+            { code: "Wireframe", what: "A rough sketch of each page's layout. Boxes and labels. This is not meant to be pretty." },
           ]},
           { type: "heading", body: "Sketching a wireframe" },
-          { type: "text", body: "A wireframe is a drawing of where things go, with no styling at all. Rectangles for images, lines for text, a box labelled \"nav.\" The point is to make layout decisions cheaply — moving a box on paper takes two seconds, moving a section in CSS takes twenty minutes." },
+          { type: "text", body: "A wireframe is a drawing of where things go, with no styling at all. Rectangles for images, lines for text, a box labelled \"nav.\" The point is to make layout decisions cheaply. Moving a box on paper takes two seconds, moving a section in CSS takes twenty minutes." },
           { type: "tip", body: "Sketch the phone layout first. It forces you to decide what actually matters, because there's only room for the essentials. Widening a good mobile layout is much easier than cramming a desktop one down." },
           { type: "heading", body: "How you'll be assessed" },
           { type: "reference", items: [
@@ -1485,21 +1542,21 @@ body {
       },
       practice: {
       subtitle: "Practice: wireframe in code",
-      intro: "Before building your real portfolio, block out the structure with grey boxes. No content, no colour — just layout. This is a wireframe you can resize.",
+      intro: "Before building your real portfolio, block out the structure with grey boxes. No content, no colour. Just layout. This is a wireframe you can resize.",
       drills: [
-        { text: "Block out a header with a title area and a nav area.", hint: "Two boxes in a row." },
-        { text: "Block out a hero section below it.", hint: "One wide box, taller than the others." },
-        { text: "Block out a projects area with three equal cards.", hint: "Grid or flexbox, three columns." },
-        { text: "Block out an about section with text and an image area side by side.", hint: "Two columns, one wider than the other." },
-        { text: "Block out a contact area with a form shape.", hint: "Stacked rectangles for fields." },
-        { text: "Block out a footer.", hint: "Full width, short." },
-        { text: "Make the whole wireframe stack into one column on narrow screens.", hint: "One media query should handle most of it." },
-        { text: "Label each box with what goes in it.", hint: "Plain text inside each box is enough." },
-      ],
+    { text: "Add a header box: <div class=\"box\">Header: title and nav go here</div>.", hint: "Every box uses class=\"box\". The text says what will go there." },
+    { text: "Under it, add a hero box: <div class=\"box\">Hero: big headline</div>.", hint: "One wide box. It will grow taller than the rest later." },
+    { text: "Add a row wrapper with three project boxes: <div class=\"row\"> holding three <div class=\"box\"> boxes.", hint: "The wrapper lets you lay the three out as one row." },
+    { text: "Add two boxes for the about area: <div class=\"box\">About text</div> and <div class=\"box\">Photo</div>.", hint: "Two boxes. They will sit side by side later." },
+    { text: "Add a contact box with three small boxes inside for name, email, and message.", hint: "One outer box labelled Contact. Three inner boxes." },
+    { text: "Add a footer box at the very bottom: <div class=\"box\">Footer</div>.", hint: "Full width, short." },
+    { text: "In the CSS, add .row { display: flex; gap: 12px; }. Run it: the three projects sit side by side.", hint: "Flexbox on the wrapper lines up everything inside it." },
+    { text: "Add @media (max-width: 600px) { .row { flex-direction: column; } }. Shrink the preview to check.", hint: "Narrow screens get a single column." },
+  ],
       xp: 20,
       files: {
         html: `<!-- Block out your portfolio layout with labelled boxes.
-     No real content yet — this is a wireframe. -->
+     No real content yet. This is a wireframe. -->
 
 
 `,
@@ -1525,25 +1582,17 @@ body {
     },
     build: {
         subtitle: "Build: portfolio structure",
-        brief: "Build out the full structure and content of your portfolio: all four sections, real content, semantic HTML throughout. Styling can stay rough — this part is about getting everything in place.",
+        brief: "Build out the full structure and content of your portfolio: all four sections, real content, semantic HTML throughout. Styling can stay rough. This part is about getting everything in place.",
         requirements: [
-          "Start a new file with the full skeleton: <!DOCTYPE html>, <html>, <head>, <body>.",
-          "In <head>, add a <title> and the viewport meta tag.",
-          "Add <header> with your <h1> and a <nav>.",
-          "In the nav, add 3 links: About, Projects, Contact.",
-          "Add <main> and </main>.",
-          "Inside main, add <section id=\"about\"> with <h2>About</h2>.",
-          "Write 2 real paragraphs about you. Do not use fake text.",
-          "Add <section id=\"projects\"> with <h2>Projects</h2>.",
-          "Add your first project: an <h3> title and a <p> description.",
-          "Add a second project the same way.",
-          "Add <section id=\"contact\"> with <h2>Contact</h2>.",
-          "Build a form with 3 inputs. Every input needs its own <label>.",
-          "Add <footer> with a copyright line.",
-          "Check: only ONE <h1> on the whole page.",
-          "Check: every <img> has alt text.",
-          "Click each nav link. It should jump to the right section.",
-        ],
+    "Full skeleton with a title and the viewport meta tag.",
+    "All four sections built: about, projects, contact, plus header and footer.",
+    "Real content everywhere. No fake text.",
+    "Semantic tags throughout. One h1. No skipped heading levels.",
+    "Every image has alt text.",
+    "The contact form has a label on every input.",
+    "Nav links jump to the right sections.",
+    "The wireframe layout is recreated, stacking cleanly on phones.",
+  ],
         deploy: false,
         xp: 25,
         files: {
@@ -1566,17 +1615,17 @@ body {
           a: "Keyboard navigation. People who cannot use a mouse rely on that outline to see where they are. Replace it with your own style, never delete it.",
         },
         ref: [
-          { label: "Images", body: "Every img needs alt. Decorative pictures use alt=\"\" — empty, but still there." },
+          { label: "Images", body: "Every img needs alt. Decorative pictures use alt=\"\". Empty, but still there." },
           { label: "Headings", body: "One h1 per page. Go h1, h2, h3 in order. Never skip a level." },
-          { label: "Labels", body: "Every input needs a label. A placeholder is not a label — it disappears." },
+          { label: "Labels", body: "Every input needs a label. A placeholder is not a label. It disappears." },
           { label: "Keyboard", body: "Press Tab through the page. You must reach everything and see where you are." },
           { label: "Ship it", body: "Done means live. Put it on GitHub Pages and open it on a real phone." },
         ],
         blocks: [
-          { type: "text", body: "There's a real difference between a site that's built and a site that's finished. Finishing is an accessibility pass, a responsiveness check, and actually deploying it — and it takes less time than people expect." },
+          { type: "text", body: "There's a real difference between a site that's built and a site that's finished. Finishing is an accessibility pass, a responsiveness check, and actually deploying it. It takes less time than people expect." },
           { type: "heading", body: "The accessibility checklist" },
           { type: "reference", items: [
-            { code: "Alt text", what: "Every <img> has alt describing what it shows. Decorative images get alt=\"\" — empty, but present." },
+            { code: "Alt text", what: "Every <img> has alt describing what it shows. Decorative images get alt=\"\". Empty, but present." },
             { code: "Heading order", what: "One <h1>, then <h2>s, then <h3>s. Never skip a level to get a particular size." },
             { code: "Labels", what: "Every form input has a connected <label> with a matching for and id." },
             { code: "Contrast", what: "Text and background differ by at least 4.5:1. Browser dev tools will check this for you." },
@@ -1587,10 +1636,10 @@ body {
           { type: "text", body: "Open dev tools, switch to the device toolbar, and walk through phone, tablet, and desktop widths. You're looking for horizontal scrolling, overflowing images, text that runs edge to edge, and tap targets too small to hit with a thumb." },
           { type: "heading", body: "Deploying" },
           { type: "text", body: "Done means live. A site on your laptop isn't finished; a site at a URL you can send someone is. GitHub Pages is free and takes a few minutes: push your files to a repository, enable Pages in the settings, and your site gets a public address." },
-          { type: "tip", body: "Deploy earlier than you think you should — ideally well before the deadline. Deployment always surfaces something: a broken image path, a file named Index.html instead of index.html, a stylesheet link that worked locally and doesn't now." },
+          { type: "tip", body: "Deploy earlier than you think you should. Ideally well before the deadline. Deployment always surfaces something: a broken image path, a file named Index.html instead of index.html, a stylesheet link that worked locally and doesn't now." },
           { type: "heading", body: "Presenting your work" },
-          { type: "text", body: "You'll give a two-minute walkthrough. Don't narrate every feature — pick one decision you made and explain why. \"I chose this layout because...\" is far more interesting than a tour, and explaining a decision out loud is how you find out whether you actually made one." },
-          { type: "mistake", body: "Deleting a focus outline because it looked ugly. Restyle it instead — never remove it." },
+          { type: "text", body: "You'll give a two-minute walkthrough. Don't narrate every feature. Pick one decision you made and explain why. \"I chose this layout because...\" is far more interesting than a tour, and explaining a decision out loud is how you find out whether you actually made one." },
+          { type: "mistake", body: "Deleting a focus outline because it looked ugly. Restyle it instead. Never remove it." },
         ],
         task: "Run the full accessibility checklist against your site and fix everything it surfaces. Then check it at three widths. Use the sandbox to test any fixes before applying them to your real files.",
         extra: { label: "Reflection", xp: 20, text: "Write a short reflection: what was hardest, what you'd change, and what you'd do differently on the next build." },
@@ -1647,11 +1696,11 @@ input, button {
       intro: "This page has ten accessibility problems. Find and fix every one, then run the same checks against your own portfolio.",
       drills: [
         { text: "Add alt text to the image that's missing it.", hint: "Describe what it shows, don't start with \"image of\"." },
-        { text: "Give the decorative divider an empty alt attribute.", hint: "alt=\"\" — present but empty tells screen readers to skip it." },
-        { text: "Fix the heading order — it skips from h1 to h4.", hint: "Never skip levels to get a size. Use CSS for size." },
+        { text: "Give the decorative divider an empty alt attribute.", hint: "alt=\"\". Present but empty tells screen readers to skip it." },
+        { text: "Fix the heading order. It skips from h1 to h4.", hint: "Never skip levels to get a size. Use CSS for size." },
         { text: "There are two <h1>s. Fix it.", hint: "One per page." },
         { text: "Connect the label to the email input.", hint: "for must match id." },
-        { text: "Replace the placeholder-only input with a real label.", hint: "Placeholders vanish when you type — they aren't labels." },
+        { text: "Replace the placeholder-only input with a real label.", hint: "Placeholders vanish when you type. They aren't labels." },
         { text: "Fix the contrast on .faint text.", hint: "4.5:1 minimum against the background." },
         { text: "Restore a visible focus outline on the links.", hint: "Never remove it without replacing it." },
         { text: "Make the <div> that acts as a button an actual <button>.", hint: "A div can't be reached by keyboard." },
@@ -1713,27 +1762,18 @@ input { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font: inher
     },
     build: {
         subtitle: "Build: ship your portfolio",
-        brief: "Final build. Polish your portfolio, fix everything the accessibility pass surfaced, make sure it holds up at every width — then deploy it to a live, shareable URL.",
+        brief: "Final build. Polish your portfolio, fix everything the accessibility pass surfaced, make sure it holds up at every width. Then deploy it to a live, shareable URL.",
         requirements: [
-          "Look at every <img> on your page.",
-          "Add alt text to any image that is missing it.",
-          "If a picture is only decoration, use alt=\"\" (empty, but still there).",
-          "Check your headings go h1, then h2, then h3. Never skip one.",
-          "Check there is only ONE <h1>.",
-          "Look at every <label>. Its for must match an input id.",
-          "Fix any input that has only a placeholder and no label.",
-          "Check your text colour is dark enough against the background.",
-          "Click a link, then press Tab. You should SEE where you are.",
-          "If you cannot see it, delete any outline: none; from your CSS.",
-          "Find any <div> that people click. Change it to <button>.",
-          "Press Tab through the whole page. You must reach every link and button.",
-          "Make the preview 375px wide. You must NOT be able to scroll sideways.",
-          "Make it tablet width. Check it still looks right.",
-          "Make it full width. Check your lines are not too long.",
-          "Put your files on GitHub and turn on GitHub Pages.",
-          "Open your live link on a real phone.",
-          "Write 3 sentences: what was hardest, and what you would change.",
-        ],
+    "Every image has alt text. Decorative images use empty alt.",
+    "Headings run in order with no skips. Only one h1.",
+    "Every input has a connected label. No placeholder-only inputs.",
+    "Text contrast passes everywhere.",
+    "Keyboard check: Tab reaches everything and focus is always visible.",
+    "No sideways scrolling at 375px. Holds up at tablet and desktop.",
+    "Deployed to a live URL.",
+    "Opened and checked on a real phone.",
+    "Three sentences written: what was hardest, and what you would change.",
+  ],
         deploy: true,
         xp: 100,
         files: {
@@ -1782,16 +1822,17 @@ const STORE = {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch {
-      // Storage blocked or full — the session still works,
+      // Storage blocked or full. The session still works,
       // it just will not survive a refresh.
     }
   },
 };
 
 const codeKey = (l, p) => `cs:code:0:${l}:${p}`;
+const debugKey = (l) => `cs:debug:0:${l}`;
 
 // Highlights HTML tags and CSS declarations inside step text so the code
-// stands out from the instruction — important when reading in a second language.
+// stands out from the instruction. Important when reading in a second language.
 function StepText({ text }) {
   const PROPS =
     "font-family|line-height|max-width|margin|padding|border|box-sizing|font-size|" +
@@ -1807,7 +1848,7 @@ function StepText({ text }) {
         isCode(p) ? (
           <code
             key={i}
-            className="mx-0.5 rounded bg-slate-800/80 px-1 py-0.5 font-mono text-[11px] text-cyan-300"
+            className="mx-0.5 rounded-md border border-cyan-300/20 bg-cyan-400/10 px-1.5 py-0.5 font-mono2 text-[12px] font-medium text-cyan-200"
           >
             {p}
           </code>
@@ -1819,64 +1860,185 @@ function StepText({ text }) {
   );
 }
 
-function ConceptBlocks({ blocks }) {
+const STRUCTURE_LINES = [
+  { c: "<!DOCTYPE html>", n: "First line. Tells the browser this is a web page.", k: "" },
+  { c: "<html>", n: "Wraps the whole page.", k: "" },
+  { c: "  <head>", n: "Information about the page.", k: "hide" },
+  { c: "    <title>My page</title>", n: "The text in the browser tab.", k: "hide" },
+  { c: "  </head>", n: "", k: "hide" },
+  { c: "  <body>", n: "Everything visitors see goes inside here.", k: "show" },
+  { c: "    <h1>Hello</h1>", n: "", k: "show" },
+  { c: "    <p>Welcome to my page.</p>", n: "", k: "show" },
+  { c: "  </body>", n: "", k: "show" },
+  { c: "</html>", n: "", k: "" },
+];
+
+function ConceptBlocks({ blocks, theme }) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {blocks.map((b, i) => {
         if (b.type === "heading")
           return (
-            <h3 key={i} className="pt-2 text-sm font-bold tracking-tight text-cyan-300">
+            <h3 key={i} className="flex items-center gap-2.5 pt-1 text-[15px] font-extrabold" style={{ color: theme.a }}>
+              <span className="h-5 w-1.5 rounded-full" style={{ background: `linear-gradient(180deg, ${theme.a}, ${theme.b})` }} />
               {b.body}
             </h3>
           );
 
         if (b.type === "text")
           return (
-            <p key={i} className="text-sm leading-relaxed text-slate-300">
+            <p key={i} className="text-[15px] leading-relaxed text-slate-300">
               {b.body}
             </p>
           );
 
         if (b.type === "code")
           return (
-            <pre key={i} className="overflow-x-auto rounded-lg border border-slate-800 bg-slate-950 p-3">
-              <code className="font-mono text-xs leading-relaxed text-cyan-200">{b.body}</code>
-            </pre>
+            <div key={i} className="overflow-hidden rounded-2xl border border-white/10 bg-[#070c18] shadow-lg">
+              <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-2.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-300/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
+                <span className="ml-2 font-mono2 text-[10px] font-bold uppercase tracking-[.18em] text-slate-500">example</span>
+              </div>
+              <pre className="overflow-x-auto p-4">
+                <code className="font-mono2 text-[13px] leading-relaxed text-cyan-100">{b.body}</code>
+              </pre>
+            </div>
+          );
+
+        if (b.type === "demo")
+          return (
+            <div key={i} className="overflow-hidden rounded-2xl border border-white/10 bg-[#070c18] shadow-lg">
+              <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-2.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-300/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
+                <span className="ml-2 font-mono2 text-[10px] font-bold uppercase tracking-[.18em] text-slate-500">
+                  {b.label ? `see it: ${b.label}` : "see it"}
+                </span>
+              </div>
+              <div className="grid md:grid-cols-2">
+                <div className="border-b border-white/10 md:border-b-0 md:border-r">
+                  <p className="px-4 pt-3 font-mono2 text-[10px] font-bold uppercase tracking-[.18em] text-slate-500">code</p>
+                  <pre className="overflow-x-auto p-4 pt-2">
+                    <code className="font-mono2 text-[13px] leading-relaxed text-cyan-100">{b.code}</code>
+                  </pre>
+                </div>
+                <div className="bg-white">
+                  <p className="px-4 pt-3 font-mono2 text-[10px] font-bold uppercase tracking-[.18em] text-slate-400">what it looks like</p>
+                  <div className="p-4 pt-2 text-slate-900" dangerouslySetInnerHTML={{ __html: b.html }} />
+                </div>
+              </div>
+            </div>
+          );
+
+        if (b.type === "structure")
+          return (
+            <div key={i} className="overflow-hidden rounded-2xl border border-white/10 bg-[#070c18] shadow-lg">
+              <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-2.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-amber-300/80" />
+                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
+                <span className="ml-2 font-mono2 text-[10px] font-bold uppercase tracking-[.18em] text-slate-500">the full page</span>
+              </div>
+              <div className="border-b border-white/10 p-4">
+                <div className="overflow-hidden rounded-xl border border-white/10">
+                  <div className="flex items-end bg-[#141d33] px-3 pt-2">
+                    <div className="rounded-t-lg bg-white px-3 py-1.5">
+                      <span className="text-xs font-bold text-slate-700">My page</span>
+                    </div>
+                    <span className="mb-1.5 ml-2 text-[10px] font-bold text-amber-300">{"\u2190"} this is the {"<title>"}</span>
+                  </div>
+                  <div className="bg-white px-4 pb-3 pt-3 text-slate-900">
+                    <p className="text-2xl font-bold leading-tight">Hello</p>
+                    <p className="mt-1 text-sm leading-relaxed">Welcome to my page.</p>
+                  </div>
+                </div>
+                <div className="mt-3 space-y-1.5">
+                  <p className="flex items-start gap-2 text-xs leading-relaxed text-slate-300">
+                    <span className="mt-1 inline-block h-2.5 w-2.5 shrink-0 rounded-sm bg-amber-300" />
+                    <span>The tab shows the <span className="font-mono2 text-amber-200">{"<title>"}</span>. It lives in the <span className="font-mono2 text-slate-100">{"<head>"}</span>.</span>
+                  </p>
+                  <p className="flex items-start gap-2 text-xs leading-relaxed text-slate-300">
+                    <span className="mt-1 inline-block h-2.5 w-2.5 shrink-0 rounded-sm bg-emerald-400" />
+                    <span>The page shows everything in the <span className="font-mono2 text-emerald-200">{"<body>"}</span>.</span>
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-0.5 p-4">
+                {STRUCTURE_LINES.map((l, j) => (
+                  <div
+                    key={j}
+                    className={`flex flex-col gap-0.5 rounded-lg px-3 py-1.5 sm:flex-row sm:items-baseline sm:gap-3 ${
+                      l.k === "hide"
+                        ? "border-l-2 border-slate-600 bg-white/[.02]"
+                        : l.k === "show"
+                          ? "border-l-2 border-emerald-400 bg-emerald-400/[.04]"
+                          : "border-l-2 border-transparent"
+                    }`}
+                  >
+                    <code
+                      className={`shrink-0 font-mono2 text-[12px] ${
+                        l.k === "hide" ? "text-slate-500" : l.k === "show" ? "text-emerald-300" : "text-cyan-100"
+                      }`}
+                    >
+                      {l.c}
+                    </code>
+                    {l.n && <span className="text-[11px] leading-relaxed text-slate-500">{l.n}</span>}
+                  </div>
+                ))}
+                <div className="flex flex-wrap gap-2 pt-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 text-[10px] font-bold text-slate-400">
+                    <span className="h-2 w-2 rounded-sm bg-slate-500" /> In the head: visitors never see it
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 text-[10px] font-bold text-slate-400">
+                    <span className="h-2 w-2 rounded-sm bg-emerald-400" /> In the body: visitors see it
+                  </span>
+                </div>
+              </div>
+            </div>
           );
 
         if (b.type === "tip")
           return (
-            <div key={i} className="flex gap-3 rounded-lg border border-amber-500/25 bg-amber-500/5 p-3">
-              <Lightbulb className="h-4 w-4 shrink-0 text-amber-400" />
-              <p className="text-xs leading-relaxed text-slate-300">{b.body}</p>
+            <div key={i} className="flex gap-3.5 rounded-2xl border border-amber-300/25 bg-amber-300/[.07] p-4">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-300/15">
+                <Lightbulb className="h-4 w-4 text-amber-300" />
+              </div>
+              <div className="min-w-0">
+                <p className="mb-0.5 text-[11px] font-extrabold uppercase tracking-[.14em] text-amber-300">Good to know</p>
+                <p className="text-sm leading-relaxed text-slate-200">{b.body}</p>
+              </div>
             </div>
           );
 
         if (b.type === "mistake")
           return (
-            <div key={i} className="flex gap-3 rounded-lg border border-rose-500/25 bg-rose-500/5 p-3">
-              <AlertTriangle className="h-4 w-4 shrink-0 text-rose-400" />
-              <p className="text-xs leading-relaxed text-slate-300">
-                <span className="font-bold text-rose-300">Common mistake: </span>
-                {b.body}
-              </p>
+            <div key={i} className="flex gap-3.5 rounded-2xl border border-rose-300/25 bg-rose-400/[.07] p-4">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-400/15">
+                <AlertTriangle className="h-4 w-4 text-rose-300" />
+              </div>
+              <div className="min-w-0">
+                <p className="mb-0.5 text-[11px] font-extrabold uppercase tracking-[.14em] text-rose-300">Common mistake</p>
+                <p className="text-sm leading-relaxed text-slate-200">{b.body}</p>
+              </div>
             </div>
           );
 
         if (b.type === "reference")
           return (
-            <div key={i} className="overflow-hidden rounded-lg border border-slate-800">
+            <div key={i} className="overflow-hidden rounded-2xl border border-white/10">
               {b.items.map((item, j) => (
                 <div
                   key={j}
-                  className={`p-3 ${j % 2 ? "bg-slate-950/40" : "bg-slate-950/70"} ${
-                    j > 0 ? "border-t border-slate-800" : ""
-                  }`}
+                  className={`p-4 ${j > 0 ? "border-t border-white/10" : ""}`}
+                  style={{ background: j % 2 ? "rgba(255,255,255,.015)" : "rgba(255,255,255,.045)" }}
                 >
-                  <code className="font-mono text-xs font-bold text-cyan-300">{item.code}</code>
-                  <p className="mt-1 text-xs leading-relaxed text-slate-300">{item.what}</p>
+                  <code className="font-mono2 text-[13px] font-bold text-emerald-300">{item.code}</code>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-300">{item.what}</p>
                   {item.note && (
-                    <p className="mt-1.5 border-l-2 border-slate-700 pl-2 text-xs italic leading-relaxed text-slate-500">
+                    <p className="mt-2 border-l-2 border-emerald-300/40 pl-3 text-[13px] italic leading-relaxed text-slate-400">
                       {item.note}
                     </p>
                   )}
@@ -1895,26 +2057,42 @@ function Prototype() {
   const [screen, setScreen] = useState("map");
   const [xp, setXp] = useState(() => STORE.read("cs:xp", 0));
   const [furthest, setFurthest] = useState(() => STORE.read("cs:furthest", 0));
-  const [selected, setSelected] = useState(0);
   const [openLesson, setOpenLesson] = useState(null);
-  const [activePart, setActivePart] = useState(0); // 0 = learn, 1 = build
+  const [activePart, setActivePart] = useState(0); // 0 = learn, 1 = practice, 2 = build
   const [done, setDone] = useState(() => STORE.read("cs:done", {}));
   const [checked, setChecked] = useState(() => STORE.read("cs:checked", {}));
   const [showRef, setShowRef] = useState(false);
   const [showAnswer, setShowAnswer] = useState(false);
   const [gaining, setGaining] = useState(null);
+  const [gainId, setGainId] = useState(0);
+  const [view, setView] = useState("code"); // lab on phones: code | preview
+  const [showWelcome, setShowWelcome] = useState(() => !STORE.read("cs:seenWelcome", false));
+  const [showLabHint, setShowLabHint] = useState(() => !STORE.read("cs:seenLabHint", false));
 
   const [files, setFiles] = useState(null);
   const [tab, setTab] = useState("html");
   const [srcDoc, setSrcDoc] = useState("");
   const [ran, setRan] = useState(false);
 
+  const [debugHtml, setDebugHtml] = useState("");
+  const [debugRan, setDebugRan] = useState(false);
+  const [debugSrcDoc, setDebugSrcDoc] = useState("");
+  const [debugView, setDebugView] = useState("code"); // debug box on phones: code | preview
+
   const lesson = openLesson !== null ? UNIT_1.lessons[openLesson] : null;
-  const part = lesson
-    ? [lesson.learn, lesson.practice, lesson.build][activePart]
-    : null;
+  const part = lesson ? [lesson.learn, lesson.practice, lesson.build][activePart] : null;
+  const partMeta = PARTS[activePart];
   const isPractice = activePart === 1;
   const isBuild = activePart === 2;
+  const theme = themeFor(openLesson ?? Math.min(furthest, UNIT_1.lessons.length - 1));
+
+  const key = (l, p) => `${l}:${p}`;
+  const totalParts = UNIT_1.lessons.length * 3;
+  const partsDone = Object.keys(done).filter((k) => done[k]).length;
+  const lessonsDone = UNIT_1.lessons.filter(
+    (_, i) => done[key(i, 0)] && done[key(i, 1)] && done[key(i, 2)]
+  ).length;
+  const xpPct = Math.round(Math.min(100, (xp / UNIT_1.totalXp) * 100));
 
   function buildDoc(f) {
     return `<!DOCTYPE html>
@@ -1926,7 +2104,7 @@ function Prototype() {
     if (!files) return;
     setSrcDoc(buildDoc(files));
     setRan(true);
-    setTimeout(() => setRan(false), 1000);
+    setTimeout(() => setRan(false), 1200);
   }
 
   // Load this part's files: the student's saved version if they
@@ -1949,16 +2127,56 @@ function Prototype() {
     return () => clearTimeout(t);
   }, [files, screen, openLesson, activePart]);
 
-  const key = (l, p) => `${l}:${p}`;
+  // Debug challenge box: its own code, saved separately from the main lab.
+  useEffect(() => {
+    if (screen !== "lesson" || !lesson?.learn?.debug) return;
+    const saved = STORE.read(debugKey(openLesson), null);
+    const next = saved ?? lesson.learn.debug.html;
+    setDebugHtml(next);
+    setDebugSrcDoc(buildDebugDoc(next));
+  }, [screen, openLesson]);
+
+  useEffect(() => {
+    if (screen !== "lesson" || !lesson?.learn?.debug) return;
+    const t = setTimeout(() => {
+      STORE.write(debugKey(openLesson), debugHtml);
+    }, 1000);
+    return () => clearTimeout(t);
+  }, [debugHtml, screen, openLesson]);
 
   useEffect(() => {
     setShowAnswer(false);
-  }, [openLesson, activePart]);
+    setView("code");
+    setDebugView("code");
+    window.scrollTo(0, 0);
+  }, [screen, openLesson, activePart]);
 
   useEffect(() => STORE.write("cs:xp", xp), [xp]);
   useEffect(() => STORE.write("cs:done", done), [done]);
   useEffect(() => STORE.write("cs:checked", checked), [checked]);
   useEffect(() => STORE.write("cs:furthest", furthest), [furthest]);
+
+  const WELCOME_STEPS = [
+    { icon: BookOpen, color: "#22d3ee", deep: "#0e7490", title: "1 · Learn", text: "Read the short lesson. Simple words, small steps." },
+    { icon: Dumbbell, color: "#a78bfa", deep: "#6d28d9", title: "2 · Practice", text: "Tap the drills to train what you just read." },
+    { icon: Rocket, color: "#e879f9", deep: "#a21caf", title: "3 · Build", text: "Make a real project from scratch." },
+  ];
+
+  function dismissWelcome() {
+    STORE.write("cs:seenWelcome", true);
+    setShowWelcome(false);
+  }
+
+  function dismissLabHint() {
+    STORE.write("cs:seenLabHint", true);
+    setShowLabHint(false);
+  }
+
+  function openLessonAt(i, p = 0) {
+    setOpenLesson(i);
+    setActivePart(p);
+    setScreen("lesson");
+  }
 
   function markComplete() {
     const k = key(openLesson, activePart);
@@ -1968,19 +2186,17 @@ function Prototype() {
     setDone(next);
     setXp((x) => x + gained);
     setGaining(gained);
-    setTimeout(() => setGaining(null), 1000);
+    setGainId((i) => i + 1);
+    setTimeout(() => setGaining(null), 1100);
 
     if (activePart < 2) {
-      setTimeout(() => setActivePart(activePart + 1), 700);
+      setTimeout(() => setActivePart(activePart + 1), 750);
     } else if (next[key(openLesson, 0)] && next[key(openLesson, 1)]) {
       if (openLesson === UNIT_1.lessons.length - 1) {
-        setTimeout(() => setScreen("levelup"), 900);
+        setTimeout(() => setScreen("levelup"), 950);
       } else {
         setFurthest((f) => Math.max(f, openLesson + 1));
-        setTimeout(() => {
-          setSelected(openLesson + 1);
-          setScreen("map");
-        }, 900);
+        setTimeout(() => setScreen("map"), 950);
       }
     }
   }
@@ -1997,285 +2213,642 @@ function Prototype() {
     });
   }
 
-  const renderLab = () =>
-    files && (
-      <div className="mb-4 overflow-hidden rounded-xl border border-slate-800 bg-slate-900">
-        <div className="flex items-center justify-between border-b border-slate-800 px-4 py-3">
-          <div className="flex items-center gap-2">
-            <Code2 className="h-4 w-4 text-cyan-400" />
-            <p className="text-sm font-bold">{isBuild ? "Your project" : isPractice ? "Practice sandbox" : "Build lab"}</p>
-            <span className="hidden text-[10px] text-slate-600 sm:inline">saved automatically</span>
+  const renderStatusBar = (accent) => (
+    <div
+      className="sticky top-0 z-30 border-b border-white/10"
+      style={{ background: "rgba(6,10,21,.88)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}
+    >
+      <div className="mx-auto flex max-w-3xl items-center gap-2.5 px-4 py-3 sm:gap-3 sm:px-5">
+        <div className="flex items-center gap-2.5">
+          <div
+            className="flex h-10 w-10 items-center justify-center rounded-2xl text-white"
+            style={{ background: `linear-gradient(135deg, ${accent.a}, ${accent.b})`, boxShadow: `0 6px 18px -6px ${accent.ring}` }}
+          >
+            <Flame className="h-5 w-5" />
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                setFiles(part.files);
-                STORE.write(codeKey(openLesson, activePart), part.files);
-              }}
-              className="flex items-center gap-1.5 rounded-lg border border-slate-700 px-2.5 py-1.5 text-xs font-bold text-slate-400 hover:text-slate-200"
-            >
-              <RotateCcw className="h-3 w-3" /> Reset
-            </button>
-            <button
-              onClick={run}
-              className="flex items-center gap-1.5 rounded-lg bg-cyan-400 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-cyan-300"
-            >
-              {ran ? <Check className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
-              {ran ? "Ran" : "Run code"}
-            </button>
+          <div className="leading-tight">
+            <p className="text-sm font-extrabold">Level 1</p>
+            <p className="hidden text-[11px] text-slate-500 sm:block">{UNIT_1.badge}</p>
           </div>
         </div>
-
-        <div className="flex border-b border-slate-800">
-          {TABS.map((t) => (
-            <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
-              className={`border-b-2 px-4 py-2.5 font-mono text-xs ${
-                tab === t.key
-                  ? "border-cyan-400 text-slate-100"
-                  : "border-transparent text-slate-500 hover:text-slate-300"
-              }`}
-            >
-              {t.name}
-            </button>
-          ))}
-        </div>
-
-        <textarea
-          value={files[tab]}
-          spellCheck={false}
-          onChange={(e) => setFiles((f) => ({ ...f, [tab]: e.target.value }))}
-          onKeyDown={handleTabKey}
-          className={`w-full resize-none bg-slate-950 p-4 font-mono text-xs leading-relaxed text-cyan-100 outline-none ${
-            isBuild ? "h-72" : "h-60"
-          }`}
-        />
-
-        <div className="flex items-center gap-2 border-y border-slate-800 px-4 py-2">
-          <Eye className="h-3.5 w-3.5 text-slate-500" />
-          <span className="font-mono text-xs text-slate-500">live preview</span>
-        </div>
-        <iframe
-          title="preview"
-          srcDoc={srcDoc}
-          sandbox="allow-scripts"
-          className={`w-full border-0 bg-white ${isBuild ? "h-80" : "h-64"}`}
-        />
-      </div>
-    );
-
-  const renderStatusBar = () => (
-    <div className="sticky top-0 z-10 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
-      <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-3">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-cyan-500/30 bg-cyan-500/10">
-            <Flame className="h-4 w-4 text-cyan-400" />
-          </div>
-          <div>
-            <p className="text-sm font-bold leading-tight">Level 1</p>
-            <p className="text-xs leading-tight text-slate-500">{UNIT_1.badge}</p>
-          </div>
-        </div>
-        <div className="flex flex-1 items-center px-5">
-          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-800">
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          <div className="progress-sheen h-2.5 min-w-0 flex-1 overflow-hidden rounded-full bg-white/10">
             <div
-              className="h-full rounded-full bg-cyan-400 transition-all duration-500"
-              style={{ width: `${Math.min(100, (xp / UNIT_1.totalXp) * 100)}%` }}
+              className="h-full rounded-full transition-all duration-700"
+              style={{ width: `${xpPct}%`, background: `linear-gradient(90deg, ${accent.b}, ${accent.a})` }}
             />
           </div>
+          <span className="shrink-0 font-mono2 text-[11px] font-bold text-slate-400">{xpPct}%</span>
         </div>
-        <div className="relative flex items-center gap-1 rounded-lg border border-fuchsia-500/30 bg-fuchsia-500/10 px-2.5 py-1">
-          <Zap className="h-3.5 w-3.5 text-fuchsia-400" />
-          <span className="text-sm font-bold text-fuchsia-300">{xp}</span>
-          {gaining && (
-            <span className="absolute -top-6 right-0 animate-bounce text-sm font-bold text-fuchsia-400">
-              +{gaining}
-            </span>
+        <div className="relative flex shrink-0 items-center gap-1.5 rounded-2xl border border-fuchsia-300/25 bg-fuchsia-400/10 px-3 py-1.5">
+          <Zap className="h-3.5 w-3.5 text-fuchsia-300" />
+          <span className="text-sm font-extrabold text-fuchsia-200">{xp}</span>
+          {gaining !== null && (
+            <span key={gainId} className="xp-float">+{gaining}</span>
           )}
         </div>
       </div>
     </div>
   );
 
-  if (screen === "map") {
-    return (
-      <div className="min-h-screen bg-slate-950 text-slate-100">
-        {renderStatusBar()}
-        <div className="mx-auto max-w-3xl px-5 py-8">
-          <div className="mb-6 flex items-start justify-between gap-4">
-            <div>
-              <h1 className="mb-1 text-2xl font-bold tracking-tight">Your course map</h1>
-              <p className="text-sm text-slate-400">Four units. Unit 1 is live.</p>
+  const renderLab = (t) =>
+    files && (
+      <>
+        {showLabHint && activePart !== 0 && (
+          <div className="pop-in mb-3 flex items-start gap-3 rounded-2xl border border-cyan-300/25 bg-cyan-400/[.07] p-3.5">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-cyan-400/15">
+              <Play className="h-4 w-4 text-cyan-300" />
             </div>
-            {xp > 0 && (
-              <button
-                onClick={() => {
-                  if (!confirm("Clear all progress and saved code on this device?")) return;
-                  Object.keys(localStorage)
-                    .filter((k) => k.startsWith("cs:"))
-                    .forEach((k) => localStorage.removeItem(k));
-                  setXp(0);
-                  setDone({});
-                  setChecked({});
-                  setFurthest(0);
-                  setSelected(0);
-                }}
-                className="shrink-0 rounded-lg border border-slate-800 px-2.5 py-1.5 text-[11px] font-bold text-slate-500 hover:border-slate-700 hover:text-slate-300"
-              >
-                Reset all
-              </button>
-            )}
+            <p className="flex-1 text-xs leading-relaxed text-slate-300">
+              Type your code in the boxes. Then press <span className="font-extrabold text-cyan-200">Run code</span> to see your page in the preview below.
+            </p>
+            <button
+              onClick={dismissLabHint}
+              aria-label="Dismiss hint"
+              className="pressable flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/10 text-slate-400 hover:text-slate-200"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
           </div>
-
-          <div className="mb-8 grid grid-cols-2 gap-3">
-            <div className="rounded-xl border border-cyan-500/50 bg-cyan-500/10 p-4">
-              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800">
-                <Code2 className="h-4 w-4 text-cyan-400" />
-              </div>
-              <p className="text-sm font-bold text-slate-100">{UNIT_1.title}</p>
-              <p className="text-xs text-slate-500">{UNIT_1.sub}</p>
-            </div>
-            {LOCKED_UNITS.map((u, i) => (
-              <div key={i} className="rounded-xl border border-slate-800 bg-slate-900/50 p-4 opacity-50">
-                <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-slate-800">
-                  <Lock className="h-3.5 w-3.5 text-slate-500" />
-                </div>
-                <p className="text-sm font-bold text-slate-100">{u.title}</p>
-                <p className="text-xs text-slate-500">{u.sub}</p>
-              </div>
-            ))}
+        )}
+        <div className="mb-6 overflow-hidden rounded-3xl border border-white/10 bg-[#0a101f] shadow-2xl">
+        <div className="flex items-center gap-3 border-b border-white/10 px-4 py-3">
+          <div className="flex shrink-0 gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-300/80" />
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
           </div>
-
-          <div className="mb-3 flex items-center justify-between">
-            <h2 className="text-sm font-bold text-slate-300">{UNIT_1.title}</h2>
-            <span className="flex items-center gap-1 text-xs text-slate-500">
-              <Trophy className="h-3.5 w-3.5 text-amber-400" /> {UNIT_1.badge}
-            </span>
+          <div className="flex min-w-0 items-center gap-2">
+            <Code2 className="h-4 w-4 shrink-0" style={{ color: t.a }} />
+            <p className="truncate text-sm font-extrabold">{isBuild ? "Your project" : isPractice ? "Practice sandbox" : "Try it"}</p>
+            <span className="hidden shrink-0 text-[10px] text-slate-600 lg:inline">auto-saved</span>
           </div>
-
-          <div className="relative rounded-xl border border-slate-800 bg-slate-900 p-5">
-            <div className="absolute bottom-9 left-9 top-9 w-0.5 bg-slate-800" />
-            <div className="flex flex-col gap-1">
-              {UNIT_1.lessons.map((l, i) => {
-                const parts = [done[key(i, 0)], done[key(i, 1)], done[key(i, 2)]].filter(Boolean).length;
-                const complete = parts === 3;
-                const locked = i > furthest;
-                const current = i === selected;
-                return (
-                  <button
-                    key={i}
-                    onClick={() => !locked && setSelected(i)}
-                    disabled={locked}
-                    className={`relative z-[1] flex items-center gap-3 rounded-lg px-2 py-2.5 text-left ${
-                      current ? "bg-slate-800/60" : "hover:bg-slate-800/30"
-                    }`}
-                  >
-                    <div
-                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-[11px] font-bold ${
-                        complete
-                          ? "border-emerald-400 bg-emerald-400 text-slate-950"
-                          : current
-                          ? "border-cyan-400 bg-cyan-500/20 text-cyan-300"
-                          : locked
-                          ? "border-slate-700 bg-slate-800 text-slate-600"
-                          : "border-slate-600 bg-slate-800 text-slate-400"
-                      }`}
-                    >
-                      {complete ? <Check className="h-3 w-3" /> : locked ? <Lock className="h-2.5 w-2.5" /> : i + 1}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p
-                        className={`text-sm ${
-                          locked ? "text-slate-600" : current ? "font-medium text-slate-100" : "text-slate-300"
-                        }`}
-                      >
-                        {l.title}
-                      </p>
-                      {!locked && <p className="truncate text-xs text-slate-500">{l.blurb}</p>}
-                    </div>
-                    {!locked && parts > 0 && !complete && (
-                      <span className="shrink-0 text-[10px] font-bold text-cyan-300">{parts}/3</span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="mt-4 flex items-center justify-between rounded-xl border border-cyan-500/30 bg-cyan-500/5 p-4">
-            <div className="min-w-0">
-              <p className="text-xs text-slate-500">Selected · {UNIT_1.lessons[selected].xp} XP available</p>
-              <p className="truncate text-sm font-bold text-slate-100">{UNIT_1.lessons[selected].title}</p>
-            </div>
+          <div className="ml-auto flex shrink-0 items-center gap-2">
             <button
               onClick={() => {
-                setOpenLesson(selected);
-                setActivePart(0);
-                setScreen("lesson");
+                setFiles(part.files);
+                STORE.write(codeKey(openLesson, activePart), part.files);
               }}
-              className="ml-3 flex shrink-0 items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-white"
+              className="pressable flex items-center gap-1.5 rounded-xl border border-white/10 px-2.5 py-2 text-xs font-bold text-slate-400 hover:border-white/25 hover:text-slate-200"
             >
-              <Play className="h-3.5 w-3.5" /> Start
+              <RotateCcw className="h-3 w-3" />
+              <span className="hidden sm:inline">Reset</span>
+            </button>
+            <button
+              onClick={run}
+              className="pressable flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold text-white"
+              style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})`, boxShadow: `0 6px 18px -6px ${t.ring}` }}
+            >
+              {ran ? <Check className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+              {ran ? "Ran it" : "Run code"}
             </button>
           </div>
         </div>
+
+        <div className="flex gap-1 overflow-x-auto border-b border-white/10 px-3 py-2">
+          {TABS.map((tb) => (
+            <button
+              key={tb.key}
+              onClick={() => setTab(tb.key)}
+              className={`shrink-0 rounded-lg px-3 py-1.5 font-mono2 text-xs font-bold transition-colors ${
+                tab === tb.key ? "bg-white/10 text-white" : "text-slate-500 hover:text-slate-300"
+              }`}
+              style={tab === tb.key ? { boxShadow: `inset 0 -2px 0 ${t.a}` } : undefined}
+            >
+              {tb.name}
+            </button>
+          ))}
+        </div>
+
+        {/* phones: flip between code and preview instead of a tall stack */}
+        <div className="border-b border-white/10 p-2 sm:hidden">
+          <div className="grid grid-cols-2 gap-1 rounded-xl bg-white/5 p-1">
+            {[
+              { v: "code", label: "Code", icon: Code2 },
+              { v: "preview", label: "Preview", icon: Eye },
+            ].map((o) => (
+              <button
+                key={o.v}
+                onClick={() => setView(o.v)}
+                className={`flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-extrabold ${
+                  view === o.v ? "text-white" : "text-slate-500"
+                }`}
+                style={view === o.v ? { background: `linear-gradient(135deg, ${t.a}, ${t.b})` } : undefined}
+              >
+                <o.icon className="h-3.5 w-3.5" /> {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <textarea
+          value={files[tab]}
+          spellCheck={false}
+          autoCapitalize="off"
+          autoCorrect="off"
+          onChange={(e) => setFiles((f) => ({ ...f, [tab]: e.target.value }))}
+          onKeyDown={handleTabKey}
+          className={`code-area font-mono2 w-full resize-none bg-[#070c18] p-4 text-[13px] leading-relaxed text-slate-100 outline-none ${
+            view === "preview" ? "hidden" : "block"
+          } sm:block ${isBuild ? "h-80" : "h-64"}`}
+        />
+
+        <div className={`${view === "code" ? "hidden" : "block"} sm:block border-t border-white/10`}>
+          <div className="flex items-center gap-2 px-4 py-2.5">
+            <Eye className="h-3.5 w-3.5 text-slate-500" />
+            <span className="font-mono2 text-[11px] font-bold uppercase tracking-[.14em] text-slate-500">preview</span>
+            <span className="ml-auto text-[10px] text-slate-600">press Run code to update</span>
+          </div>
+          <iframe
+            title="preview"
+            srcDoc={srcDoc}
+            sandbox="allow-scripts"
+            className={`w-full border-0 bg-white ${isBuild ? "h-72 sm:h-80" : "h-64 sm:h-72"}`}
+          />
+        </div>
+      </div>
+      </>
+    );
+
+  function buildDebugDoc(h) {
+    return `<!DOCTYPE html>\n<html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head>\n<body>${h}</body></html>`;
+  }
+
+  function runDebug() {
+    setDebugSrcDoc(buildDebugDoc(debugHtml));
+    setDebugRan(true);
+    setTimeout(() => setDebugRan(false), 1200);
+  }
+
+  function handleDebugTabKey(e) {
+    if (e.key !== "Tab") return;
+    e.preventDefault();
+    const el = e.target;
+    const s = el.selectionStart;
+    const updated = el.value.slice(0, s) + "  " + el.value.slice(el.selectionEnd);
+    setDebugHtml(updated);
+    requestAnimationFrame(() => {
+      el.selectionStart = el.selectionEnd = s + 2;
+    });
+  }
+
+  const renderDebugLab = (t) =>
+    lesson?.learn?.debug && (
+      <div className="mb-6 overflow-hidden rounded-3xl border border-white/10 bg-[#0a101f] shadow-2xl">
+        <div className="border-b border-white/10 p-4 sm:p-5">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl text-white" style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})` }}>
+              <Bug className="h-4 w-4" />
+            </div>
+            <h2 className="font-display text-base font-extrabold">Debug challenge</h2>
+            <span className="rounded-lg px-2 py-1 text-[11px] font-extrabold text-white" style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})` }}>
+              +15 XP
+            </span>
+          </div>
+          <p className="mt-2.5 text-sm leading-relaxed text-slate-300">
+            This code has <span className="font-extrabold text-white">3 errors</span>. Find them and fix them. Press <span className="font-extrabold" style={{ color: t.a }}>Run code</span> to see your page.
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-slate-500">Hint: check every closing tag. Check the quotes.</p>
+        </div>
+        <div className="flex items-center gap-3 px-4 py-3">
+          <p className="font-mono2 text-xs font-bold text-slate-500">broken.html</p>
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <button
+              onClick={() => {
+                setDebugHtml(lesson.learn.debug.html);
+                STORE.write(debugKey(openLesson), lesson.learn.debug.html);
+              }}
+              className="pressable flex items-center gap-1.5 rounded-xl border border-white/10 px-2.5 py-2 text-xs font-bold text-slate-400 hover:border-white/25 hover:text-slate-200"
+            >
+              <RotateCcw className="h-3 w-3" />
+              <span className="hidden sm:inline">Reset</span>
+            </button>
+            <button
+              onClick={runDebug}
+              className="pressable flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold text-white"
+              style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})`, boxShadow: `0 6px 18px -6px ${t.ring}` }}
+            >
+              {debugRan ? <Check className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
+              {debugRan ? "Ran it" : "Run code"}
+            </button>
+          </div>
+        </div>
+
+        {/* phones: flip between code and preview instead of a tall stack */}
+        <div className="border-y border-white/10 p-2 sm:hidden">
+          <div className="grid grid-cols-2 gap-1 rounded-xl bg-white/5 p-1">
+            {[
+              { v: "code", label: "Code", icon: Code2 },
+              { v: "preview", label: "Preview", icon: Eye },
+            ].map((o) => (
+              <button
+                key={o.v}
+                onClick={() => setDebugView(o.v)}
+                className={`flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-extrabold ${
+                  debugView === o.v ? "text-white" : "text-slate-500"
+                }`}
+                style={debugView === o.v ? { background: `linear-gradient(135deg, ${t.a}, ${t.b})` } : undefined}
+              >
+                <o.icon className="h-3.5 w-3.5" /> {o.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <textarea
+          value={debugHtml}
+          spellCheck={false}
+          autoCapitalize="off"
+          autoCorrect="off"
+          onChange={(e) => setDebugHtml(e.target.value)}
+          onKeyDown={handleDebugTabKey}
+          className={`code-area font-mono2 h-64 w-full resize-none bg-[#070c18] p-4 text-[13px] leading-relaxed text-slate-100 outline-none ${
+            debugView === "preview" ? "hidden" : "block"
+          } sm:block`}
+        />
+
+        <div className={`${debugView === "code" ? "hidden" : "block"} sm:block border-t border-white/10`}>
+          <div className="flex items-center gap-2 px-4 py-2.5">
+            <Eye className="h-3.5 w-3.5 text-slate-500" />
+            <span className="font-mono2 text-[11px] font-bold uppercase tracking-[.14em] text-slate-500">preview</span>
+            <span className="ml-auto text-[10px] text-slate-600">press Run code to update</span>
+          </div>
+          <iframe
+            title="debug preview"
+            srcDoc={debugSrcDoc}
+            sandbox="allow-scripts"
+            className="h-64 w-full border-0 bg-white sm:h-72"
+          />
+        </div>
+      </div>
+    );
+
+  const renderStickyCta = (t) => {
+    const isDone = done[key(openLesson, activePart)];
+    const cta = isBuild
+      ? { label: "Submit project", doneLabel: "Project submitted" }
+      : isPractice
+      ? { label: "Mark drills complete", doneLabel: "Drills complete" }
+      : { label: "Mark complete", doneLabel: "Completed" };
+    const xpGain = (part.xp ?? 0) + (part.extra?.xp ?? 0);
+    return (
+      <div className="sticky bottom-0 z-30 mt-8 border-t border-white/10" style={{ background: "rgba(6,10,21,.93)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
+        <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3 sm:px-5" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-extrabold uppercase tracking-[.16em]" style={{ color: partMeta.color }}>
+              {partMeta.label} · part {activePart + 1} of 3
+            </p>
+            <p className="truncate text-sm font-extrabold text-slate-100">
+              {isDone ? cta.doneLabel : `${cta.label} · +${xpGain} XP`}
+            </p>
+          </div>
+          <button
+            onClick={markComplete}
+            disabled={isDone}
+            className="pressable flex shrink-0 items-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-extrabold text-white sm:px-6"
+            style={
+              isDone
+                ? { background: "rgba(52,211,153,.12)", border: "1px solid rgba(52,211,153,.4)", color: "#6ee7b7" }
+                : { background: `linear-gradient(135deg, ${partMeta.color}, ${partMeta.deep})`, boxShadow: `0 12px 30px -8px ${partMeta.color}77` }
+            }
+          >
+            {isDone ? (
+              <>
+                <CheckCircle2 className="h-4 w-4" /> Done
+              </>
+            ) : (
+              <>
+                {cta.label} <ArrowRight className="h-4 w-4" />
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  // ─────────────────────────── MAP ───────────────────────────
+  if (screen === "map") {
+    const mapAccent = themeFor(Math.min(furthest, UNIT_1.lessons.length - 1));
+    const stats = [
+      { icon: Zap, label: "Total XP", value: xp, color: "#e879f9", soft: "rgba(232,121,249,.14)" },
+      { icon: CheckCircle2, label: "Parts done", value: `${partsDone}/${totalParts}`, color: "#34d399", soft: "rgba(52,211,153,.14)" },
+      { icon: Trophy, label: "Lessons done", value: `${lessonsDone}/${UNIT_1.lessons.length}`, color: "#fbbf24", soft: "rgba(251,191,36,.14)" },
+    ];
+    return (
+      <div className="min-h-screen">
+        {renderStatusBar(mapAccent)}
+        <div className="mx-auto max-w-3xl px-4 pb-12 pt-5 sm:px-5 sm:pt-7">
+          {/* hero */}
+          <div className="screen-enter relative mb-6 overflow-hidden rounded-3xl border border-white/10 p-6 sm:p-8" style={{ background: "linear-gradient(135deg, rgba(34,211,238,.09), rgba(232,121,249,.07) 55%, rgba(255,255,255,.02))" }}>
+            <div className="absolute -right-14 -top-14 h-52 w-52 rounded-full blur-3xl" style={{ background: "rgba(34,211,238,.16)" }} />
+            <div className="absolute -bottom-16 -left-10 h-52 w-52 rounded-full blur-3xl" style={{ background: "rgba(232,121,249,.13)" }} />
+            <div className="relative">
+              <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-extrabold tracking-wide text-slate-300">
+                <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                UNIT 1 · HTML &amp; CSS · LIVE NOW
+              </p>
+              <h1 className="font-display text-3xl font-extrabold sm:text-4xl">
+                Your course{" "}
+                <span className="bg-gradient-to-r from-cyan-300 via-violet-300 to-fuchsia-300 bg-clip-text text-transparent">map</span>
+              </h1>
+              <p className="mt-2 max-w-md text-sm leading-relaxed text-slate-400">
+                Eight lessons, each ending with something real you built. Tap a lesson to jump straight in.
+              </p>
+              <div className="mt-5 grid grid-cols-3 gap-2.5 sm:gap-3">
+                {stats.map((s, i) => (
+                  <div key={i} className="rounded-2xl border border-white/10 bg-white/[.04] p-3 sm:p-4">
+                    <div className="mb-2 flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: s.soft }}>
+                      <s.icon className="h-3.5 w-3.5" style={{ color: s.color }} />
+                    </div>
+                    <p className="text-lg font-extrabold leading-none sm:text-xl">{s.value}</p>
+                    <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* units */}
+          <div className="mb-8 grid grid-cols-2 gap-2.5 sm:gap-3">
+            <div
+              className="relative overflow-hidden rounded-2xl border p-4"
+              style={{ borderColor: "rgba(34,211,238,.4)", background: "linear-gradient(135deg, rgba(34,211,238,.12), rgba(34,211,238,.03))" }}
+            >
+              <div className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#22d3ee,#0e7490)" }}>
+                <Code2 className="h-4 w-4" />
+              </div>
+              <p className="text-sm font-extrabold text-slate-100">{UNIT_1.title}</p>
+              <p className="text-xs text-slate-400">{UNIT_1.sub}</p>
+              <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-cyan-400/15 px-2 py-0.5 text-[10px] font-extrabold text-cyan-300">
+                <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-cyan-300" /> LIVE
+              </span>
+            </div>
+            {LOCKED_UNITS.map((u, i) => {
+              const lt = themeFor(i + 1);
+              const Icon = u.icon || Lock;
+              return (
+                <div key={i} className="rounded-2xl border border-white/[.07] bg-white/[.02] p-4" style={{ background: `linear-gradient(135deg, ${lt.soft}, transparent 70%)` }}>
+                  <div className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-xl bg-white/5">
+                    <Lock className="h-3.5 w-3.5 text-slate-500" />
+                  </div>
+                  <p className="text-sm font-extrabold text-slate-400">{u.title}</p>
+                  <p className="text-xs text-slate-600">{u.sub}</p>
+                  <span className="mt-2 inline-block rounded-full bg-white/5 px-2 py-0.5 text-[10px] font-extrabold text-slate-600">LOCKED</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* lessons */}
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="font-display text-base font-extrabold">Lessons</h2>
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-bold text-slate-500">{lessonsDone}/{UNIT_1.lessons.length} complete</span>
+              {xp > 0 && (
+                <button
+                  onClick={() => {
+                    if (!confirm("Clear all progress and saved code on this device?")) return;
+                    Object.keys(localStorage)
+                      .filter((k) => k.startsWith("cs:"))
+                      .forEach((k) => localStorage.removeItem(k));
+                    setXp(0);
+                    setDone({});
+                    setChecked({});
+                    setFurthest(0);
+                  }}
+                  className="rounded-lg border border-white/10 px-2.5 py-1.5 text-[11px] font-bold text-slate-500 hover:border-white/25 hover:text-slate-300"
+                >
+                  Reset all
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="space-y-2.5">
+            {UNIT_1.lessons.map((l, i) => {
+              const t = themeFor(i);
+              const nParts = [0, 1, 2].filter((p) => done[key(i, p)]).length;
+              const complete = nParts === 3;
+              const locked = i > furthest;
+              const isNext = i === furthest && !complete;
+              return (
+                <div
+                  key={i}
+                  className={`pressable relative overflow-hidden rounded-2xl border ${
+                    locked ? "border-white/[.06] bg-white/[.02]" : "border-white/10 bg-white/[.04] hover:bg-white/[.06]"
+                  }`}
+                  style={!locked && isNext ? { borderColor: t.ring, boxShadow: `0 10px 34px -14px ${t.ring}` } : undefined}
+                >
+                  {isNext && !locked && (
+                    <div className="absolute inset-x-0 top-0 h-[3px]" style={{ background: `linear-gradient(90deg, transparent, ${t.a}, transparent)` }} />
+                  )}
+                  <button
+                    onClick={() => !locked && openLessonAt(i)}
+                    disabled={locked}
+                    className="flex w-full items-center gap-3.5 p-3.5 text-left sm:gap-4 sm:p-4 disabled:cursor-not-allowed"
+                  >
+                    <div
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-base font-extrabold text-white"
+                      style={
+                        complete
+                          ? { background: "linear-gradient(135deg,#34d399,#047857)", boxShadow: "0 6px 18px -6px rgba(52,211,153,.5)" }
+                          : locked
+                          ? { background: "rgba(255,255,255,.05)", color: "#475569" }
+                          : { background: `linear-gradient(135deg, ${t.a}, ${t.b})`, boxShadow: `0 6px 18px -6px ${t.ring}` }
+                      }
+                    >
+                      {complete ? <Check className="h-5 w-5" /> : locked ? <Lock className="h-4 w-4" /> : i + 1}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className={`truncate text-sm font-extrabold sm:text-[15px] ${locked ? "text-slate-600" : "text-slate-100"}`}>
+                          {l.title}
+                        </p>
+                        {isNext && (
+                          <span className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide" style={{ background: t.soft, color: t.a }}>
+                            Up next
+                          </span>
+                        )}
+                      </div>
+                      {!locked && <p className="clamp-2 mt-0.5 text-xs leading-relaxed text-slate-400">{l.blurb}</p>}
+                      {locked && <p className="mt-0.5 text-xs text-slate-600">Finish lesson {i} to unlock</p>}
+                      <div className="mt-2 flex items-center gap-2.5">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2 py-0.5 text-[10px] font-extrabold" style={{ color: locked ? "#475569" : t.a }}>
+                          <Zap className="h-2.5 w-2.5" /> {l.xp} XP
+                        </span>
+                        {!locked && !complete && (
+                          <span className="flex items-center gap-1">
+                            {[0, 1, 2].map((p) => (
+                              <span key={p} className="h-1.5 w-5 rounded-full" style={{ background: done[key(i, p)] ? t.a : "rgba(255,255,255,.12)" }} />
+                            ))}
+                          </span>
+                        )}
+                        {complete && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10px] font-extrabold text-emerald-300">
+                            <Check className="h-2.5 w-2.5" /> Done
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {!locked && (
+                      <div
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5"
+                        style={complete ? undefined : { borderColor: t.ring }}
+                      >
+                        {complete
+                          ? <CheckCircle2 className="h-4.5 w-4.5 text-emerald-400" style={{ width: 18, height: 18 }} />
+                          : <Play className="h-4 w-4" style={{ color: t.a }} />}
+                      </div>
+                    )}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-8 flex items-center justify-center gap-2">
+            <Info className="h-3.5 w-3.5 shrink-0 text-slate-600" />
+            <p className="text-[11px] text-slate-600">Your XP and code are saved on this device.</p>
+          </div>
+        </div>
+        {showWelcome && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: "rgba(3,6,14,.8)", backdropFilter: "blur(6px)", WebkitBackdropFilter: "blur(6px)" }}
+          >
+            <div className="pop-in relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl border border-white/10 bg-[#0b1222] p-6 shadow-2xl sm:p-7">
+              <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full blur-3xl" style={{ background: "rgba(34,211,238,.16)" }} />
+              <div className="absolute -bottom-12 -left-12 h-40 w-40 rounded-full blur-3xl" style={{ background: "rgba(232,121,249,.13)" }} />
+              <div className="relative">
+                <div
+                  className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl text-white"
+                  style={{ background: "linear-gradient(135deg,#22d3ee,#0e7490)", boxShadow: "0 10px 26px -8px rgba(34,211,238,.5)" }}
+                >
+                  <Sparkles className="h-6 w-6" />
+                </div>
+                <h2 className="font-display text-2xl font-extrabold">Welcome!</h2>
+                <p className="mt-1 text-sm leading-relaxed text-slate-400">Every lesson has 3 parts. Do them in order.</p>
+                <div className="mt-5 space-y-2.5">
+                  {WELCOME_STEPS.map((s, i) => (
+                    <div key={i} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[.03] p-3.5">
+                      <div
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white"
+                        style={{ background: `linear-gradient(135deg, ${s.color}, ${s.deep})` }}
+                      >
+                        <s.icon className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-extrabold" style={{ color: s.color }}>{s.title}</p>
+                        <p className="text-xs leading-relaxed text-slate-400">{s.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-2.5 flex items-center gap-3 rounded-2xl border border-cyan-300/25 bg-cyan-400/[.07] p-3.5">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-400/15">
+                    <Play className="h-5 w-5 text-cyan-300" />
+                  </div>
+                  <p className="text-xs leading-relaxed text-slate-300">
+                    In the code lab, press <span className="font-extrabold text-cyan-200">Run code</span> to see your page.
+                  </p>
+                </div>
+                <div className="mt-2.5 flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/[.03] p-3.5">
+                  <Info className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+                  <p className="text-xs leading-relaxed text-slate-400">
+                    <span className="font-extrabold text-slate-200">Your progress saves on this device.</span> Use the same phone or computer each time.
+                  </p>
+                </div>
+                <button
+                  onClick={dismissWelcome}
+                  className="pressable mt-5 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-extrabold text-white"
+                  style={{ background: "linear-gradient(135deg,#22d3ee,#0e7490)", boxShadow: "0 12px 30px -8px rgba(34,211,238,.5)" }}
+                >
+                  Start learning <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
 
+  // ─────────────────────────── LESSON ───────────────────────────
   if (screen === "lesson") {
+    const t = themeFor(openLesson);
     const isDone = done[key(openLesson, activePart)];
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100">
-        {renderStatusBar()}
-        <div className="mx-auto max-w-3xl px-5 py-8">
+      <div className="min-h-screen">
+        {renderStatusBar(t)}
+        <div className="mx-auto max-w-3xl px-4 pb-10 pt-5 sm:px-5 sm:pt-7">
           <button
             onClick={() => setScreen("map")}
-            className="mb-4 flex items-center gap-1 text-xs font-bold text-slate-500 hover:text-slate-300"
+            className="pressable mb-4 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-extrabold text-slate-300 hover:border-white/25"
           >
-            <ChevronLeft className="h-3.5 w-3.5" /> Back to map
+            <ChevronLeft className="h-3.5 w-3.5" /> Course map
           </button>
 
-          <div className="mb-6 flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-slate-800 bg-slate-900 text-lg font-bold text-cyan-400">
-              {openLesson + 1}
-            </div>
-            <div className="min-w-0 flex-1">
-              <h1 className="text-2xl font-bold tracking-tight">{lesson.title}</h1>
-              <p className="mt-1 text-sm text-slate-400">{lesson.blurb}</p>
+          {/* header */}
+          <div
+            className="screen-enter relative mb-5 overflow-hidden rounded-3xl border border-white/10 p-5 sm:p-6"
+            style={{ background: `linear-gradient(135deg, ${t.soft}, rgba(255,255,255,.02) 60%)` }}
+          >
+            <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full blur-3xl" style={{ background: t.soft }} />
+            <div className="relative flex items-start gap-4">
+              <div
+                className="floaty flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-xl font-extrabold text-white"
+                style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})`, boxShadow: `0 10px 26px -8px ${t.ring}` }}
+              >
+                {openLesson + 1}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[11px] font-extrabold uppercase tracking-[.16em]" style={{ color: t.a }}>
+                  Lesson {openLesson + 1} · {UNIT_1.sub}
+                </p>
+                <h1 className="font-display mt-1 text-2xl font-extrabold sm:text-[28px]">{lesson.title}</h1>
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-400">{lesson.blurb}</p>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[11px] font-extrabold" style={{ color: t.a }}>
+                    <Zap className="h-3 w-3" /> {lesson.xp} XP up for grabs
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/30 px-2.5 py-1">
+                    {[0, 1, 2].map((p) => (
+                      <span key={p} title={PARTS[p].label} className="h-1.5 w-6 rounded-full" style={{ background: done[key(openLesson, p)] ? PARTS[p].color : "rgba(255,255,255,.12)" }} />
+                    ))}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* collapsible core reference — hidden until asked for */}
-          <div className="mb-6">
+          {/* core reference */}
+          <div className="mb-5">
             <button
               onClick={() => setShowRef((v) => !v)}
-              className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2.5 text-left ${
-                showRef ? "border-slate-700 bg-slate-900" : "border-slate-800 bg-slate-900/50 hover:border-slate-700"
+              className={`pressable flex w-full items-center gap-3 rounded-2xl border p-3.5 text-left ${
+                showRef ? "border-emerald-300/30 bg-emerald-300/[.06]" : "border-white/10 bg-white/[.03] hover:border-white/20"
               }`}
             >
-              <BookMarked className="h-4 w-4 shrink-0 text-emerald-400" />
-              <span className="text-xs font-bold text-slate-300">Core reference</span>
-              <span className="truncate text-xs text-slate-600">— open this when you forget a word</span>
-              <ChevronDown
-                className={`ml-auto h-4 w-4 shrink-0 text-slate-500 transition-transform ${
-                  showRef ? "rotate-180" : ""
-                }`}
-              />
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-300/15">
+                <BookMarked className="h-4 w-4 text-emerald-300" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-extrabold text-slate-100">Core reference</p>
+                <p className="truncate text-xs text-slate-500">Open this when you forget a word</p>
+              </div>
+              <ChevronDown className={`h-4 w-4 shrink-0 text-slate-400 transition-transform duration-300 ${showRef ? "rotate-180" : ""}`} />
             </button>
-
             {showRef && (
-              <div className="mt-2 overflow-hidden rounded-lg border border-slate-800">
+              <div className="pop-in mt-2 overflow-hidden rounded-2xl border border-white/10">
                 {lesson.learn.ref.map((r, i) => (
                   <div
                     key={i}
-                    className={`p-3 ${i % 2 ? "bg-slate-950/40" : "bg-slate-950/70"} ${
-                      i > 0 ? "border-t border-slate-800" : ""
-                    }`}
+                    className={`p-4 ${i > 0 ? "border-t border-white/10" : ""}`}
+                    style={{ background: i % 2 ? "rgba(255,255,255,.015)" : "rgba(255,255,255,.045)" }}
                   >
-                    <p className="font-mono text-xs font-bold text-emerald-300">{r.label}</p>
-                    <p className="mt-1 text-xs leading-relaxed text-slate-300">
+                    <p className="font-mono2 text-[13px] font-bold text-emerald-300">{r.label}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-slate-300">
                       <StepText text={r.body} />
                     </p>
                   </div>
@@ -2285,314 +2858,282 @@ function Prototype() {
           </div>
 
           {/* part switcher */}
-          <div className="mb-6 flex gap-1.5 sm:gap-2">
-            {[
-              { icon: BookOpen, label: "Learn", sub: lesson.learn.subtitle },
-              { icon: Dumbbell, label: "Practice", sub: lesson.practice.subtitle },
-              { icon: Rocket, label: "Build", sub: lesson.build.subtitle },
-            ].map((p, i) => {
-              const Icon = p.icon;
+          <div className="grid grid-cols-3 gap-1 rounded-2xl border border-white/10 bg-black/40 p-1.5">
+            {PARTS.map((pm, i) => {
+              const active = i === activePart;
+              const partDone = done[key(openLesson, i)];
+              const Icon = pm.icon;
               return (
                 <button
-                  key={i}
+                  key={pm.key}
                   onClick={() => setActivePart(i)}
-                  className={`min-w-0 flex-1 rounded-lg border px-2 py-2 text-left sm:px-3 sm:py-2.5 ${
-                    activePart === i
-                      ? i === 2
-                        ? "border-fuchsia-500/50 bg-fuchsia-500/10"
-                        : i === 1
-                        ? "border-violet-500/50 bg-violet-500/10"
-                        : "border-cyan-500/50 bg-cyan-500/10"
-                      : "border-slate-800 bg-slate-900 hover:border-slate-700"
+                  className={`pressable flex items-center justify-center gap-1.5 rounded-xl px-2 py-2.5 text-xs font-extrabold sm:text-sm ${
+                    active ? "text-white" : "text-slate-400 hover:text-slate-200"
                   }`}
+                  style={active ? { background: `linear-gradient(135deg, ${pm.color}, ${pm.deep})`, boxShadow: `0 8px 22px -8px ${pm.color}99` } : undefined}
                 >
-                  <div className="flex items-center gap-1.5">
-                    {done[key(openLesson, i)] ? (
-                      <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-400" />
-                    ) : (
-                      <Icon className={`h-3.5 w-3.5 shrink-0 ${activePart === i ? "text-slate-200" : "text-slate-600"}`} />
-                    )}
-                    <span
-                      className={`truncate text-[11px] font-bold sm:text-xs ${
-                        activePart === i
-                          ? i === 2
-                            ? "text-fuchsia-300"
-                            : i === 1
-                            ? "text-violet-300"
-                            : "text-cyan-300"
-                          : "text-slate-400"
-                      }`}
-                    >
-                      {p.label}
-                    </span>
-                  </div>
-                  <p className="mt-0.5 hidden truncate text-xs text-slate-500 sm:block">{p.sub}</p>
+                  {partDone && !active
+                    ? <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                    : <Icon className="h-4 w-4 shrink-0" />}
+                  {pm.label}
                 </button>
               );
             })}
           </div>
+          <p className="mb-6 mt-2 text-center text-xs text-slate-500">{part.subtitle}</p>
 
-          {/* LEARN */}
-          {!isPractice && !isBuild && (
-            <>
-              <div className="mb-4 rounded-xl border border-slate-800 bg-slate-900 p-5">
-                <ConceptBlocks blocks={lesson.learn.blocks} />
-              </div>
-              {renderLab()}
-              <div className="rounded-xl border border-slate-800 bg-slate-900 p-5">
-                <div className="mb-2 flex items-center gap-2">
-                  <ListChecks className="h-4 w-4 text-cyan-400" />
-                  <h2 className="text-sm font-bold text-slate-200">Your turn</h2>
+          <div key={activePart} className="screen-enter">
+            {/* LEARN */}
+            {!isPractice && !isBuild && (
+              <>
+                <div className="mb-6 rounded-3xl border border-white/10 bg-white/[.03] p-5 sm:p-6">
+                  <ConceptBlocks blocks={lesson.learn.blocks} theme={t} />
                 </div>
-                <p className="mb-4 text-sm leading-relaxed text-slate-300">{part.task}</p>
-
-                <div className="mb-4 rounded-lg border border-slate-800 bg-slate-950/60 p-3">
-                  <div className="mb-2 flex items-center gap-2">
-                    <HelpCircle className="h-3.5 w-3.5 text-cyan-400" />
-                    <span className="text-xs font-bold text-slate-300">Check your learning</span>
+                <div className="mb-6 rounded-3xl border border-indigo-300/25 bg-indigo-400/[.05] p-5 sm:p-6">
+                  <div className="mb-3 flex items-center gap-2.5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-400/15">
+                      <HelpCircle className="h-4 w-4 text-indigo-300" />
+                    </div>
+                    <h2 className="font-display text-base font-extrabold">Check your learning</h2>
                   </div>
-                  <p className="mb-3 text-xs leading-relaxed text-slate-300">
+                  <p className="mb-3 text-[15px] leading-relaxed text-slate-200">
                     <StepText text={lesson.learn.check.q} />
                   </p>
                   <button
                     onClick={() => setShowAnswer((v) => !v)}
-                    className="rounded-md border border-slate-700 px-2.5 py-1.5 font-mono text-[11px] font-bold text-slate-300 hover:border-slate-600 hover:text-slate-100"
+                    className="pressable rounded-xl border border-indigo-300/30 px-3.5 py-2 font-mono2 text-[11px] font-bold text-indigo-200 hover:bg-indigo-400/10"
                   >
-                    {showAnswer ? "Hide answer" : "Show answer"}
+                    {showAnswer ? "Hide answer" : "Reveal answer"}
                   </button>
                   {showAnswer && (
-                    <p className="mt-3 border-t border-slate-800 pt-3 text-xs leading-relaxed text-slate-400">
+                    <p className="pop-in mt-3 border-t border-indigo-300/15 pt-3 text-sm leading-relaxed text-slate-300">
                       <StepText text={lesson.learn.check.a} />
                     </p>
                   )}
                 </div>
-
-                {part.extra && (
-                  <div className="mb-4 rounded-lg border border-slate-800 bg-slate-950/60 p-3">
-                    <div className="mb-1 flex items-center gap-2">
-                      <span className="text-xs font-bold text-cyan-300">{part.extra.label}</span>
-                      <span className="rounded bg-fuchsia-500/15 px-1.5 py-0.5 text-[10px] font-bold text-fuchsia-300">
-                        +{part.extra.xp} XP
-                      </span>
+                <div
+                  className="mb-6 rounded-3xl border p-5 sm:p-6"
+                  style={{ borderColor: t.ring, background: `linear-gradient(180deg, ${t.soft}, rgba(255,255,255,.015))` }}
+                >
+                  <div className="mb-3 flex items-center gap-2.5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl text-white" style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})` }}>
+                      <ListChecks className="h-4 w-4" />
                     </div>
-                    <p className="text-xs leading-relaxed text-slate-400">{part.extra.text}</p>
+                    <h2 className="font-display text-base font-extrabold">Your turn</h2>
                   </div>
-                )}
+                  <p className="mb-4 text-[15px] leading-relaxed text-slate-200">{part.task}</p>
 
-                <button
-                  onClick={markComplete}
-                  disabled={isDone}
-                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold ${
-                    isDone
-                      ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                      : "bg-slate-100 text-slate-950 hover:bg-white"
-                  }`}
-                >
-                  {isDone ? (
-                    <>
-                      <CheckCircle2 className="h-4 w-4" /> Completed
-                    </>
-                  ) : (
-                    <>Mark complete · +{(part.xp ?? 0) + (part.extra?.xp ?? 0)} XP</>
-                  )}
-                </button>
-              </div>
-            </>
-          )}
-
-
-          {/* PRACTICE */}
-          {isPractice && (
-            <>
-              <div className="mb-4 rounded-xl border border-violet-500/30 bg-violet-500/5 p-5">
-                <div className="mb-2 flex items-center gap-2">
-                  <Dumbbell className="h-4 w-4 text-violet-400" />
-                  <h2 className="text-sm font-bold text-slate-200">Drills</h2>
-                  <span className="ml-auto text-xs font-bold text-violet-300">
-                    {part.drills.filter((_, i) => checked[`${openLesson}:${i}`]).length}/{part.drills.length}
-                  </span>
-                </div>
-                <p className="mb-4 text-sm leading-relaxed text-slate-300">{part.intro}</p>
-
-                <div className="space-y-1.5">
-                  {part.drills.map((d, i) => {
-                    const k = `${openLesson}:${i}`;
-                    const on = checked[k];
-                    return (
-                      <button
-                        key={i}
-                        onClick={() => setChecked((c) => ({ ...c, [k]: !c[k] }))}
-                        className="flex w-full items-start gap-2.5 rounded-lg border border-slate-800 bg-slate-950/50 p-3 text-left hover:border-slate-700"
-                      >
-                        {on ? (
-                          <CheckSquare className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
-                        ) : (
-                          <Square className="mt-0.5 h-4 w-4 shrink-0 text-slate-600" />
-                        )}
-                        <div className="min-w-0">
-                          <p className={`text-xs leading-relaxed ${on ? "text-slate-500 line-through" : "text-slate-200"}`}>
-                            <span className="mr-1.5 font-bold text-violet-400">{i + 1}.</span>
-                            <StepText text={d.text} />
-                          </p>
-                          {d.hint && !on && (
-                            <p className="mt-1 text-[11px] leading-relaxed text-slate-500">{d.hint}</p>
-                          )}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {renderLab()}
-
-              <div className="rounded-xl border border-violet-500/30 bg-violet-500/5 p-5">
-                <button
-                  onClick={markComplete}
-                  disabled={isDone}
-                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold ${
-                    isDone
-                      ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                      : "bg-slate-100 text-slate-950 hover:bg-white"
-                  }`}
-                >
-                  {isDone ? (
-                    <>
-                      <CheckCircle2 className="h-4 w-4" /> Drills complete
-                    </>
-                  ) : (
-                    <>Mark drills complete · +{part.xp} XP</>
-                  )}
-                </button>
-              </div>
-            </>
-          )}
-
-          {/* BUILD */}
-          {isBuild && (
-            <>
-              <div className="mb-4 rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/5 p-5">
-                <div className="mb-2 flex items-center gap-2">
-                  <Rocket className="h-4 w-4 text-fuchsia-400" />
-                  <h2 className="text-sm font-bold text-slate-200">Project brief</h2>
-                </div>
-                <p className="mb-4 text-sm leading-relaxed text-slate-300">{part.brief}</p>
-
-                <div className="mb-2 flex items-center gap-2">
-                  <p className="text-xs font-bold text-slate-500">Build steps</p>
-                  <span className="ml-auto text-xs font-bold text-fuchsia-300">
-                    {part.requirements.filter((_, i) => checked[`b${openLesson}:${i}`]).length}/
-                    {part.requirements.length}
-                  </span>
-                </div>
-                <div className="space-y-1">
-                  {part.requirements.map((r, i) => {
-                    const k = `b${openLesson}:${i}`;
-                    const on = checked[k];
-                    return (
-                      <button
-                        key={i}
-                        onClick={() => setChecked((c) => ({ ...c, [k]: !c[k] }))}
-                        className="flex w-full items-start gap-2.5 rounded-lg border border-slate-800 bg-slate-950/50 p-2.5 text-left hover:border-slate-700"
-                      >
-                        {on ? (
-                          <CheckSquare className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
-                        ) : (
-                          <Square className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-600" />
-                        )}
-                        <span
-                          className={`text-xs leading-relaxed ${
-                            on ? "text-slate-500 line-through" : "text-slate-200"
-                          }`}
-                        >
-                          <span className="mr-1.5 font-bold text-fuchsia-400">{i + 1}.</span>
-                          <StepText text={r} />
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="mt-4 flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2.5">
-                  <Code2 className="h-4 w-4 shrink-0 text-fuchsia-400" />
-                  <p className="text-xs text-slate-400">
-                    The files below are empty on purpose. Build this from scratch.
-                  </p>
-                </div>
-
-                {part.deploy && (
-                  <div className="mt-2 flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/60 px-3 py-2.5">
-                    <Globe className="h-4 w-4 shrink-0 text-cyan-400" />
-                    <p className="text-xs text-slate-400">
-                      When it's working here, move it to your own editor, commit it, and deploy it live.
+                  <div className="mb-4 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[.03] p-3.5">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})` }}>
+                      <Pencil className="h-4 w-4" />
+                    </div>
+                    <p className="text-xs leading-relaxed text-slate-300">
+                      Do the <span className="font-extrabold text-white">Your turn</span> task in the boxes below. Notes like <span className="font-mono2 text-slate-100">&lt;!-- this --&gt;</span> are hints that tell you where to type. Press <span className="font-extrabold" style={{ color: t.a }}>Run code</span> to see your page.
                     </p>
                   </div>
-                )}
-              </div>
 
-              {renderLab()}
-
-              <div className="rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/5 p-5">
-                <button
-                  onClick={markComplete}
-                  disabled={isDone}
-                  className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold ${
-                    isDone
-                      ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
-                      : "bg-slate-100 text-slate-950 hover:bg-white"
-                  }`}
-                >
-                  {isDone ? (
-                    <>
-                      <CheckCircle2 className="h-4 w-4" /> Project submitted
-                    </>
-                  ) : (
-                    <>Submit project · +{part.xp} XP</>
+                  {part.extra && !part.debug && (
+                    <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/30 p-3.5">
+                      <span className="shrink-0 rounded-lg px-2 py-1 text-[11px] font-extrabold text-white" style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})` }}>
+                        +{part.extra.xp} XP
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-xs font-extrabold" style={{ color: t.a }}>{part.extra.label}</p>
+                        <p className="mt-0.5 text-xs leading-relaxed text-slate-400">{part.extra.text}</p>
+                      </div>
+                    </div>
                   )}
-                </button>
-              </div>
-            </>
-          )}
+                </div>
+                {renderLab(t)}
+                {renderDebugLab(t)}
+              </>
+            )}
+
+            {/* PRACTICE */}
+            {isPractice && (
+              <>
+                <div className="mb-6 rounded-3xl border border-violet-300/25 bg-violet-400/[.05] p-5 sm:p-6">
+                  <div className="mb-3 flex items-center gap-2.5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#a78bfa,#6d28d9)" }}>
+                      <Dumbbell className="h-4 w-4" />
+                    </div>
+                    <h2 className="font-display text-base font-extrabold">Drills</h2>
+                    <span className="ml-auto rounded-full bg-violet-400/15 px-2.5 py-1 text-[11px] font-extrabold text-violet-200">
+                      {part.drills.filter((_, i) => checked[`${openLesson}:${i}`]).length}/{part.drills.length}
+                    </span>
+                  </div>
+                  <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-white/10">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${(part.drills.filter((_, i) => checked[`${openLesson}:${i}`]).length / part.drills.length) * 100}%`, background: "linear-gradient(90deg,#6d28d9,#a78bfa)" }}
+                    />
+                  </div>
+                  <p className="mb-4 text-[15px] leading-relaxed text-slate-300">{part.intro}</p>
+                  <div className="space-y-2">
+                    {part.drills.map((d, i) => {
+                      const k = `${openLesson}:${i}`;
+                      const on = checked[k];
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => setChecked((c) => ({ ...c, [k]: !c[k] }))}
+                          className={`pressable flex w-full items-start gap-3 rounded-2xl border p-3.5 text-left ${
+                            on ? "border-emerald-300/25 bg-emerald-300/[.05]" : "border-white/10 bg-black/30 hover:border-white/20"
+                          }`}
+                        >
+                          <span
+                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-[11px] font-extrabold text-white"
+                            style={on ? { background: "linear-gradient(135deg,#34d399,#047857)" } : { background: "linear-gradient(135deg,#a78bfa,#6d28d9)" }}
+                          >
+                            {on ? <Check className="h-3.5 w-3.5" /> : i + 1}
+                          </span>
+                          <div className="min-w-0">
+                            <p className={`text-sm leading-relaxed ${on ? "text-slate-500 line-through" : "text-slate-100"}`}>
+                              <StepText text={d.text} />
+                            </p>
+                            {d.hint && !on && (
+                              <p className="mt-1.5 flex items-start gap-1.5 text-xs leading-relaxed text-slate-500">
+                                <Lightbulb className="mt-0.5 h-3 w-3 shrink-0 text-amber-300/70" />
+                                {d.hint}
+                              </p>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+                {renderLab(t)}
+              </>
+            )}
+
+            {/* BUILD */}
+            {isBuild && (
+              <>
+                <div className="mb-6 rounded-3xl border border-fuchsia-300/25 bg-fuchsia-400/[.05] p-5 sm:p-6">
+                  <div className="mb-3 flex items-center gap-2.5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#e879f9,#a21caf)" }}>
+                      <Rocket className="h-4 w-4" />
+                    </div>
+                    <h2 className="font-display text-base font-extrabold">Project brief</h2>
+                    <span className="ml-auto rounded-full bg-fuchsia-400/15 px-2.5 py-1 text-[11px] font-extrabold text-fuchsia-200">
+                      {part.requirements.filter((_, i) => checked[`b${openLesson}:${i}`]).length}/{part.requirements.length}
+                    </span>
+                  </div>
+                  <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-white/10">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${(part.requirements.filter((_, i) => checked[`b${openLesson}:${i}`]).length / part.requirements.length) * 100}%`, background: "linear-gradient(90deg,#a21caf,#e879f9)" }}
+                    />
+                  </div>
+                  <p className="mb-4 text-[15px] leading-relaxed text-slate-300">{part.brief}</p>
+                  <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[.14em] text-slate-500">Build steps</p>
+                  <div className="space-y-2">
+                    {part.requirements.map((r, i) => {
+                      const k = `b${openLesson}:${i}`;
+                      const on = checked[k];
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => setChecked((c) => ({ ...c, [k]: !c[k] }))}
+                          className={`pressable flex w-full items-start gap-3 rounded-2xl border p-3 text-left ${
+                            on ? "border-emerald-300/25 bg-emerald-300/[.05]" : "border-white/10 bg-black/30 hover:border-white/20"
+                          }`}
+                        >
+                          {on
+                            ? <CheckSquare className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                            : <Square className="mt-0.5 h-4 w-4 shrink-0 text-slate-600" />}
+                          <span className={`text-sm leading-relaxed ${on ? "text-slate-500 line-through" : "text-slate-100"}`}>
+                            <StepText text={r} />
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-4 flex items-center gap-2.5 rounded-2xl border border-white/10 bg-black/30 px-3.5 py-3">
+                    <Code2 className="h-4 w-4 shrink-0 text-fuchsia-300" />
+                    <p className="text-xs leading-relaxed text-slate-400">The files below are empty on purpose. Build this from scratch.</p>
+                  </div>
+                  {part.deploy && (
+                    <div className="mt-2 flex items-center gap-2.5 rounded-2xl border border-white/10 bg-black/30 px-3.5 py-3">
+                      <Globe className="h-4 w-4 shrink-0 text-cyan-300" />
+                      <p className="text-xs leading-relaxed text-slate-400">When it&apos;s working here, move it to your own editor, commit it, and deploy it live.</p>
+                    </div>
+                  )}
+                </div>
+                {renderLab(t)}
+              </>
+            )}
+          </div>
         </div>
+        {renderStickyCta(t)}
       </div>
     );
   }
 
+  // ─────────────────────────── LEVEL UP ───────────────────────────
+  const confettiColors = THEMES.map((x) => x.a);
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4">
-      <div className="w-full max-w-sm rounded-2xl border border-slate-800 bg-slate-900 p-8 text-center">
-        <div className="relative mx-auto mb-5 flex h-20 w-20 items-center justify-center">
-          <span className="absolute h-20 w-20 animate-ping rounded-full bg-cyan-500/10" style={{ animationDuration: "2s" }} />
-          <span className="absolute h-16 w-16 rounded-full bg-cyan-500/20" />
-          <div className="relative flex h-14 w-14 items-center justify-center rounded-full border border-cyan-400/40 bg-cyan-500/20">
-            <PartyPopper className="h-6 w-6 text-cyan-300" />
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden p-4">
+      <div className="pointer-events-none fixed inset-0" aria-hidden="true">
+        {Array.from({ length: 26 }).map((_, i) => {
+          const left = (i * 41 + 7) % 100;
+          const delay = ((i * 137) % 2200) / 1000;
+          const dur = 2.8 + ((i * 53) % 22) / 10;
+          const size = 5 + ((i * 29) % 5);
+          return (
+            <span
+              key={i}
+              className="confetti-bit"
+              style={{
+                left: `${left}%`,
+                width: size,
+                height: Math.max(3, size * 0.55),
+                background: confettiColors[i % confettiColors.length],
+                animationDelay: `${delay}s`,
+                animationDuration: `${dur}s`,
+              }}
+            />
+          );
+        })}
+      </div>
+      <div className="pop-in relative w-full max-w-sm overflow-hidden rounded-3xl border border-white/10 bg-white/[.04] p-8 text-center shadow-2xl" style={{ backdropFilter: "blur(12px)" }}>
+        <div className="absolute -right-12 -top-12 h-40 w-40 rounded-full blur-3xl" style={{ background: "rgba(251,191,36,.16)" }} />
+        <div className="absolute -bottom-12 -left-12 h-40 w-40 rounded-full blur-3xl" style={{ background: "rgba(232,121,249,.14)" }} />
+        <div className="relative">
+          <div className="relative mx-auto mb-5 flex h-24 w-24 items-center justify-center">
+            <span className="absolute inset-0 rounded-full bg-amber-400/25 blur-xl" />
+            <span className="absolute inset-0 animate-ping rounded-full bg-amber-400/10" style={{ animationDuration: "2.2s" }} />
+            <div className="relative flex h-20 w-20 items-center justify-center rounded-full text-white" style={{ background: "linear-gradient(135deg,#fbbf24,#b45309)", boxShadow: "0 14px 36px -10px rgba(251,191,36,.55)" }}>
+              <Trophy className="h-9 w-9" />
+            </div>
           </div>
+          <p className="mb-1 text-[11px] font-extrabold uppercase tracking-[.22em] text-emerald-300">Unit complete</p>
+          <h1 className="font-display text-3xl font-extrabold">{UNIT_1.badge} unlocked</h1>
+          <p className="mt-2 text-sm leading-relaxed text-slate-400">
+            You finished {UNIT_1.title} with <span className="font-extrabold text-slate-100">{xp} XP</span>. JavaScript is next.
+          </p>
+          <div className="mb-6 mt-5 flex items-center gap-3 rounded-2xl border border-fuchsia-300/25 bg-fuchsia-400/[.07] p-3.5 text-left">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#e879f9,#a21caf)" }}>
+              <Star className="h-5 w-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">New badge earned</p>
+              <p className="truncate text-sm font-extrabold text-slate-100">{UNIT_1.badge}</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setScreen("map")}
+            className="pressable flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-extrabold text-white"
+            style={{ background: "linear-gradient(135deg,#22d3ee,#0e7490)", boxShadow: "0 12px 30px -8px rgba(34,211,238,.5)" }}
+          >
+            Back to map <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
-        <p className="mb-1 text-xs font-bold uppercase tracking-wider text-cyan-400">Unit complete</p>
-        <h1 className="mb-2 text-2xl font-bold tracking-tight text-slate-50">{UNIT_1.badge} unlocked</h1>
-        <p className="mb-6 text-sm text-slate-400">
-          You finished {UNIT_1.title} with {xp} XP. JavaScript is next.
-        </p>
-        <div className="mb-6 flex items-center gap-3 rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/5 p-3 text-left">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-fuchsia-500/30 bg-fuchsia-500/20">
-            <Star className="h-5 w-5 text-fuchsia-300" />
-          </div>
-          <div>
-            <p className="text-xs text-slate-500">New badge earned</p>
-            <p className="text-sm font-bold text-slate-100">{UNIT_1.badge}</p>
-          </div>
-        </div>
-        <button
-          onClick={() => setScreen("map")}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-slate-100 py-2.5 text-sm font-bold text-slate-950 hover:bg-white"
-        >
-          Back to map <ArrowRight className="h-4 w-4" />
-        </button>
       </div>
     </div>
   );
 }
-
 
 const rootEl = document.getElementById("root");
 rootEl.innerHTML = "";
