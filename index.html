@@ -1107,7 +1107,7 @@ b {
           ]},
           { type: "mistake", body: "Leaving out the viewport meta tag, then wondering why the phone layout never appears." },
         ],
-        task: "Drag the edge of the preview to make it narrow, then wide again. Watch the page respond. In the CSS, find the breakpoint and change its width. Run it and drag again. What moved, and what stayed?",
+        task: "Tap Phone above the preview to see the page at phone width, then Full to go back. Watch the page respond. In the CSS, find the breakpoint and change its width. Run it and switch widths again. What moved, and what stayed?",
         files: {
           html: `<nav class="nav">
   <span class="logo">My site</span>
@@ -1128,7 +1128,7 @@ b {
   <img src="https://placehold.co/800x300/0ea5e9/white?text=Too+wide" alt="Placeholder">
 </div>
 
-<p class="hint">Drag the edge of this preview to resize.</p>`,
+<p class="hint">Use the Phone, Tablet, and Full buttons above this preview to resize it.</p>`,
           css: `body {
   font-family: system-ui, sans-serif;
   margin: 0;
@@ -1180,7 +1180,7 @@ b {
       },
       practice: {
       subtitle: "Practice: responsive",
-      intro: "Drag the preview edge to test as you go. Every drill should be checked at more than one width.",
+      intro: "Use the Phone, Tablet, and Full buttons above the preview to test as you go. Every drill should be checked at more than one width.",
       drills: [
     { text: "In the HTML <head>, add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">. In the CSS, add .photo { max-width: 100%; }.", hint: "The meta tag goes in the head. The CSS stops the wide image overflowing." },
     { text: "Add a rule that stacks the cards on phones: .cards { flex-direction: column; }.", hint: "The starter already makes .cards a flex row. This switches it to a column." },
@@ -1189,7 +1189,7 @@ b {
     { text: "Add a second query: @media (min-width: 480px) { .cards { display: grid; grid-template-columns: 1fr 1fr; } }.", hint: "Tablet size: two cards across. Grid makes this easy." },
     { text: "Stack the nav on phones: add .nav { flex-direction: column; } before the queries. Inside the 700px query, add .nav { flex-direction: row; }.", hint: "Same pattern as the cards: column base, row inside the query." },
     { text: "Make the h1 scale with the screen: h1 { font-size: clamp(1.5rem, 5vw, 3rem); }.", hint: "clamp sets a minimum, a preferred size, and a maximum." },
-    { text: "Drag the preview to 375px wide. The page must not scroll sideways.", hint: "Sideways scroll means something still has a fixed width. Find it." },
+    { text: "Set the preview to Phone width. The page must not scroll sideways.", hint: "Sideways scroll means something still has a fixed width. Find it." },
   ],
       xp: 20,
       files: {
@@ -1744,6 +1744,93 @@ input { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font: inher
   ],
 };
 
+const DRILL_CHECKS = {
+  // Auto-checks for practice drills. Key is "lessonIndex:drillIndex".
+  // Each check looks for text in the student's code. Case and spacing
+  // do not matter. A drill with no entry here is checked by hand.
+  // A check is { tab, need:[all must appear], any:[at least one appears] },
+  // or an array of those where every entry must pass.
+  // Lesson 1: tags & structure (html)
+  "0:0": { tab: "html", need: ["<h1", "</h1>"] },
+  "0:1": { tab: "html", need: ["<p", "</p>"] },
+  "0:2": { tab: "html", need: ["<ol"] },
+  "0:3": { tab: "html", need: ["<ol", "<li"] },
+  "0:4": { tab: "html", need: ["</ol>", "<img"] },
+  "0:5": { tab: "html", need: ["<a", "href", "</a>"] },
+  "0:6": { tab: "html", need: ["<h2", "</h2>"] },
+  "0:7": { tab: "html", need: ["<ul", "</ul>", "<li"] },
+  "0:8": { tab: "html", need: ["myfirstpage"] },
+  // Lesson 2: semantics & forms (html)
+  "1:0": { tab: "html", need: ["<header", "</header>"] },
+  "1:1": { tab: "html", need: ["<header", "<h1", "</h1>"] },
+  "1:2": { tab: "html", need: ["<nav", "</nav>", "<a"] },
+  "1:3": { tab: "html", need: ["<main", "</main>"] },
+  "1:4": { tab: "html", need: ["<section", "<h2", "<p"] },
+  "1:5": { tab: "html", need: ["<aside", "<a"] },
+  "1:6": { tab: "html", need: ["<footer", "</footer>"] },
+  "1:7": { tab: "html", need: ["<form", "<label", 'for="name"', 'id="name"'] },
+  "1:8": { tab: "html", need: ['type="email"'] },
+  // Lesson 3: selectors & the box model (css)
+  "2:0": { tab: "css", need: ["p{", "font-size:16px"] },
+  "2:1": { tab: "css", need: [".card{"], any: ["background:white", "background:#fff"] },
+  "2:2": { tab: "css", need: ["#intro{", "border-left:4pxsolid"] },
+  "2:3": { tab: "css", need: [".cardh2{"], any: ["navy", "#000080"] },
+  "2:4": { tab: "css", need: [".card{", "padding:20px"] },
+  "2:5": { tab: "css", need: ["margin:16px"] },
+  "2:6": { tab: "css", need: ["border:2pxsolid"] },
+  "2:7": { tab: "css", need: [".box{", "box-sizing:border-box"] },
+  "2:8": { tab: "css", need: ["body{", "max-width:700px", "margin:0auto"] },
+  "2:9": { tab: "css", need: [".faint{", "color:#334155"] },
+  // Lesson 4: flexbox (css)
+  "3:0": { tab: "css", need: [".one{", "display:flex", "justify-content:center"] },
+  "3:1": { tab: "css", need: [".two{", "display:flex", "justify-content:space-between"] },
+  "3:2": { tab: "css", need: [".three{", "display:flex", "justify-content:center", "align-items:center"] },
+  "3:3": { tab: "css", need: [".four{", "display:flex", "flex-direction:column", "gap:12px"] },
+  "3:4": { tab: "css", need: [".five{", "display:flex", "flex:1"] },
+  "3:5": { tab: "css", need: [".six{", "display:flex", "first-child", "flex:2"] },
+  "3:6": { tab: "css", need: [".seven{", "display:flex", "justify-content:space-between", "align-items:center"] },
+  "3:7": { tab: "css", need: [".eight{", "display:flex", "flex-wrap:wrap", "gap:8px"] },
+  "3:8": { tab: "css", need: [".nine{", "display:flex", "flex-shrink:0"] },
+  // Lesson 5: grid (css)
+  "4:0": { tab: "css", need: [".one{", "display:grid", "grid-template-columns:repeat(3,1fr)"] },
+  "4:1": { tab: "css", need: [".two{", "display:grid", "grid-template-columns:1fr2fr"] },
+  "4:2": { tab: "css", need: [".three{", "display:grid", "150px1fr"] },
+  "4:3": { tab: "css", need: [".four{", "display:grid", "gap:16px"] },
+  "4:4": { tab: "css", need: [".five{", "display:grid", "grid-template-columns:1fr1fr"] },
+  "4:5": { tab: "css", need: [".six{", "display:grid", "grid-template-areas"] },
+  "4:6": { tab: "css", need: ["grid-area:head", "grid-area:side", "grid-area:main", "grid-area:foot"] },
+  // Lesson 6: responsive design
+  "5:0": [{ tab: "html", need: ["viewport"] }, { tab: "css", need: [".photo{", "max-width:100%"] }],
+  "5:1": { tab: "css", need: [".cards{", "flex-direction:column"] },
+  "5:2": { tab: "css", need: ["@media(min-width:700px)"] },
+  "5:3": { tab: "css", need: ["@media(min-width:700px)", "flex-direction:row"] },
+  "5:4": { tab: "css", need: ["@media(min-width:480px)", "grid-template-columns:1fr1fr"] },
+  "5:5": { tab: "css", need: [".nav{", "flex-direction:column"] },
+  "5:6": { tab: "css", need: ["clamp(1.5rem,5vw,3rem)"] },
+  // Lesson 7: hierarchy & spacing (css)
+  "6:0": { tab: "css", need: [".eyebrow{", "font-size:12px", "text-transform:uppercase", "letter-spacing:2px"] },
+  "6:1": { tab: "css", need: [".headline{", "font-size:32px", "font-weight:700"] },
+  "6:2": { tab: "css", need: [".body{", "font-size:16px"] },
+  "6:3": { tab: "css", need: ["8px04px0"] },
+  "6:4": { tab: "css", need: ["0032px0"] },
+  "6:6": { tab: "css", need: [".cta{", "font-size:20px", "font-weight:700"] },
+  // Lesson 8: wireframe in code
+  "7:0": { tab: "html", need: ['class="box"', "header"] },
+  "7:1": { tab: "html", need: ["hero"] },
+  "7:2": { tab: "html", need: ['class="row"'] },
+  "7:3": { tab: "html", need: ["about", "photo"] },
+  "7:4": { tab: "html", need: ["contact"] },
+  "7:5": { tab: "html", need: ["footer"] },
+  "7:6": { tab: "css", need: [".row{", "display:flex", "gap:12px"] },
+  "7:7": { tab: "css", need: ["@media(max-width:600px)", "flex-direction:column"] },
+  // Lesson 9: accessibility audit
+  "8:0": { tab: "html", need: ["alt="] },
+  "8:1": { tab: "html", need: ['alt=""'] },
+  "8:2": { tab: "html", any: ["<h2", "<h3"] },
+  "8:4": { tab: "html", need: ['for="email"'] },
+  "8:6": { tab: "css", need: [".faint{"], any: ["#334155", "#1e293b", "#0f172a"] },
+};
+
 const LOCKED_UNITS = [
   { title: "Bringing pages to life", sub: "JavaScript", icon: Braces },
   { title: "Scaling up", sub: "React", icon: Boxes },
@@ -2007,6 +2094,37 @@ function ConceptBlocks({ blocks, theme }) {
   );
 }
 
+// Practice drill auto-checks -------------------------------------------
+// Comparisons ignore case and all spacing, so "margin: 0 auto"
+// and "margin:0 auto" count the same.
+
+const norm = (s) => (s || "").toLowerCase().replace(/\s+/g, "");
+
+function drillPasses(check, files) {
+  const subs = Array.isArray(check) ? check : [check];
+  return subs.every((c) => {
+    const src = norm(files[c.tab] || "");
+    const needOk = (c.need || []).every((s) => src.includes(norm(s)));
+    const any = c.any || [];
+    const anyOk = any.length === 0 || any.some((s) => src.includes(norm(s)));
+    return needOk && anyOk;
+  });
+}
+
+// Daily streak, stored as { count, last } in localStorage.
+function loadStreak() {
+  const dayStr = (d) => d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
+  const s = STORE.read("cs:streak", { count: 0, last: "" });
+  const now = new Date();
+  const t = dayStr(now);
+  if (s.last === t) return s;
+  const y = new Date(now);
+  y.setDate(y.getDate() - 1);
+  const next = { count: s.last === dayStr(y) ? s.count + 1 : 1, last: t };
+  STORE.write("cs:streak", next);
+  return next;
+}
+
 function Prototype() {
   const [screen, setScreen] = useState("map");
   const [xp, setXp] = useState(() => STORE.read("cs:xp", 0));
@@ -2022,6 +2140,9 @@ function Prototype() {
   const [view, setView] = useState("code"); // lab on phones: code | preview
   const [showWelcome, setShowWelcome] = useState(() => !STORE.read("cs:seenWelcome", false));
   const [showLabHint, setShowLabHint] = useState(() => !STORE.read("cs:seenLabHint", false));
+  const [streak] = useState(loadStreak);
+  const [checkMsg, setCheckMsg] = useState(null);
+  const [previewW, setPreviewW] = useState("full"); // phone | tablet | full
 
   const [files, setFiles] = useState(null);
   const [tab, setTab] = useState("html");
@@ -2043,11 +2164,48 @@ function Prototype() {
     (_, i) => done[key(i, 0)] && done[key(i, 1)] && done[key(i, 2)]
   ).length;
   const xpPct = Math.round(Math.min(100, (xp / UNIT_1.totalXp) * 100));
+  const level = Math.min(6, Math.floor(xp / 100) + 1);
 
   function buildDoc(f) {
     return `<!DOCTYPE html>
 <html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>${f.css}</style></head>
 <body>${f.html}<script>${f.js}<\/script></body></html>`;
+  }
+
+  // Practice: tick the drills the app can verify from the student's code.
+  // Run shows the page. Check my work validates it.
+  function checkWork() {
+    if (!isPractice || !part || !files) return;
+    const next = { ...checked };
+    let checkable = 0;
+    let checkablePassed = 0;
+    let firstFail = -1;
+    let passed = 0;
+    part.drills.forEach((d, i) => {
+      const k = `${openLesson}:${i}`;
+      const c = DRILL_CHECKS[k];
+      if (c) {
+        checkable++;
+        const ok = !!next[k] || drillPasses(c, files);
+        if (ok) {
+          next[k] = true;
+          checkablePassed++;
+        } else if (firstFail === -1) {
+          firstFail = i;
+        }
+      }
+      if (next[k]) passed++;
+    });
+    setChecked(next);
+    const total = part.drills.length;
+    if (checkable > 0 && checkablePassed === checkable) {
+      setCheckMsg({
+        ok: true,
+        text: checkable === total ? "All checks pass. Well done." : "All auto-checks pass. Tick the rest yourself when done.",
+      });
+    } else {
+      setCheckMsg({ ok: false, text: `${passed} of ${total} drills done. Next: drill ${firstFail + 1}.` });
+    }
   }
 
   function run() {
@@ -2080,6 +2238,8 @@ function Prototype() {
   useEffect(() => {
     setShowAnswer(false);
     setView("code");
+    setCheckMsg(null);
+    setPreviewW("full");
     window.scrollTo(0, 0);
   }, [screen, openLesson, activePart]);
 
@@ -2159,7 +2319,7 @@ function Prototype() {
             <Flame className="h-5 w-5" />
           </div>
           <div className="leading-tight">
-            <p className="text-sm font-extrabold">Level 1</p>
+            <p className="text-sm font-extrabold">Level {level}</p>
             <p className="hidden text-[11px] text-slate-500 sm:block">{UNIT_1.badge}</p>
           </div>
         </div>
@@ -2178,6 +2338,10 @@ function Prototype() {
           {gaining !== null && (
             <span key={gainId} className="xp-float">+{gaining}</span>
           )}
+        </div>
+        <div className="flex shrink-0 items-center gap-1.5 rounded-2xl border border-orange-300/25 bg-orange-400/10 px-3 py-1.5" title="Day streak">
+          <Flame className="h-3.5 w-3.5 text-orange-300" />
+          <span className="text-sm font-extrabold text-orange-200">{streak.count}</span>
         </div>
       </div>
     </div>
@@ -2234,9 +2398,26 @@ function Prototype() {
               {ran ? <Check className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
               {ran ? "Ran it" : "Run code"}
             </button>
+            {isPractice && (
+              <button
+                onClick={checkWork}
+                className="pressable flex items-center gap-1.5 rounded-xl border border-emerald-300/30 bg-emerald-400/10 px-3.5 py-2 text-xs font-extrabold text-emerald-200 hover:bg-emerald-400/20"
+              >
+                <ListChecks className="h-3.5 w-3.5" />
+                Check my work
+              </button>
+            )}
           </div>
         </div>
 
+        {isPractice && (
+          <div className="border-b border-white/10 px-4 py-2.5">
+            <p className="text-[11px] leading-relaxed text-slate-500">Run shows your page. Check my work ticks the drills the app can verify.</p>
+            {checkMsg && (
+              <p className={`mt-1 text-xs font-bold ${checkMsg.ok ? "text-emerald-300" : "text-amber-300"}`}>{checkMsg.text}</p>
+            )}
+          </div>
+        )}
         <div className="flex gap-1 overflow-x-auto border-b border-white/10 px-3 py-2">
           {TABS.map((tb) => (
             <button
@@ -2289,14 +2470,27 @@ function Prototype() {
           <div className="flex items-center gap-2 px-4 py-2.5">
             <Eye className="h-3.5 w-3.5 text-slate-500" />
             <span className="font-mono2 text-[11px] font-bold uppercase tracking-[.14em] text-slate-500">preview</span>
-            <span className="ml-auto text-[10px] text-slate-600">press Run code to update</span>
+            <div className="ml-auto flex items-center gap-1">
+              {[{ v: "phone", label: "Phone" }, { v: "tablet", label: "Tablet" }, { v: "full", label: "Full" }].map((o) => (
+                <button
+                  key={o.v}
+                  onClick={() => setPreviewW(o.v)}
+                  className={`rounded-lg px-2 py-1 font-mono2 text-[10px] font-bold ${previewW === o.v ? "bg-white/15 text-white" : "text-slate-500 hover:text-slate-300"}`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            <span className="hidden text-[10px] text-slate-600 lg:inline">press Run code to update</span>
           </div>
-          <iframe
-            title="preview"
-            srcDoc={srcDoc}
-            sandbox="allow-scripts"
-            className={`w-full border-0 bg-white ${isBuild ? "h-72 sm:h-80" : "h-64 sm:h-72"}`}
-          />
+          <div className="mx-auto transition-all duration-300" style={previewW === "full" ? undefined : { maxWidth: previewW === "phone" ? 375 : 768 }}>
+            <iframe
+              title="preview"
+              srcDoc={srcDoc}
+              sandbox="allow-scripts"
+              className={`w-full border-0 bg-white ${isBuild ? "h-72 sm:h-80" : "h-64 sm:h-72"}`}
+            />
+          </div>
         </div>
       </div>
       </>
@@ -2365,14 +2559,14 @@ function Prototype() {
             <div className="relative">
               <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-extrabold tracking-wide text-slate-300">
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                UNIT 1 · HTML &amp; CSS · LIVE NOW
+                UNIT 1 · HTML &amp; CSS
               </p>
               <h1 className="font-display text-3xl font-extrabold sm:text-4xl">
                 Your course{" "}
                 <span className="bg-gradient-to-r from-cyan-300 via-violet-300 to-fuchsia-300 bg-clip-text text-transparent">map</span>
               </h1>
               <p className="mt-2 max-w-md text-sm leading-relaxed text-slate-400">
-                Eight lessons, each ending with something real you built. Tap a lesson to jump straight in.
+                Nine lessons, each ending with something real you built. Tap a lesson to jump straight in.
               </p>
               <div className="mt-5 grid grid-cols-3 gap-2.5 sm:gap-3">
                 {stats.map((s, i) => (
@@ -2525,11 +2719,6 @@ function Prototype() {
               );
             })}
           </div>
-
-          <div className="mt-8 flex items-center justify-center gap-2">
-            <Info className="h-3.5 w-3.5 shrink-0 text-slate-600" />
-            <p className="text-[11px] text-slate-600">Your XP and code are saved on this device.</p>
-          </div>
         </div>
         {showWelcome && (
           <div
@@ -2570,12 +2759,6 @@ function Prototype() {
                   </div>
                   <p className="text-xs leading-relaxed text-slate-300">
                     In the code lab, press <span className="font-extrabold text-cyan-200">Run code</span> to see your page.
-                  </p>
-                </div>
-                <div className="mt-2.5 flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/[.03] p-3.5">
-                  <Info className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
-                  <p className="text-xs leading-relaxed text-slate-400">
-                    <span className="font-extrabold text-slate-200">Your progress saves on this device.</span> Use the same phone or computer each time.
                   </p>
                 </div>
                 <button
@@ -2863,12 +3046,6 @@ function Prototype() {
                     <Code2 className="h-4 w-4 shrink-0 text-fuchsia-300" />
                     <p className="text-xs leading-relaxed text-slate-400">The files below are empty on purpose. Build this from scratch.</p>
                   </div>
-                  {part.deploy && (
-                    <div className="mt-2 flex items-center gap-2.5 rounded-2xl border border-white/10 bg-black/30 px-3.5 py-3">
-                      <Globe className="h-4 w-4 shrink-0 text-cyan-300" />
-                      <p className="text-xs leading-relaxed text-slate-400">When it&apos;s working here, move it to your own editor, commit it, and deploy it live.</p>
-                    </div>
-                  )}
                 </div>
                 {renderLab(t)}
               </>
