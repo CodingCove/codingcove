@@ -149,13 +149,13 @@ const UNIT_1 = {
   title: "Web foundations",
   sub: "HTML & CSS",
   badge: "Page builder",
-  totalXp: 580,
+  totalXp: 555,
   lessons: [
     // ─────────────────────────────── 1
     {
       title: "Welcome to the web",
       blurb: "What a browser actually does, and the tags every page is built from.",
-      xp: 60,
+      xp: 45,
       learn: {
         subtitle: "How a page is built",
         check: {
@@ -209,19 +209,12 @@ const UNIT_1 = {
           { type: "code", body: "<a href=\"https://example.com\">Visit example</a>\n    └─ attribute name\n         └─ value, always in quotes" },
           { type: "mistake", body: "Forgetting the slash in a closing tag. <p> opens. </p> closes. Without the slash the browser keeps going and your whole page shifts." },
         ],
-        task: "The starter page has a heading and a paragraph. Add a list with three items, a link, and a second heading. Then try deleting a closing tag and running it again. Notice the browser doesn't show an error. It just guesses. That's why typos hide.",
-        extra: { label: "Debugging challenge", xp: 15, text: "Finished the task above? Scroll down to the Debug challenge box. It has its own code for you to fix." },
-        debug: {
-          html: `<h2>Broken section<h2>
-<p>This paragraph never closes
-<a href=https://example.com>A link with a problem</a>`,
-        },
+        task: "Press Run code and look at the preview. Change the heading to your name and run it again. Delete one closing tag and run it once more. The page still shows. The browser guesses instead of showing an error. That is why typos hide.",
         files: {
           html: `<h1>Hello, world!</h1>
 <p>This is my first web page. Everything you see here
    started as plain text.</p>
 
-<!-- Add a list, a link, and an <h2> below -->
 `,
           css: `body {
   font-family: system-ui, sans-serif;
@@ -258,7 +251,6 @@ console.log("Page loaded.");`,
      https://placehold.co/400x200
 
      Delete these comments when you're done. -->
-
 
 `,
         css: `body {
@@ -300,7 +292,7 @@ img { max-width: 100%; }`,
     {
       title: "Structure & semantics",
       blurb: "Landmarks, meaning, and how forms are actually built.",
-      xp: 65,
+      xp: 50,
       learn: {
         subtitle: "Meaning over appearance",
         check: {
@@ -342,7 +334,7 @@ img { max-width: 100%; }`,
           { type: "code", body: "<!-- Broken: label isn't connected -->\n<label>Email</label>\n<input type=\"email\">\n\n<!-- Correct: for matches id -->\n<label for=\"email\">Email</label>\n<input id=\"email\" type=\"email\">" },
           { type: "mistake", body: "Writing a label but not connecting it. The for and the id must be the same word, or the label does nothing." },
         ],
-        task: "Refactor the div soup into proper semantic tags. When you're done the page should look exactly the same. That is the point. Then finish the contact form: add an email input and a textarea, each with a properly connected label.",
+        task: "Press Run code and look at the page. It is built from plain <div> tags. Change one <div> to a <header> and run it again. The page looks exactly the same. That is the point of semantic tags. Keep swapping divs for better tags and watch nothing break.",
         extra: { label: "Exit ticket", xp: 5, text: "In one sentence: why does an input need a <label> even when the form already looks clear?" },
         files: {
           html: `<div class="top">
@@ -362,8 +354,6 @@ img { max-width: 100%; }`,
   <form>
     <label for="name">Your name</label>
     <input id="name" type="text">
-
-    <!-- Add an email input and a textarea, each with a label -->
 
     <button type="submit">Send</button>
   </form>
@@ -430,7 +420,6 @@ button {
      Header → Main → Footer, then the form.
      Delete these comments as you go. -->
 
-
 `,
         css: `body {
   font-family: system-ui, sans-serif;
@@ -476,7 +465,7 @@ button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; c
     {
       title: "CSS fundamentals",
       blurb: "Selectors, the box model, and making text genuinely readable.",
-      xp: 70,
+      xp: 50,
       learn: {
         subtitle: "How styling works",
         check: {
@@ -528,8 +517,7 @@ button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; c
           { type: "tip", body: "Contrast is an accessibility requirement, not a preference. Light grey text on white looks elegant on your bright laptop and becomes unreadable in sunlight or for anyone with low vision. Aim for at least 4.5:1 between text and background." },
           { type: "mistake", body: "Forgetting the semicolon at the end of a style line. The browser then ignores that line and often the next one too." },
         ],
-        task: "Three tasks in the starter file. First, change margin, padding, and border on the cards one at a time and watch which ones move the neighbors. Second, fix the unreadable paragraph at the bottom. It has poor contrast, cramped line-height, and lines that run too long. Third, set a font pairing you actually like.",
-        extra: { label: "Debugging challenge", xp: 15, text: "The .wide box overflows its container. The cause is box-sizing. Fix it without changing the width value." },
+        task: "Press Run code and look at the cards. In the CSS, change the padding on .card and run it again. Now change the margin. Which one moves the neighbours? Scroll to the hard-to-read paragraph. Change its CSS until it is easy to read.",
         files: {
           html: `<h1>Styling practice</h1>
 
@@ -573,7 +561,6 @@ button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; c
   padding: 20px;
   border: 4px solid #ef4444;
   background: #fecaca;
-  /* Add box-sizing here */
 }
 
 .hard-to-read {
@@ -661,7 +648,7 @@ body {
     {
       title: "Flexbox",
       blurb: "Arranging things in a row or column without fighting the browser.",
-      xp: 65,
+      xp: 50,
       learn: {
         subtitle: "Layout along one axis",
         check: {
@@ -702,8 +689,7 @@ body {
           { type: "code", body: "/* Logo left, links right: the classic nav bar */\n.nav {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}" },
           { type: "mistake", body: "Putting flexbox properties on the child instead of the parent. display: flex goes on the container." },
         ],
-        task: "Three exercises in the CSS. First, cycle the .row through every justify-content value and predict each before you run it. Second, make the nav bar put the logo on the left and links on the right. Third, make the three cards sit in an equal-width row.",
-        extra: { label: "Debugging challenge", xp: 15, text: "The .broken-nav wraps onto two lines when it shouldn't. Find out why and fix it." },
+        task: "Press Run code and look at the three boxes. In the CSS, change the justify-content value on .row and run it. Try every value you know. Can you guess what each one does before you run it? Then fix the nav so the logo sits left and the links sit right.",
         files: {
           html: `<div class="row">
   <div class="box">1</div>
@@ -727,7 +713,7 @@ body {
 </div>
 
 <nav class="broken-nav">
-  <span class="logo">Fix me</span>
+  <span class="logo">My site</span>
   <div class="links">
     <a href="#">A longer link</a>
     <a href="#">Another long one</a>
@@ -740,7 +726,6 @@ body {
   margin: 0;
 }
 
-/* 1. Try each justify-content value */
 .row {
   display: flex;
   justify-content: flex-start;
@@ -751,7 +736,6 @@ body {
   border-radius: 8px;
   min-height: 110px;
 }
-/* flex-start · center · flex-end · space-between · space-evenly */
 
 .box {
   background: #0ea5e9;
@@ -761,7 +745,6 @@ body {
   font-weight: 700;
 }
 
-/* 2. Make this a row: logo left, links right */
 .nav {
   margin-top: 24px;
   padding: 16px;
@@ -773,7 +756,6 @@ body {
 .links { display: flex; gap: 16px; }
 .links a { color: #7dd3fc; text-decoration: none; }
 
-/* 3. Make these three equal-width in a row */
 .cards {
   margin-top: 24px;
 }
@@ -785,7 +767,6 @@ body {
   font-weight: 600;
 }
 
-/* Debugging challenge: why does this wrap? */
 .broken-nav {
   display: flex;
   flex-wrap: wrap;
@@ -941,7 +922,7 @@ b {
           ]},
           { type: "mistake", body: "Mixing up rows and columns. grid-template-columns sets how many go ACROSS, not down." },
         ],
-        task: "First, cycle .grid through the column values listed in the comments and watch how fr distributes space. Then rebuild the .page layout using grid-template-areas so it has a header across the top, a sidebar and main area in the middle, and a footer across the bottom.",
+        task: "Press Run code and look at the grid. In the CSS, change grid-template-columns on .grid to 1fr 2fr and run it. Try 200px 1fr next. Watch how the space is shared. Then change the .page layout CSS and see how the regions move.",
         extra: { label: "Exit ticket", xp: 5, text: "Name one layout where Grid is clearly the better choice than Flexbox, and explain why in a sentence." },
         files: {
           html: `<h2>Track sizing</h2>
@@ -965,13 +946,11 @@ b {
   margin: 0;
 }
 
-/* Try each of these in turn */
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
-/* 1fr 2fr · 200px 1fr · repeat(4, 1fr) */
 
 .cell {
   background: #c7d2fe;
@@ -981,7 +960,6 @@ b {
   font-weight: 700;
 }
 
-/* Rebuild this using grid-template-areas */
 .page {
   display: grid;
   gap: 12px;
@@ -1093,7 +1071,7 @@ b {
     {
       title: "Responsive design",
       blurb: "One page that works on a phone, a tablet, and a laptop.",
-      xp: 65,
+      xp: 50,
       learn: {
         subtitle: "Designing for unknown screens",
         check: {
@@ -1129,8 +1107,7 @@ b {
           ]},
           { type: "mistake", body: "Leaving out the viewport meta tag, then wondering why the phone layout never appears." },
         ],
-        task: "Drag the preview pane narrow and wide to see the current breakpoint working. Then add a tablet breakpoint to the nav. Finally, rewrite the .cards block mobile-first: strip the desktop assumptions out of the base rule and add them back in a min-width query.",
-        extra: { label: "Debugging challenge", xp: 15, text: "The .gallery images overflow their container on narrow screens. Fix it with one line." },
+        task: "Drag the edge of the preview to make it narrow, then wide again. Watch the page respond. In the CSS, find the breakpoint and change its width. Run it and drag again. What moved, and what stayed?",
         files: {
           html: `<nav class="nav">
   <span class="logo">My site</span>
@@ -1176,10 +1153,6 @@ b {
   .nav { flex-direction: column; align-items: flex-start; gap: 12px; }
 }
 
-/* Add a tablet breakpoint for the nav here */
-
-
-/* Rewrite this mobile-first */
 .cards {
   display: flex;
   gap: 16px;
@@ -1197,10 +1170,8 @@ b {
   .cards { flex-direction: column; }
 }
 
-/* Debugging challenge: the image overflows */
 .gallery {
   margin-top: 16px;
-  border: 2px dashed #ef4444;
 }
 
 .hint { color: #64748b; font-size: 14px; }`,
@@ -1296,7 +1267,7 @@ b {
     {
       title: "Visual design principles",
       blurb: "Hierarchy, whitespace, and making choices on purpose.",
-      xp: 55,
+      xp: 60,
       learn: {
         subtitle: "Why some pages just look better",
         check: {
@@ -1336,7 +1307,7 @@ b {
           { type: "tip", body: "A reliable shortcut: start greyscale. Build the whole page in black, white, and grey, get the hierarchy and spacing right, and only then add colour. If it works in greyscale, colour will improve it. If it doesn't, colour was hiding the problem." },
           { type: "mistake", body: "Using five different spacing values. Pick four numbers and reuse them everywhere." },
         ],
-        task: "The starter page has no hierarchy. Everything is the same size and weight. Fix it using only font-size, font-weight, and spacing. No new colours allowed. Then fix the second block, where the spacing groups the wrong things together.",
+        task: "Press Run code and look at the first block. Every line looks the same. In the CSS, make one line bigger and bolder, then run it. Look at the second block. The spacing groups the wrong things together. Change the margins until each heading sits close to its own paragraph.",
         extra: { label: "Critique", xp: 10, text: "Pick two real websites and describe each one's hierarchy in a sentence: what does your eye hit first, second, third, and how did they do it?" },
         files: {
           html: `<div class="flat">
@@ -1359,16 +1330,12 @@ b {
   max-width: 480px;
 }
 
-/* Everything looks identical. Build a hierarchy using
-   ONLY font-size, font-weight, and margin. */
 .flat p {
   font-size: 16px;
   font-weight: 400;
   margin: 8px 0;
 }
 
-/* The spacing here groups the wrong things together.
-   Headings should sit close to their own paragraph. */
 .grouping {
   margin-top: 48px;
 }
@@ -1457,7 +1424,7 @@ b {
     {
       title: "Capstone: plan & build",
       blurb: "Plan your portfolio properly, then build the bulk of it.",
-      xp: 60,
+      xp: 55,
       learn: {
         subtitle: "Planning before building",
         check: {
@@ -1493,13 +1460,10 @@ b {
           ]},
           { type: "mistake", body: "Filling the page with placeholder text. Real content is the only way to find real layout problems." },
         ],
-        task: "Produce your plan: a wireframe for each page, your palette and fonts, and a paragraph describing what the site is. Get it signed off, then start building the structure in the sandbox below.",
+        task: "Press Run code and look at your empty portfolio. Change Your name to your real name and run it again. Add a sentence under About. This skeleton is yours now. Keep building it here.",
         extra: { label: "Peer review", xp: 10, text: "Swap plans with a classmate and give three specific, actionable notes on theirs." },
         files: {
-          html: `<!-- Start building your portfolio structure here.
-     Semantic tags, real content, layout first. -->
-
-<header>
+          html: `<header>
   <h1>Your name</h1>
   <nav>
     <a href="#about">About</a>
@@ -1526,7 +1490,6 @@ b {
   <p>&copy; 2026</p>
 </footer>`,
           css: `:root {
-  /* Your palette, decided in planning */
   --primary: #0f172a;
   --accent: #0ea5e9;
   --muted: #64748b;
@@ -1557,7 +1520,6 @@ body {
       files: {
         html: `<!-- Block out your portfolio layout with labelled boxes.
      No real content yet. This is a wireframe. -->
-
 
 `,
         css: `body {
@@ -1607,7 +1569,7 @@ body {
     {
       title: "Capstone: polish & ship",
       blurb: "Accessibility pass, final polish, and getting it live.",
-      xp: 130,
+      xp: 140,
       learn: {
         subtitle: "Finishing properly",
         check: {
@@ -1641,14 +1603,10 @@ body {
           { type: "text", body: "You'll give a two-minute walkthrough. Don't narrate every feature. Pick one decision you made and explain why. \"I chose this layout because...\" is far more interesting than a tour, and explaining a decision out loud is how you find out whether you actually made one." },
           { type: "mistake", body: "Deleting a focus outline because it looked ugly. Restyle it instead. Never remove it." },
         ],
-        task: "Run the full accessibility checklist against your site and fix everything it surfaces. Then check it at three widths. Use the sandbox to test any fixes before applying them to your real files.",
+        task: "Press Run code and look at the page closely. Some text is hard to read. Click the preview, then press Tab again and again. Can you always see where you are? Explore, find every problem, and fix it in the code.",
         extra: { label: "Reflection", xp: 20, text: "Write a short reflection: what was hardest, what you'd change, and what you'd do differently on the next build." },
         files: {
-          html: `<!-- This page has SIX accessibility problems.
-     Find and fix them all, then apply the same
-     checks to your own portfolio. -->
-
-<div class="header">
+          html: `<div class="header">
   <h3>My portfolio</h3>
 </div>
 
@@ -1786,7 +1744,6 @@ input { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font: inher
   ],
 };
 
-
 const LOCKED_UNITS = [
   { title: "Bringing pages to life", sub: "JavaScript", icon: Braces },
   { title: "Scaling up", sub: "React", icon: Boxes },
@@ -1798,8 +1755,6 @@ const TABS = [
   { key: "css", name: "style.css" },
   { key: "js", name: "script.js" },
 ];
-
-
 
 // ------------------------------------------------------------
 // Persistence
@@ -1829,7 +1784,6 @@ const STORE = {
 };
 
 const codeKey = (l, p) => `cs:code:0:${l}:${p}`;
-const debugKey = (l) => `cs:debug:0:${l}`;
 
 // Highlights HTML tags and CSS declarations inside step text so the code
 // stands out from the instruction. Important when reading in a second language.
@@ -2074,10 +2028,6 @@ function Prototype() {
   const [srcDoc, setSrcDoc] = useState("");
   const [ran, setRan] = useState(false);
 
-  const [debugHtml, setDebugHtml] = useState("");
-  const [debugRan, setDebugRan] = useState(false);
-  const [debugSrcDoc, setDebugSrcDoc] = useState("");
-  const [debugView, setDebugView] = useState("code"); // debug box on phones: code | preview
 
   const lesson = openLesson !== null ? UNIT_1.lessons[openLesson] : null;
   const part = lesson ? [lesson.learn, lesson.practice, lesson.build][activePart] : null;
@@ -2127,27 +2077,9 @@ function Prototype() {
     return () => clearTimeout(t);
   }, [files, screen, openLesson, activePart]);
 
-  // Debug challenge box: its own code, saved separately from the main lab.
-  useEffect(() => {
-    if (screen !== "lesson" || !lesson?.learn?.debug) return;
-    const saved = STORE.read(debugKey(openLesson), null);
-    const next = saved ?? lesson.learn.debug.html;
-    setDebugHtml(next);
-    setDebugSrcDoc(buildDebugDoc(next));
-  }, [screen, openLesson]);
-
-  useEffect(() => {
-    if (screen !== "lesson" || !lesson?.learn?.debug) return;
-    const t = setTimeout(() => {
-      STORE.write(debugKey(openLesson), debugHtml);
-    }, 1000);
-    return () => clearTimeout(t);
-  }, [debugHtml, screen, openLesson]);
-
   useEffect(() => {
     setShowAnswer(false);
     setView("code");
-    setDebugView("code");
     window.scrollTo(0, 0);
   }, [screen, openLesson, activePart]);
 
@@ -2368,119 +2300,6 @@ function Prototype() {
         </div>
       </div>
       </>
-    );
-
-  function buildDebugDoc(h) {
-    return `<!DOCTYPE html>\n<html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head>\n<body>${h}</body></html>`;
-  }
-
-  function runDebug() {
-    setDebugSrcDoc(buildDebugDoc(debugHtml));
-    setDebugRan(true);
-    setTimeout(() => setDebugRan(false), 1200);
-  }
-
-  function handleDebugTabKey(e) {
-    if (e.key !== "Tab") return;
-    e.preventDefault();
-    const el = e.target;
-    const s = el.selectionStart;
-    const updated = el.value.slice(0, s) + "  " + el.value.slice(el.selectionEnd);
-    setDebugHtml(updated);
-    requestAnimationFrame(() => {
-      el.selectionStart = el.selectionEnd = s + 2;
-    });
-  }
-
-  const renderDebugLab = (t) =>
-    lesson?.learn?.debug && (
-      <div className="mb-6 overflow-hidden rounded-3xl border border-white/10 bg-[#0a101f] shadow-2xl">
-        <div className="border-b border-white/10 p-4 sm:p-5">
-          <div className="flex flex-wrap items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl text-white" style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})` }}>
-              <Bug className="h-4 w-4" />
-            </div>
-            <h2 className="font-display text-base font-extrabold">Debug challenge</h2>
-            <span className="rounded-lg px-2 py-1 text-[11px] font-extrabold text-white" style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})` }}>
-              +15 XP
-            </span>
-          </div>
-          <p className="mt-2.5 text-sm leading-relaxed text-slate-300">
-            This code has <span className="font-extrabold text-white">3 errors</span>. Find them and fix them. Press <span className="font-extrabold" style={{ color: t.a }}>Run code</span> to see your page.
-          </p>
-          <p className="mt-1 text-xs leading-relaxed text-slate-500">Hint: check every closing tag. Check the quotes.</p>
-        </div>
-        <div className="flex items-center gap-3 px-4 py-3">
-          <p className="font-mono2 text-xs font-bold text-slate-500">broken.html</p>
-          <div className="ml-auto flex shrink-0 items-center gap-2">
-            <button
-              onClick={() => {
-                setDebugHtml(lesson.learn.debug.html);
-                STORE.write(debugKey(openLesson), lesson.learn.debug.html);
-              }}
-              className="pressable flex items-center gap-1.5 rounded-xl border border-white/10 px-2.5 py-2 text-xs font-bold text-slate-400 hover:border-white/25 hover:text-slate-200"
-            >
-              <RotateCcw className="h-3 w-3" />
-              <span className="hidden sm:inline">Reset</span>
-            </button>
-            <button
-              onClick={runDebug}
-              className="pressable flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-extrabold text-white"
-              style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})`, boxShadow: `0 6px 18px -6px ${t.ring}` }}
-            >
-              {debugRan ? <Check className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />}
-              {debugRan ? "Ran it" : "Run code"}
-            </button>
-          </div>
-        </div>
-
-        {/* phones: flip between code and preview instead of a tall stack */}
-        <div className="border-y border-white/10 p-2 sm:hidden">
-          <div className="grid grid-cols-2 gap-1 rounded-xl bg-white/5 p-1">
-            {[
-              { v: "code", label: "Code", icon: Code2 },
-              { v: "preview", label: "Preview", icon: Eye },
-            ].map((o) => (
-              <button
-                key={o.v}
-                onClick={() => setDebugView(o.v)}
-                className={`flex items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-extrabold ${
-                  debugView === o.v ? "text-white" : "text-slate-500"
-                }`}
-                style={debugView === o.v ? { background: `linear-gradient(135deg, ${t.a}, ${t.b})` } : undefined}
-              >
-                <o.icon className="h-3.5 w-3.5" /> {o.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <textarea
-          value={debugHtml}
-          spellCheck={false}
-          autoCapitalize="off"
-          autoCorrect="off"
-          onChange={(e) => setDebugHtml(e.target.value)}
-          onKeyDown={handleDebugTabKey}
-          className={`code-area font-mono2 h-64 w-full resize-none bg-[#070c18] p-4 text-[13px] leading-relaxed text-slate-100 outline-none ${
-            debugView === "preview" ? "hidden" : "block"
-          } sm:block`}
-        />
-
-        <div className={`${debugView === "code" ? "hidden" : "block"} sm:block border-t border-white/10`}>
-          <div className="flex items-center gap-2 px-4 py-2.5">
-            <Eye className="h-3.5 w-3.5 text-slate-500" />
-            <span className="font-mono2 text-[11px] font-bold uppercase tracking-[.14em] text-slate-500">preview</span>
-            <span className="ml-auto text-[10px] text-slate-600">press Run code to update</span>
-          </div>
-          <iframe
-            title="debug preview"
-            srcDoc={debugSrcDoc}
-            sandbox="allow-scripts"
-            className="h-64 w-full border-0 bg-white sm:h-72"
-          />
-        </div>
-      </div>
     );
 
   const renderStickyCta = (t) => {
@@ -2923,16 +2742,7 @@ function Prototype() {
                   </div>
                   <p className="mb-4 text-[15px] leading-relaxed text-slate-200">{part.task}</p>
 
-                  <div className="mb-4 flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[.03] p-3.5">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-white" style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})` }}>
-                      <Pencil className="h-4 w-4" />
-                    </div>
-                    <p className="text-xs leading-relaxed text-slate-300">
-                      Do the <span className="font-extrabold text-white">Your turn</span> task in the boxes below. Notes like <span className="font-mono2 text-slate-100">&lt;!-- this --&gt;</span> are hints that tell you where to type. Press <span className="font-extrabold" style={{ color: t.a }}>Run code</span> to see your page.
-                    </p>
-                  </div>
-
-                  {part.extra && !part.debug && (
+                  {part.extra && (
                     <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/30 p-3.5">
                       <span className="shrink-0 rounded-lg px-2 py-1 text-[11px] font-extrabold text-white" style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})` }}>
                         +{part.extra.xp} XP
@@ -2945,7 +2755,6 @@ function Prototype() {
                   )}
                 </div>
                 {renderLab(t)}
-                {renderDebugLab(t)}
               </>
             )}
 
