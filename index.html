@@ -79,6 +79,16 @@
   }
   .confetti-bit { position: absolute; top: -8px; border-radius: 2px; animation: confettiFall linear both; }
 
+  /* Mission card: scroll engagement */
+  @keyframes badgePop { 0% { transform: scale(.55); } 60% { transform: scale(1.28); } 100% { transform: scale(1); } }
+  .badge-pop { animation: badgePop .32s ease; }
+  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .badge-pop { animation: none; }
+  }
+
   /* Code editor */
   .code-area { caret-color: #22d3ee; }
   .code-area::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -122,7 +132,7 @@ const {
   RotateCcw = blank, Eye = blank, Globe = blank, Lightbulb = blank,
   ListChecks = blank, Dumbbell = blank, Square = blank, CheckSquare = blank,
   AlertTriangle = blank, BookMarked = blank, HelpCircle = blank, ChevronDown = blank,
-  X = blank, Info = blank, Pencil = blank, Bug = blank,
+  X = blank, Info = blank, Pencil = blank, Bug = blank, Target = blank,
 } = L;
 
 // One accent identity per lesson, so every lesson feels like its own place
@@ -149,13 +159,13 @@ const UNIT_1 = {
   title: "Web foundations",
   sub: "HTML & CSS",
   badge: "Page builder",
-  totalXp: 555,
+  totalXp: 690,
   lessons: [
     // ─────────────────────────────── 1
     {
       title: "Welcome to the web",
       blurb: "What a browser actually does, and the tags every page is built from.",
-      xp: 45,
+      xp: 60,
       learn: {
         subtitle: "How a page is built",
         check: {
@@ -243,6 +253,38 @@ console.log("Page loaded.");`,
     { text: "At the very top, add a comment: <!-- My first page -->.", hint: "Comments start with <!-- and end with -->. Visitors never see them." },
   ],
       xp: 20,
+      job: "Build a small page with a heading, two paragraphs, lists, an image, and a link.",
+      goal: {
+        html: `<!-- My first page -->
+<h1>Alex</h1>
+<p>I love pizza.</p>
+<p>I code every day.</p>
+<ol>
+  <li>Boil water</li>
+  <li>Add pasta</li>
+  <li>Stir well</li>
+  <li>Drain it</li>
+  <li>Eat</li>
+</ol>
+<img src="https://placehold.co/400x200" alt="A bowl of pasta">
+<a href="https://example.com">Visit example</a>
+<h2>My favourites</h2>
+<ul>
+  <li>Pizza</li>
+  <li>Code</li>
+  <li>Sleep</li>
+</ul>`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+  line-height: 1.6;
+}
+
+img { max-width: 100%; }`,
+        js: `// Not needed for these drills.`,
+      },
       files: {
         html: `<!-- Work through the drills one at a time.
      Run the code after each one.
@@ -292,7 +334,7 @@ img { max-width: 100%; }`,
     {
       title: "Structure & semantics",
       blurb: "Landmarks, meaning, and how forms are actually built.",
-      xp: 50,
+      xp: 65,
       learn: {
         subtitle: "Meaning over appearance",
         check: {
@@ -415,6 +457,51 @@ button {
     { text: "Add <button type=\"submit\">Send</button> inside the form. Then click each label and check the right box lights up.", hint: "If a label does nothing when clicked, its for and id do not match." },
   ],
       xp: 20,
+      job: "Build a page skeleton with a header, main content, footer, and a contact form.",
+      goal: {
+        html: `<header>
+  <h1>My site</h1>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </nav>
+</header>
+<main>
+  <section>
+    <h2>About</h2>
+    <p>I build small web pages.</p>
+  </section>
+  <aside>
+    <a href="#">My blog</a>
+  </aside>
+</main>
+<footer>
+  <p>(c) 2026 My site</p>
+</footer>
+<form>
+  <label for="name">Name</label>
+  <input id="name" type="text">
+  <label for="email">Email</label>
+  <input id="email" type="email">
+  <button type="submit">Send</button>
+</form>`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px;
+  line-height: 1.6;
+}
+
+nav { display: flex; gap: 16px; }
+
+form { display: flex; flex-direction: column; gap: 8px; max-width: 320px; }
+label { font-size: 14px; font-weight: 600; }
+input, textarea { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font: inherit; }
+button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; color: white; font-weight: 600; }`,
+        js: `// Not needed for these drills.`,
+      },
       files: {
         html: `<!-- Build the page structure with semantic tags.
      Header → Main → Footer, then the form.
@@ -465,7 +552,7 @@ button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; c
     {
       title: "CSS fundamentals",
       blurb: "Selectors, the box model, and making text genuinely readable.",
-      xp: 50,
+      xp: 65,
       learn: {
         subtitle: "How styling works",
         check: {
@@ -587,6 +674,51 @@ button { padding: 10px; border: none; border-radius: 6px; background: #0f172a; c
     { text: "Find the .faint rule. Change its color to #334155.", hint: "Text must stand out clearly from its background." },
   ],
       xp: 20,
+      job: "Style the page with CSS: sizes, colours, spacing, and the box model.",
+      goal: {
+        html: `<h1>Styling drills</h1>
+
+<p id="intro">This paragraph has an ID.</p>
+
+<div class="card">
+  <h2>Card heading</h2>
+  <p>A paragraph inside the card.</p>
+</div>
+
+<div class="box">A box with padding and a border.</div>
+
+<p class="faint">This text needs better contrast.</p>`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  padding: 24px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+p { font-size: 16px; }
+
+#intro { border-left: 4px solid blue; }
+
+.card {
+  background: white;
+  padding: 20px;
+  margin: 16px;
+  border: 2px solid #cbd5e1;
+}
+
+.card h2 { color: navy; }
+
+.box {
+  width: 200px;
+  padding: 20px;
+  border: 4px solid #0ea5e9;
+  background: #e0f2fe;
+  box-sizing: border-box;
+}
+
+.faint { color: #334155; }`,
+        js: `// Not needed for these drills.`,
+      },
       files: {
         html: `<h1>Styling drills</h1>
 
@@ -648,7 +780,7 @@ body {
     {
       title: "Flexbox",
       blurb: "Arranging things in a row or column without fighting the browser.",
-      xp: 50,
+      xp: 65,
       learn: {
         subtitle: "Layout along one axis",
         check: {
@@ -795,6 +927,53 @@ body {
     { text: "Add .nine { display: flex; }. Then add .nine b:first-child { flex-shrink: 0; }.", hint: "flex-shrink: 0 goes on the box itself. It stops that box shrinking." },
   ],
       xp: 20,
+      job: "Line up nine rows of boxes with flexbox: centring, spacing, wrapping, and flexible widths.",
+      goal: {
+        html: `<div class="one"><b>1</b><b>2</b><b>3</b></div>
+<div class="two"><b>1</b><b>2</b></div>
+<div class="three"><b>centre me</b></div>
+<div class="four"><b>1</b><b>2</b><b>3</b></div>
+<div class="five"><b>1</b><b>2</b><b>3</b></div>
+<div class="six"><b>wide</b><b>2</b><b>3</b></div>
+<div class="seven"><b>Logo</b><span><b>A</b><b>B</b></span></div>
+<div class="eight"><b>one</b><b>two</b><b>three</b><b>four</b><b>five</b><b>six</b></div>
+<div class="nine"><b>A very long logo name</b><b>x</b></div>`,
+        css: `body { font-family: system-ui, sans-serif; padding: 16px; }
+
+div {
+  background: #f1f5f9;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  min-height: 70px;
+}
+
+b {
+  display: block;
+  background: #0ea5e9;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.nine, .eight { width: 260px; }
+
+.one { display: flex; justify-content: center; }
+.two { display: flex; justify-content: space-between; }
+.three { display: flex; justify-content: center; align-items: center; }
+.four { display: flex; flex-direction: column; gap: 12px; }
+.five { display: flex; }
+.five b { flex: 1; }
+.six { display: flex; }
+.six b { flex: 1; }
+.six b:first-child { flex: 2; }
+.seven { display: flex; justify-content: space-between; align-items: center; }
+.eight { display: flex; flex-wrap: wrap; gap: 8px; }
+.nine { display: flex; }
+.nine b:first-child { flex-shrink: 0; }`,
+        js: `// Not needed for these drills.`,
+      },
       files: {
         html: `<div class="one"><b>1</b><b>2</b><b>3</b></div>
 <div class="two"><b>1</b><b>2</b></div>
@@ -883,7 +1062,7 @@ b {
     {
       title: "CSS grid",
       blurb: "Two-dimensional layout, and knowing which tool to reach for.",
-      xp: 55,
+      xp: 70,
       learn: {
         subtitle: "Rows and columns at once",
         check: {
@@ -991,6 +1170,51 @@ b {
     { text: "Below, add .head { grid-area: head; }, .side { grid-area: side; }, .main { grid-area: main; }, .foot { grid-area: foot; }.", hint: "Each name must match a word in the template exactly." },
   ],
       xp: 20,
+      job: "Lay out six rows of boxes with grid: columns, gaps, and named areas.",
+      goal: {
+        html: `<div class="one"><b>1</b><b>2</b><b>3</b></div>
+<div class="two"><b>1</b><b>2</b></div>
+<div class="three"><b>side</b><b>main</b></div>
+<div class="four"><b>1</b><b>2</b><b>3</b><b>4</b></div>
+<div class="five"><b>1</b><b>2</b><b>3</b><b>4</b></div>
+
+<div class="six">
+  <b class="head">head</b>
+  <b class="side">side</b>
+  <b class="main">main</b>
+  <b class="foot">foot</b>
+</div>`,
+        css: `body { font-family: system-ui, sans-serif; padding: 16px; }
+
+div {
+  background: #f1f5f9;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+b {
+  display: block;
+  background: #818cf8;
+  color: white;
+  padding: 16px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.one { display: grid; grid-template-columns: repeat(3, 1fr); }
+.two { display: grid; grid-template-columns: 1fr 2fr; }
+.three { display: grid; grid-template-columns: 150px 1fr; }
+.four { display: grid; gap: 16px; }
+.five { display: grid; grid-template-columns: 1fr 1fr; }
+.six { display: grid; grid-template-areas: "head head" "side main" "foot foot"; }
+.head { grid-area: head; }
+.side { grid-area: side; }
+.main { grid-area: main; }
+.foot { grid-area: foot; }`,
+        js: `// Not needed for these drills.`,
+      },
       files: {
         html: `<div class="one"><b>1</b><b>2</b><b>3</b></div>
 <div class="two"><b>1</b><b>2</b></div>
@@ -1071,7 +1295,7 @@ b {
     {
       title: "Responsive design",
       blurb: "One page that works on a phone, a tablet, and a laptop.",
-      xp: 50,
+      xp: 65,
       learn: {
         subtitle: "Designing for unknown screens",
         check: {
@@ -1192,6 +1416,68 @@ b {
     { text: "Set the preview to Phone width. The page must not scroll sideways.", hint: "Sideways scroll means something still has a fixed width. Find it." },
   ],
       xp: 20,
+      job: "Make the page work on phones and tablets: flexible images, stacked cards, and media queries.",
+      goal: {
+        w: "phone",
+        html: `<meta name="viewport" content="width=device-width, initial-scale=1">
+<nav class="nav">
+  <span class="logo">My site</span>
+  <div class="links"><a href="#">Home</a><a href="#">About</a></div>
+</nav>
+
+<h1>Responsive drills</h1>
+
+<div class="cards">
+  <div class="card">One</div>
+  <div class="card">Two</div>
+  <div class="card">Three</div>
+</div>
+
+<img class="photo" src="https://placehold.co/900x300/0ea5e9/white?text=Wide+image" alt="Placeholder">
+
+<p>Use the Phone, Tablet, and Full buttons above the preview to test each change.</p>`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  padding: 16px;
+  line-height: 1.6;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  padding: 12px;
+  background: #0f172a;
+  color: white;
+  border-radius: 8px;
+}
+.links { display: flex; gap: 12px; }
+.links a { color: #7dd3fc; text-decoration: none; }
+
+.cards { display: flex; gap: 12px; flex-direction: column; }
+.card {
+  flex: 1;
+  background: #e0e7ff;
+  padding: 24px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.photo { max-width: 100%; }
+
+h1 { font-size: clamp(1.5rem, 5vw, 3rem); }
+
+@media (min-width: 480px) {
+  .cards { display: grid; grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 700px) {
+  .cards { flex-direction: row; }
+  .nav { flex-direction: row; }
+}`,
+        js: `// Not needed for these drills.`,
+      },
       files: {
         html: `<nav class="nav">
   <span class="logo">My site</span>
@@ -1267,7 +1553,7 @@ b {
     {
       title: "Visual design principles",
       blurb: "Hierarchy, whitespace, and making choices on purpose.",
-      xp: 60,
+      xp: 75,
       learn: {
         subtitle: "Why some pages just look better",
         check: {
@@ -1362,6 +1648,43 @@ b {
     { text: "Check the left edge. Every element must start at the same line.", hint: "Look down the left side. Fix any stray padding or margin." },
   ],
       xp: 20,
+      job: "Build clear hierarchy with only type and spacing. No colour allowed.",
+      goal: {
+        html: `<div class="flat">
+  <p class="eyebrow">Student builder</p>
+  <p class="headline">Alex makes tiny web things</p>
+  <p class="body">Learning to turn ideas into useful pages, one experiment at a time, and writing about what breaks along the way.</p>
+  <p class="cta">Get in touch</p>
+</div>
+
+<div class="grouping">
+  <h3>Section one</h3>
+  <p>This paragraph belongs to the heading above it.</p>
+  <h3>Section two</h3>
+  <p>So does this one.</p>
+</div>`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  padding: 24px;
+  color: #0f172a;
+}
+
+.flat p {
+  font-size: 16px;
+  font-weight: 400;
+  margin: 8px 0;
+}
+
+.eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; }
+.headline { font-size: 32px; font-weight: 700; }
+.body { font-size: 16px; }
+.cta { font-size: 20px; font-weight: 700; }
+
+.grouping { margin-top: 32px; }
+.grouping h3 { margin: 8px 0 4px 0; }
+.grouping p { margin: 0 0 32px 0; }`,
+        js: `// Not needed for these drills.`,
+      },
       files: {
         html: `<div class="flat">
   <p class="eyebrow">Student builder</p>
@@ -1424,7 +1747,7 @@ b {
     {
       title: "Capstone: plan & build",
       blurb: "Plan your portfolio properly, then build the bulk of it.",
-      xp: 55,
+      xp: 70,
       learn: {
         subtitle: "Planning before building",
         check: {
@@ -1517,6 +1840,47 @@ body {
     { text: "Add @media (max-width: 600px) { .row { flex-direction: column; } }. Shrink the preview to check.", hint: "Narrow screens get a single column." },
   ],
       xp: 20,
+      job: "Block out your portfolio layout with labelled boxes: header, hero, projects, about, contact, and footer.",
+      goal: {
+        html: `<div class="box">Header: title and nav go here</div>
+<div class="box">Hero: big headline</div>
+<div class="row">
+  <div class="box">Project 1</div>
+  <div class="box">Project 2</div>
+  <div class="box">Project 3</div>
+</div>
+<div class="box">About text</div>
+<div class="box">Photo</div>
+<div class="box">Contact
+  <div class="box">Name</div>
+  <div class="box">Email</div>
+  <div class="box">Message</div>
+</div>
+<div class="box">Footer</div>`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  padding: 16px;
+}
+
+.box {
+  background: #e2e8f0;
+  border: 2px dashed #94a3b8;
+  padding: 24px;
+  border-radius: 6px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.row { display: flex; gap: 12px; }
+
+@media (max-width: 600px) {
+  .row { flex-direction: column; }
+}`,
+        js: `// Not needed for this drill.`,
+      },
       files: {
         html: `<!-- Block out your portfolio layout with labelled boxes.
      No real content yet. This is a wireframe. -->
@@ -1569,7 +1933,7 @@ body {
     {
       title: "Capstone: polish & ship",
       blurb: "Accessibility pass, final polish, and getting it live.",
-      xp: 140,
+      xp: 155,
       learn: {
         subtitle: "Finishing properly",
         check: {
@@ -1665,6 +2029,61 @@ input, button {
         { text: "Tab through the whole page and confirm you can reach everything.", hint: "Click the preview first, then press Tab repeatedly." },
       ],
       xp: 20,
+      job: "Audit the page for accessibility: fix headings, labels, alt text, contrast, and keyboard access.",
+      goal: {
+        note: "Some drills have no picture. Tab order is checked by hand.",
+        html: `<h1>My portfolio</h1>
+
+<img src="https://placehold.co/400x150/0ea5e9/white?text=Photo" alt="Photo of Alex smiling at a laptop">
+
+<h2>Projects</h2>
+<p>All headings are in order now.</p>
+
+<img src="https://placehold.co/400x8/cbd5e1/cbd5e1?text=+" alt="">
+
+<h2>Contact</h2>
+
+<form>
+  <label for="email">Email address</label>
+  <input id="email" type="email">
+
+  <label for="name">Your name</label>
+  <input id="name" type="text">
+
+  <button type="submit">Submit</button>
+</form>
+
+<p class="faint">Low contrast text is fixed now.</p>
+
+<a href="#" class="link">A link</a>
+<a href="#" class="link">Another link</a>`,
+        css: `body {
+  font-family: system-ui, sans-serif;
+  padding: 24px;
+  line-height: 1.6;
+  max-width: 600px;
+}
+
+img { max-width: 100%; }
+
+.faint { color: #334155; }
+
+.link:focus { outline: 2px solid #0ea5e9; outline-offset: 2px; }
+
+form { display: flex; flex-direction: column; gap: 8px; max-width: 320px; margin: 16px 0; }
+input { padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font: inherit; }
+
+button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #0f172a;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}`,
+        js: `// Click the preview, then press Tab repeatedly.`,
+      },
       files: {
         html: `<h1>My portfolio</h1>
 
@@ -1831,6 +2250,137 @@ const DRILL_CHECKS = {
   "8:6": { tab: "css", need: [".faint{"], any: ["#334155", "#1e293b", "#0f172a"] },
 };
 
+// Quick quizzes, one per lesson. Three questions each.
+// First answer is final. A correct first answer earns 5 XP.
+const QUIZZES = [
+  [ // Lesson 1: tags & structure
+    { q: "Which line is a correct image tag?",
+      options: ['<img src="cat.jpg">', '<image src="cat.jpg">', '<img>cat.jpg</img>', '<picture src="cat.jpg">'],
+      answer: 0,
+      why: "img is the tag name and src holds the address. An img tag needs no closing tag." },
+    { q: "Where does the browser tab title come from?",
+      options: ["The first <h1> on the page", "The <title> tag inside <head>", "The name of the file", "The first paragraph"],
+      answer: 1,
+      why: "The <title> tag sits inside <head>. The browser shows its text on the tab." },
+    { q: "What does <!-- buy milk --> do on a page?",
+      options: ["Shows bold text", "Adds a note only coders can see", "Adds a link", "Makes a list"],
+      answer: 1,
+      why: "Comments are notes for people reading the code. Visitors never see them." },
+  ],
+  [ // Lesson 2: semantics & forms
+    { q: "Which tag marks the banner at the top of a page?",
+      options: ["<head>", "<header>", "<h1>", "<top>"],
+      answer: 1,
+      why: "<header> marks the banner area you can see. <head> is different. It holds settings visitors never see." },
+    { q: 'A label has for="email". What must the input have so they connect?',
+      options: ['id="email"', 'class="email"', 'name="email"', "Nothing. Labels connect on their own."],
+      answer: 0,
+      why: "for and id must match exactly. Then clicking the label jumps to the input." },
+    { q: "Which input type asks the browser to check for an @ sign?",
+      options: ['type="text"', 'type="email"', 'type="password"', 'type="number"'],
+      answer: 1,
+      why: 'type="email" tells the browser to expect an email address. It warns you if the @ sign is missing.' },
+  ],
+  [ // Lesson 3: selectors & the box model
+    { q: "What does the selector .card match?",
+      options: ["Every <card> tag", 'Every element with class="card"', "Only the first card", 'The element with id="card"'],
+      answer: 1,
+      why: "A dot means class. .card matches every element whose class is card." },
+    { q: "What does the selector #intro match?",
+      options: ['Every element with class="intro"', 'The element with id="intro"', "The first paragraph", "Every <div>"],
+      answer: 1,
+      why: "A # means id. An id must be unique, so #intro matches exactly one element." },
+    { q: "A box is 200px wide, with 20px of padding on the left and right. With the default box model, how wide is it on screen?",
+      options: ["200px", "220px", "240px", "400px"],
+      answer: 2,
+      why: "Padding adds to the width: 200 + 20 + 20 = 240. With box-sizing: border-box it would stay 200." },
+  ],
+  [ // Lesson 4: flexbox
+    { q: "In a flex row, which line centers items from left to right?",
+      options: ["display: flex;", "justify-content: center;", "align-items: center;", "text-align: center;"],
+      answer: 1,
+      why: "justify-content spreads items along the main direction. In a row, that runs left to right." },
+    { q: "What does flex-direction: column change?",
+      options: ["Items get narrower", "The main direction runs top to bottom", "Items wrap to a new line", "Nothing changes"],
+      answer: 1,
+      why: "Column stacks items from top to bottom. The main direction follows the stack." },
+    { q: "Two boxes share a flex row. One has flex: 2 and the other has flex: 1. How is the space split?",
+      options: ["Half and half", "Two thirds and one third", "The first box takes it all", "One third and two thirds"],
+      answer: 1,
+      why: "flex numbers are shares of the free space. 2 and 1 make 3 shares, so the boxes get two thirds and one third." },
+  ],
+  [ // Lesson 5: grid
+    { q: "What does grid-template-columns: 1fr 1fr build?",
+      options: ["Two equal columns", "One column", "Two rows", "Two overlapping boxes"],
+      answer: 0,
+      why: "1fr means one share of the free space. 1fr 1fr splits the row into two equal columns." },
+    { q: "Which line adds space between grid cells?",
+      options: ["gap: 16px;", "margin: 16px;", "padding: 16px;", "spacing: 16px;"],
+      answer: 0,
+      why: "gap sets the space between rows and columns in one line. Margin and padding go on the elements themselves." },
+    { q: "What does grid-template-columns: 150px 1fr build?",
+      options: ["Two equal columns", "A fixed 150px column plus one that fills the rest", "150 tiny columns", "One row 150px tall"],
+      answer: 1,
+      why: "150px never changes. 1fr takes all the space that is left over." },
+  ],
+  [ // Lesson 6: responsive design
+    { q: "What does the viewport meta tag do?",
+      options: ["Makes all text bigger", "Tells the phone to use its real screen width", "Adds a border around the page", "Loads the page faster"],
+      answer: 1,
+      why: "Without it, phones pretend to be 980px wide and shrink everything. The tag tells the phone to report its true width." },
+    { q: "When does a @media (min-width: 700px) rule apply?",
+      options: ["Only below 700px", "At 700px wide and wider", "On every screen size", "Only on phones"],
+      answer: 1,
+      why: "min-width means minimum width. The rule switches on at 700px and stays on for wider screens." },
+    { q: "What does max-width: 100% do on an image?",
+      options: ["Makes it exactly 100 pixels wide", "Stops it growing wider than its container", "Hides the image", "Centers the image"],
+      answer: 1,
+      why: "The image may shrink to fit, but it can never overflow its box. That stops sideways scrolling." },
+  ],
+  [ // Lesson 7: hierarchy & spacing
+    { q: "Which makes the most important text stand out?",
+      options: ["Small gray text", "Big bold text with space around it", "Tiny centered text", "Underlined text"],
+      answer: 1,
+      why: "Size, weight, and space shout importance. The eye lands on the biggest, boldest thing first." },
+    { q: "What does text-transform: uppercase do?",
+      options: ["Makes the text bigger", "Shows the text in capital letters", "Makes the text bold", "Underlines the text"],
+      answer: 1,
+      why: "It only changes how the text looks. The HTML underneath still holds the original letters." },
+    { q: "Two sections blur together. What separates them best?",
+      options: ["More space between them", "A brighter background color", "Smaller text", "More words"],
+      answer: 0,
+      why: "Space groups things. Things close together feel related. A bigger gap says a new section starts here." },
+  ],
+  [ // Lesson 8: wireframe in code
+    { q: "What is a wireframe for?",
+      options: ["Picking the final colors", "Planning the layout with plain boxes", "Writing the final words", "Publishing the site"],
+      answer: 1,
+      why: "A wireframe is a rough sketch made of boxes. It plans where things go before you care how they look." },
+    { q: "Why do wireframes use gray boxes instead of real content?",
+      options: ["Real content is not allowed yet", "Boxes keep the focus on layout, not wording", "Gray boxes load faster", "It is a legal rule"],
+      answer: 1,
+      why: "Final words too early make you stop seeing the layout. Boxes let you judge the structure first." },
+    { q: "Your wireframe has a row of three boxes. On a phone they get too narrow. What is the usual fix?",
+      options: ["Shrink the text", "Stack them vertically under a breakpoint", "Delete one box", "Give everything fixed pixel widths"],
+      answer: 1,
+      why: "Narrow screens stack content. A media query flips the row into a column on small screens." },
+  ],
+  [ // Lesson 9: accessibility audit
+    { q: "An image shows a chart. Which alt text is best?",
+      options: ['alt="image"', 'alt="Sales rose 20 percent in 2026"', 'alt=""', "Leave alt off"],
+      answer: 1,
+      why: "Alt text should carry the image's meaning. The word image says nothing. Empty alt is only for decoration." },
+    { q: 'When is alt="" the right choice?',
+      options: ["For every image", "For decorative images that add no meaning", "For charts and graphs", "Never. It is always wrong."],
+      answer: 1,
+      why: "Screen readers skip empty alt text. That is perfect for decoration, and wrong for real content." },
+    { q: "A page has two <h1> tags. Why is that a problem?",
+      options: ["It breaks the CSS", "Screen reader users lose the one main topic", "The page loads slower", "The headings look bad"],
+      answer: 1,
+      why: "One h1 names the page's topic. Two is like a book with two titles. Confusing." },
+  ],
+];
+
 const LOCKED_UNITS = [
   { title: "Bringing pages to life", sub: "JavaScript", icon: Braces },
   { title: "Scaling up", sub: "React", icon: Boxes },
@@ -1901,6 +2451,37 @@ function StepText({ text }) {
   );
 }
 
+// Fades content in as it scrolls into view. Used for drills so a long list
+// feels like it unfolds instead of looming.
+function Reveal({ children, className = "" }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      el.classList.add("in");
+      return;
+    }
+    const io = new IntersectionObserver(
+      (es) =>
+        es.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        }),
+      { threshold: 0.08 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={`reveal ${className}`}>
+      {children}
+    </div>
+  );
+}
+
 const STRUCTURE_LINES = [
   { c: "<!DOCTYPE html>", n: "First line. Tells the browser this is a web page.", k: "" },
   { c: "<html>", n: "Wraps the whole page.", k: "" },
@@ -1920,7 +2501,7 @@ function ConceptBlocks({ blocks, theme }) {
       {blocks.map((b, i) => {
         if (b.type === "heading")
           return (
-            <h3 key={i} className="flex items-center gap-2.5 pt-1 text-[15px] font-extrabold" style={{ color: theme.a }}>
+            <h3 key={i} className="flex items-center gap-2.5 pt-1 text-[15px] font-extrabold md:text-lg" style={{ color: theme.a }}>
               <span className="h-5 w-1.5 rounded-full" style={{ background: `linear-gradient(180deg, ${theme.a}, ${theme.b})` }} />
               {b.body}
             </h3>
@@ -1928,7 +2509,7 @@ function ConceptBlocks({ blocks, theme }) {
 
         if (b.type === "text")
           return (
-            <p key={i} className="text-[15px] leading-relaxed text-slate-300">
+            <p key={i} className="text-[15px] leading-relaxed text-slate-300 md:text-[17px]">
               {b.body}
             </p>
           );
@@ -2049,7 +2630,7 @@ function ConceptBlocks({ blocks, theme }) {
               </div>
               <div className="min-w-0">
                 <p className="mb-0.5 text-[11px] font-extrabold uppercase tracking-[.14em] text-amber-300">Good to know</p>
-                <p className="text-sm leading-relaxed text-slate-200">{b.body}</p>
+                <p className="text-sm leading-relaxed text-slate-200 md:text-[15px]">{b.body}</p>
               </div>
             </div>
           );
@@ -2062,7 +2643,7 @@ function ConceptBlocks({ blocks, theme }) {
               </div>
               <div className="min-w-0">
                 <p className="mb-0.5 text-[11px] font-extrabold uppercase tracking-[.14em] text-rose-300">Common mistake</p>
-                <p className="text-sm leading-relaxed text-slate-200">{b.body}</p>
+                <p className="text-sm leading-relaxed text-slate-200 md:text-[15px]">{b.body}</p>
               </div>
             </div>
           );
@@ -2076,10 +2657,10 @@ function ConceptBlocks({ blocks, theme }) {
                   className={`p-4 ${j > 0 ? "border-t border-white/10" : ""}`}
                   style={{ background: j % 2 ? "rgba(255,255,255,.015)" : "rgba(255,255,255,.045)" }}
                 >
-                  <code className="font-mono2 text-[13px] font-bold text-emerald-300">{item.code}</code>
-                  <p className="mt-1 text-sm leading-relaxed text-slate-300">{item.what}</p>
+                  <code className="font-mono2 text-[13px] font-bold text-emerald-300 md:text-sm">{item.code}</code>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-300 md:text-[15px]">{item.what}</p>
                   {item.note && (
-                    <p className="mt-2 border-l-2 border-emerald-300/40 pl-3 text-[13px] italic leading-relaxed text-slate-400">
+                    <p className="mt-2 border-l-2 border-emerald-300/40 pl-3 text-[13px] italic leading-relaxed text-slate-400 md:text-sm">
                       {item.note}
                     </p>
                   )}
@@ -2143,11 +2724,17 @@ function Prototype() {
   const [streak] = useState(loadStreak);
   const [checkMsg, setCheckMsg] = useState(null);
   const [previewW, setPreviewW] = useState("full"); // phone | tablet | full
+  const [quizAns, setQuizAns] = useState(() => STORE.read("cs:quiz", {}));
 
   const [files, setFiles] = useState(null);
   const [tab, setTab] = useState("html");
   const [srcDoc, setSrcDoc] = useState("");
   const [ran, setRan] = useState(false);
+  // Mission card open/closed, remembered per lesson. First visit: open.
+  const [missionOpen, setMissionOpen] = useState(true);
+  useEffect(() => {
+    if (openLesson !== null) setMissionOpen(STORE.read(`cs:mission:${openLesson}`, true));
+  }, [openLesson]);
 
 
   const lesson = openLesson !== null ? UNIT_1.lessons[openLesson] : null;
@@ -2164,7 +2751,7 @@ function Prototype() {
     (_, i) => done[key(i, 0)] && done[key(i, 1)] && done[key(i, 2)]
   ).length;
   const xpPct = Math.round(Math.min(100, (xp / UNIT_1.totalXp) * 100));
-  const level = Math.min(6, Math.floor(xp / 100) + 1);
+  const level = Math.min(7, Math.floor(xp / 100) + 1);
 
   function buildDoc(f) {
     return `<!DOCTYPE html>
@@ -2205,6 +2792,22 @@ function Prototype() {
       });
     } else {
       setCheckMsg({ ok: false, text: `${passed} of ${total} drills done. Next: drill ${firstFail + 1}.` });
+    }
+  }
+
+  // Quick quiz: the first answer is final. 5 XP for a correct first answer.
+  function answerQuiz(li, qi, oi) {
+    const k = li + ":" + qi;
+    if (quizAns[k] !== undefined) return;
+    const q = QUIZZES[li][qi];
+    const next = { ...quizAns, [k]: oi };
+    setQuizAns(next);
+    STORE.write("cs:quiz", next);
+    if (oi === q.answer) {
+      setXp((x) => x + 5);
+      setGaining(5);
+      setGainId((g) => g + 1);
+      setTimeout(() => setGaining(null), 1100);
     }
   }
 
@@ -2377,6 +2980,11 @@ function Prototype() {
           <div className="flex min-w-0 items-center gap-2">
             <Code2 className="h-4 w-4 shrink-0" style={{ color: t.a }} />
             <p className="truncate text-sm font-extrabold">{isBuild ? "Your project" : isPractice ? "Practice sandbox" : "Try it"}</p>
+            {isPractice && (
+              <span className="shrink-0 rounded-full bg-violet-400/15 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-violet-200">
+                Your work
+              </span>
+            )}
             <span className="hidden shrink-0 text-[10px] text-slate-600 lg:inline">auto-saved</span>
           </div>
           <div className="ml-auto flex shrink-0 items-center gap-2">
@@ -2504,6 +3112,29 @@ function Prototype() {
       ? { label: "Mark drills complete", doneLabel: "Drills complete" }
       : { label: "Mark complete", doneLabel: "Completed" };
     const xpGain = (part.xp ?? 0) + (part.extra?.xp ?? 0);
+    // When this part is already done, the button points forward instead of
+    // going dead: next part, next lesson, or back to the map. No scrolling up.
+    const hasNextPart = activePart < 2;
+    const hasNextLesson = openLesson < UNIT_1.lessons.length - 1;
+    const nextLabel = hasNextPart
+      ? `Next: ${PARTS[activePart + 1].label}`
+      : hasNextLesson
+        ? "Next lesson"
+        : "Course map";
+    const goNext = () => {
+      if (hasNextPart) setActivePart(activePart + 1);
+      else if (hasNextLesson) openLessonAt(openLesson + 1, 0);
+      else setScreen("map");
+    };
+    const nextStyle = hasNextPart
+      ? {
+          background: `linear-gradient(135deg, ${PARTS[activePart + 1].color}, ${PARTS[activePart + 1].deep})`,
+          boxShadow: `0 12px 30px -8px ${PARTS[activePart + 1].color}77`,
+        }
+      : {
+          background: `linear-gradient(135deg, ${t.a}, ${t.b})`,
+          boxShadow: `0 12px 30px -8px ${t.a}77`,
+        };
     return (
       <div className="sticky bottom-0 z-30 mt-8 border-t border-white/10" style={{ background: "rgba(6,10,21,.93)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-3 sm:px-5" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
@@ -2516,18 +3147,17 @@ function Prototype() {
             </p>
           </div>
           <button
-            onClick={markComplete}
-            disabled={isDone}
-            className="pressable flex shrink-0 items-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-extrabold text-white sm:px-6"
+            onClick={isDone ? goNext : markComplete}
+            className="pressable flex shrink-0 items-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-extrabold text-white sm:px-6 md:text-base"
             style={
               isDone
-                ? { background: "rgba(52,211,153,.12)", border: "1px solid rgba(52,211,153,.4)", color: "#6ee7b7" }
+                ? nextStyle
                 : { background: `linear-gradient(135deg, ${partMeta.color}, ${partMeta.deep})`, boxShadow: `0 12px 30px -8px ${partMeta.color}77` }
             }
           >
             {isDone ? (
               <>
-                <CheckCircle2 className="h-4 w-4" /> Done
+                {nextLabel} <ArrowRight className="h-4 w-4" />
               </>
             ) : (
               <>
@@ -2561,11 +3191,11 @@ function Prototype() {
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400" />
                 UNIT 1 · HTML &amp; CSS
               </p>
-              <h1 className="font-display text-3xl font-extrabold sm:text-4xl">
+              <h1 className="font-display text-3xl font-extrabold sm:text-4xl md:text-5xl">
                 Your course{" "}
                 <span className="bg-gradient-to-r from-cyan-300 via-violet-300 to-fuchsia-300 bg-clip-text text-transparent">map</span>
               </h1>
-              <p className="mt-2 max-w-md text-sm leading-relaxed text-slate-400">
+              <p className="mt-2 max-w-md text-sm leading-relaxed text-slate-400 md:text-base">
                 Nine lessons, each ending with something real you built. Tap a lesson to jump straight in.
               </p>
               <div className="mt-5 grid grid-cols-3 gap-2.5 sm:gap-3">
@@ -2574,7 +3204,7 @@ function Prototype() {
                     <div className="mb-2 flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: s.soft }}>
                       <s.icon className="h-3.5 w-3.5" style={{ color: s.color }} />
                     </div>
-                    <p className="text-lg font-extrabold leading-none sm:text-xl">{s.value}</p>
+                    <p className="text-lg font-extrabold leading-none sm:text-xl md:text-2xl">{s.value}</p>
                     <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">{s.label}</p>
                   </div>
                 ))}
@@ -2615,7 +3245,7 @@ function Prototype() {
 
           {/* lessons */}
           <div className="mb-3 flex items-center justify-between">
-            <h2 className="font-display text-base font-extrabold">Lessons</h2>
+            <h2 className="font-display text-base font-extrabold md:text-xl">Lessons</h2>
             <div className="flex items-center gap-3">
               <span className="text-xs font-bold text-slate-500">{lessonsDone}/{UNIT_1.lessons.length} complete</span>
               {xp > 0 && (
@@ -2675,7 +3305,7 @@ function Prototype() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <p className={`truncate text-sm font-extrabold sm:text-[15px] ${locked ? "text-slate-600" : "text-slate-100"}`}>
+                        <p className={`truncate text-sm font-extrabold sm:text-[15px] md:text-base ${locked ? "text-slate-600" : "text-slate-100"}`}>
                           {l.title}
                         </p>
                         {isNext && (
@@ -2684,7 +3314,7 @@ function Prototype() {
                           </span>
                         )}
                       </div>
-                      {!locked && <p className="clamp-2 mt-0.5 text-xs leading-relaxed text-slate-400">{l.blurb}</p>}
+                      {!locked && <p className="clamp-2 mt-0.5 text-xs leading-relaxed text-slate-400 md:text-sm">{l.blurb}</p>}
                       {locked && <p className="mt-0.5 text-xs text-slate-600">Finish lesson {i} to unlock</p>}
                       <div className="mt-2 flex items-center gap-2.5">
                         <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2 py-0.5 text-[10px] font-extrabold" style={{ color: locked ? "#475569" : t.a }}>
@@ -2808,8 +3438,8 @@ function Prototype() {
                 <p className="text-[11px] font-extrabold uppercase tracking-[.16em]" style={{ color: t.a }}>
                   Lesson {openLesson + 1} · {UNIT_1.sub}
                 </p>
-                <h1 className="font-display mt-1 text-2xl font-extrabold sm:text-[28px]">{lesson.title}</h1>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-400">{lesson.blurb}</p>
+                <h1 className="font-display mt-1 text-2xl font-extrabold sm:text-[28px] md:text-4xl">{lesson.title}</h1>
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-400 md:text-base">{lesson.blurb}</p>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[11px] font-extrabold" style={{ color: t.a }}>
                     <Zap className="h-3 w-3" /> {lesson.xp} XP up for grabs
@@ -2849,8 +3479,8 @@ function Prototype() {
                     className={`p-4 ${i > 0 ? "border-t border-white/10" : ""}`}
                     style={{ background: i % 2 ? "rgba(255,255,255,.015)" : "rgba(255,255,255,.045)" }}
                   >
-                    <p className="font-mono2 text-[13px] font-bold text-emerald-300">{r.label}</p>
-                    <p className="mt-1 text-sm leading-relaxed text-slate-300">
+                    <p className="font-mono2 text-[13px] font-bold text-emerald-300 md:text-sm">{r.label}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-slate-300 md:text-[15px]">
                       <StepText text={r.body} />
                     </p>
                   </div>
@@ -2896,9 +3526,9 @@ function Prototype() {
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-400/15">
                       <HelpCircle className="h-4 w-4 text-indigo-300" />
                     </div>
-                    <h2 className="font-display text-base font-extrabold">Check your learning</h2>
+                    <h2 className="font-display text-base font-extrabold md:text-xl">Check your learning</h2>
                   </div>
-                  <p className="mb-3 text-[15px] leading-relaxed text-slate-200">
+                  <p className="mb-3 text-[15px] leading-relaxed text-slate-200 md:text-[17px]">
                     <StepText text={lesson.learn.check.q} />
                   </p>
                   <button
@@ -2908,10 +3538,59 @@ function Prototype() {
                     {showAnswer ? "Hide answer" : "Reveal answer"}
                   </button>
                   {showAnswer && (
-                    <p className="pop-in mt-3 border-t border-indigo-300/15 pt-3 text-sm leading-relaxed text-slate-300">
+                    <p className="pop-in mt-3 border-t border-indigo-300/15 pt-3 text-sm leading-relaxed text-slate-300 md:text-[15px]">
                       <StepText text={lesson.learn.check.a} />
                     </p>
                   )}
+                </div>
+                <div className="mb-6 rounded-3xl border border-emerald-300/25 bg-emerald-400/[.05] p-5 sm:p-6">
+                  <div className="mb-1 flex items-center gap-2.5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-400/15">
+                      <Star className="h-4 w-4 text-emerald-300" />
+                    </div>
+                    <h2 className="font-display text-base font-extrabold md:text-xl">Quick quiz</h2>
+                    <span className="ml-auto shrink-0 rounded-full bg-emerald-400/10 px-2 py-0.5 text-[10px] font-extrabold text-emerald-300">5 XP each</span>
+                  </div>
+                  <p className="mb-4 text-xs text-slate-500">Three questions. Your first answer is final.</p>
+                  {QUIZZES[openLesson].map((q, qi) => {
+                    const k = `${openLesson}:${qi}`;
+                    const chosen = quizAns[k];
+                    const answered = chosen !== undefined;
+                    const wasCorrect = answered && chosen === q.answer;
+                    return (
+                      <div key={qi} className="mb-4 rounded-2xl border border-white/10 bg-black/20 p-4 last:mb-0">
+                        <p className="mb-3 text-sm font-bold text-slate-100 md:text-base">{qi + 1}. {q.q}</p>
+                        <div className="grid gap-2">
+                          {q.options.map((op, oi) => {
+                            let cls = "border-white/10 bg-white/[.03] text-slate-200 hover:bg-white/[.07]";
+                            if (answered) {
+                              if (oi === q.answer) cls = "border-emerald-300/40 bg-emerald-400/10 text-emerald-100";
+                              else if (oi === chosen) cls = "border-red-300/40 bg-red-400/10 text-red-100";
+                              else cls = "border-white/10 bg-white/[.02] text-slate-500";
+                            }
+                            return (
+                              <button
+                                key={oi}
+                                disabled={answered}
+                                onClick={() => answerQuiz(openLesson, qi, oi)}
+                                className={`pressable rounded-xl border px-3 py-2 text-left text-sm disabled:cursor-default md:text-[15px] ${cls}`}
+                              >
+                                {op}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        {answered && (
+                          <div className="pop-in mt-3 border-t border-white/10 pt-3 text-sm leading-relaxed md:text-[15px]">
+                            <p className={`font-extrabold ${wasCorrect ? "text-emerald-300" : "text-amber-300"}`}>
+                              {wasCorrect ? "Correct. +5 XP" : "Not quite."}
+                            </p>
+                            <p className="mt-1 text-slate-300">{q.why}</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
                 <div
                   className="mb-6 rounded-3xl border p-5 sm:p-6"
@@ -2921,9 +3600,9 @@ function Prototype() {
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl text-white" style={{ background: `linear-gradient(135deg, ${t.a}, ${t.b})` }}>
                       <ListChecks className="h-4 w-4" />
                     </div>
-                    <h2 className="font-display text-base font-extrabold">Your turn</h2>
+                    <h2 className="font-display text-base font-extrabold md:text-xl">Your turn</h2>
                   </div>
-                  <p className="mb-4 text-[15px] leading-relaxed text-slate-200">{part.task}</p>
+                  <p className="mb-4 text-[15px] leading-relaxed text-slate-200 md:text-[17px]">{part.task}</p>
 
                   {part.extra && (
                     <div className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/30 p-3.5">
@@ -2945,52 +3624,124 @@ function Prototype() {
             {isPractice && (
               <>
                 <div className="mb-6 rounded-3xl border border-violet-300/25 bg-violet-400/[.05] p-5 sm:p-6">
-                  <div className="mb-3 flex items-center gap-2.5">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#a78bfa,#6d28d9)" }}>
-                      <Dumbbell className="h-4 w-4" />
+                  {/* Sticky progress strip: stays visible while drills scroll past. */}
+                  <div
+                    className="sticky z-20 -mx-5 -mt-5 mb-4 border-b border-violet-300/15 px-5 py-4 sm:-mx-6 sm:-mt-6 sm:px-6"
+                    style={{
+                      top: 64,
+                      background: "rgba(9,13,26,.95)",
+                      backdropFilter: "blur(12px)",
+                      WebkitBackdropFilter: "blur(12px)",
+                      borderRadius: "24px 24px 0 0",
+                    }}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#a78bfa,#6d28d9)" }}>
+                        <Dumbbell className="h-4 w-4" />
+                      </div>
+                      <h2 className="font-display text-base font-extrabold md:text-xl">Drills</h2>
+                      <span className="ml-auto rounded-full bg-violet-400/15 px-2.5 py-1 text-[11px] font-extrabold text-violet-200">
+                        {part.drills.filter((_, i) => checked[`${openLesson}:${i}`]).length}/{part.drills.length}
+                      </span>
                     </div>
-                    <h2 className="font-display text-base font-extrabold">Drills</h2>
-                    <span className="ml-auto rounded-full bg-violet-400/15 px-2.5 py-1 text-[11px] font-extrabold text-violet-200">
-                      {part.drills.filter((_, i) => checked[`${openLesson}:${i}`]).length}/{part.drills.length}
-                    </span>
+                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+                      <div
+                        className="h-full rounded-full transition-all duration-500"
+                        style={{ width: `${(part.drills.filter((_, i) => checked[`${openLesson}:${i}`]).length / part.drills.length) * 100}%`, background: "linear-gradient(90deg,#6d28d9,#a78bfa)" }}
+                      />
+                    </div>
                   </div>
-                  <div className="mb-4 h-1.5 overflow-hidden rounded-full bg-white/10">
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${(part.drills.filter((_, i) => checked[`${openLesson}:${i}`]).length / part.drills.length) * 100}%`, background: "linear-gradient(90deg,#6d28d9,#a78bfa)" }}
-                    />
-                  </div>
-                  <p className="mb-4 text-[15px] leading-relaxed text-slate-300">{part.intro}</p>
-                  <div className="space-y-2">
+                  <p className="mb-4 text-base leading-relaxed text-slate-300 md:text-lg">{part.intro}</p>
+                  {/* Mission card: the goal up front, then the drills. Practice only. */}
+                  {part.goal && (
+                    <Reveal className="mb-5">
+                      <div className="overflow-hidden rounded-2xl border border-violet-300/25 bg-black/30">
+                        <button
+                          onClick={() => {
+                            const next = !missionOpen;
+                            setMissionOpen(next);
+                            STORE.write(`cs:mission:${openLesson}`, next);
+                          }}
+                          aria-expanded={missionOpen}
+                          className="flex w-full items-center gap-3 p-4 text-left sm:p-5"
+                        >
+                          <span
+                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white"
+                            style={{ background: "linear-gradient(135deg,#a78bfa,#6d28d9)" }}
+                          >
+                            <Target className="h-5 w-5" />
+                          </span>
+                          <span className="min-w-0">
+                            <span className="block text-[17px] font-extrabold text-slate-100 md:text-lg">Your mission</span>
+                            <span className="block text-sm font-bold text-violet-300/90">{part.drills.length} drills</span>
+                          </span>
+                          <ChevronDown className={`ml-auto h-5 w-5 shrink-0 text-slate-400 transition-transform ${missionOpen ? "" : "-rotate-90"}`} />
+                        </button>
+                        {missionOpen && (
+                          <div className="px-4 pb-4 sm:px-5 sm:pb-5">
+                            <p className="mb-3 text-[17px] leading-relaxed text-slate-200 md:text-lg">
+                              <span className="font-extrabold text-violet-300">Your job:</span> {part.job}
+                            </p>
+                            <div className="overflow-hidden rounded-xl border border-white/10 bg-white">
+                              <div className="flex items-center gap-2 bg-[#1e293b] px-3 py-2">
+                                <span className="h-2.5 w-2.5 rounded-full bg-rose-400/80" />
+                                <span className="h-2.5 w-2.5 rounded-full bg-amber-300/80" />
+                                <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/80" />
+                                <span className="ml-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[11px] font-extrabold uppercase tracking-wide text-emerald-700">
+                                  Goal
+                                </span>
+                                <span className="ml-auto font-mono2 text-[11px] text-slate-500">index.html</span>
+                              </div>
+                              <div className="mx-auto" style={part.goal.w === "phone" ? { maxWidth: 375 } : undefined}>
+                                <iframe
+                                  title="Goal preview"
+                                  srcDoc={buildDoc({ html: part.goal.html, css: part.goal.css, js: part.goal.js || "" })}
+                                  sandbox="allow-scripts"
+                                  className="h-64 w-full border-0 bg-white sm:h-72"
+                                />
+                              </div>
+                            </div>
+                            <p className="mt-2.5 text-[15px] leading-relaxed text-slate-400">
+                              Yours will look the same but with your words. Seeing the goal never writes the code for you.
+                              {part.goal.note ? ` ${part.goal.note}` : ""}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </Reveal>
+                  )}
+                  <div className="space-y-2.5">
                     {part.drills.map((d, i) => {
                       const k = `${openLesson}:${i}`;
                       const on = checked[k];
                       return (
-                        <button
-                          key={i}
-                          onClick={() => setChecked((c) => ({ ...c, [k]: !c[k] }))}
-                          className={`pressable flex w-full items-start gap-3 rounded-2xl border p-3.5 text-left ${
-                            on ? "border-emerald-300/25 bg-emerald-300/[.05]" : "border-white/10 bg-black/30 hover:border-white/20"
-                          }`}
-                        >
-                          <span
-                            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-[11px] font-extrabold text-white"
-                            style={on ? { background: "linear-gradient(135deg,#34d399,#047857)" } : { background: "linear-gradient(135deg,#a78bfa,#6d28d9)" }}
+                        <Reveal key={i}>
+                          <button
+                            onClick={() => setChecked((c) => ({ ...c, [k]: !c[k] }))}
+                            className={`pressable flex w-full items-start gap-3.5 rounded-2xl border p-4 text-left ${
+                              on ? "border-emerald-300/25 bg-emerald-300/[.05]" : "border-white/10 bg-black/30 hover:border-white/20"
+                            }`}
                           >
-                            {on ? <Check className="h-3.5 w-3.5" /> : i + 1}
-                          </span>
-                          <div className="min-w-0">
-                            <p className={`text-sm leading-relaxed ${on ? "text-slate-500 line-through" : "text-slate-100"}`}>
-                              <StepText text={d.text} />
-                            </p>
-                            {d.hint && !on && (
-                              <p className="mt-1.5 flex items-start gap-1.5 text-xs leading-relaxed text-slate-500">
-                                <Lightbulb className="mt-0.5 h-3 w-3 shrink-0 text-amber-300/70" />
-                                {d.hint}
+                            <span
+                              key={on ? "on" : "off"}
+                              className="badge-pop flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-extrabold text-white"
+                              style={on ? { background: "linear-gradient(135deg,#34d399,#047857)" } : { background: "linear-gradient(135deg,#a78bfa,#6d28d9)" }}
+                            >
+                              {on ? <Check className="h-3.5 w-3.5" /> : i + 1}
+                            </span>
+                            <div className="min-w-0">
+                              <p className={`text-base leading-relaxed md:text-lg ${on ? "text-slate-500 line-through" : "text-slate-100"}`}>
+                                <StepText text={d.text} />
                               </p>
-                            )}
-                          </div>
-                        </button>
+                              {d.hint && !on && (
+                                <p className="mt-1.5 flex items-start gap-1.5 text-sm leading-relaxed text-slate-500 md:text-[15px]">
+                                  <Lightbulb className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-300/70" />
+                                  {d.hint}
+                                </p>
+                              )}
+                            </div>
+                          </button>
+                        </Reveal>
                       );
                     })}
                   </div>
@@ -3007,7 +3758,7 @@ function Prototype() {
                     <div className="flex h-9 w-9 items-center justify-center rounded-xl text-white" style={{ background: "linear-gradient(135deg,#e879f9,#a21caf)" }}>
                       <Rocket className="h-4 w-4" />
                     </div>
-                    <h2 className="font-display text-base font-extrabold">Project brief</h2>
+                    <h2 className="font-display text-base font-extrabold md:text-xl">Project brief</h2>
                     <span className="ml-auto rounded-full bg-fuchsia-400/15 px-2.5 py-1 text-[11px] font-extrabold text-fuchsia-200">
                       {part.requirements.filter((_, i) => checked[`b${openLesson}:${i}`]).length}/{part.requirements.length}
                     </span>
@@ -3018,7 +3769,7 @@ function Prototype() {
                       style={{ width: `${(part.requirements.filter((_, i) => checked[`b${openLesson}:${i}`]).length / part.requirements.length) * 100}%`, background: "linear-gradient(90deg,#a21caf,#e879f9)" }}
                     />
                   </div>
-                  <p className="mb-4 text-[15px] leading-relaxed text-slate-300">{part.brief}</p>
+                  <p className="mb-4 text-[15px] leading-relaxed text-slate-300 md:text-[17px]">{part.brief}</p>
                   <p className="mb-2 text-[11px] font-extrabold uppercase tracking-[.14em] text-slate-500">Build steps</p>
                   <div className="space-y-2">
                     {part.requirements.map((r, i) => {
@@ -3035,7 +3786,7 @@ function Prototype() {
                           {on
                             ? <CheckSquare className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
                             : <Square className="mt-0.5 h-4 w-4 shrink-0 text-slate-600" />}
-                          <span className={`text-sm leading-relaxed ${on ? "text-slate-500 line-through" : "text-slate-100"}`}>
+                          <span className={`text-sm leading-relaxed md:text-[15px] ${on ? "text-slate-500 line-through" : "text-slate-100"}`}>
                             <StepText text={r} />
                           </span>
                         </button>
